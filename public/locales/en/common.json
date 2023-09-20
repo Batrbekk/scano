@@ -1,0 +1,81 @@
+{
+  "portfolio": "Cases",
+  "blog": "Blog",
+  "events": "Events",
+  "vacancy": "Jobs",
+  "contactUs": "Contact Us",
+  "headlineTitle": [
+    "We will develop a mobile application for iOS and Android better,",
+    "than competitors"
+  ],
+  "headlineDesc": "Create an MVP for rapid go-to-market and hypothesis testing",
+  "serviceList": [
+    "Mobile development",
+    "Consulting",
+    "Design Development",
+    "IT business problem solving",
+    "Server Part Development",
+    "Product testing",
+    "Business analysis of a startup idea",
+    "Project Refinement"
+  ],
+  "technologies": "Technology stack",
+  "ourProject": "Our cases",
+  "icMarketDesc": "Mobile app and web service for buying properties abroad directly from real estate developers.",
+  "foodyDesc": "Mobile app for finding bargain cafes and restaurants with various coupons and discounts.",
+  "flappDesc": "Mobile app for delivering flower bouquets between countries",
+  "englishAppDesc": "English language learning mobile app",
+  "lionPrideDesc": "NFT collection mincing service with smart contract integration",
+  "kaltadaDesc": "Mobile app for fast home food delivery",
+  "addTitle": "Would you like to implement your project with us?",
+  "footerTitles": [
+    "contact information",
+    "Our other projects",
+    "We're on social networks"
+  ],
+  "bidAnother": "other",
+  "send": "Send",
+  "footerAddress": "Kazakhstan, Almaty, 481a Raiymbek St.",
+  "bidHelpTitle": "How can we help you?",
+  "bidHelpChips": [
+    "complex development",
+    "design and prototyping",
+    "consulting",
+    "Other"
+  ],
+  "bidPlatformsTitle": "platforms",
+  "bidForms": [
+    "Your name*",
+    "Mail*",
+    "Company*",
+    "Phone Number*",
+    "Describe the task*",
+    "Add file."
+  ],
+  "bidAboutTitle": "How did you hear about us?",
+  "bidAbouts": [
+    "Ratings",
+    "Social media",
+    "MEDIA",
+    "Recommendations",
+    "Search engine results",
+    "Other",
+    "Industry Events"
+  ],
+  "advantagesTitle": "Our advantages",
+  "advantagesDesc": "High quality and development efficiency at optimal cost and speed",
+  "advantagesTime": "Time",
+  "advantagesBudget": "Budget",
+  "advantagesCard1": [
+    "Up to 40% savings",
+    "Through cross-platform development on Flutter"
+  ],
+  "advantagesCard2": [
+    "Pay for results",
+    "The results of the work are paid after every 2 weeks"
+  ],
+  "advantagesCard3": [
+    "Own academy",
+    "Programming, where we create qualified specialists"
+  ]
+}

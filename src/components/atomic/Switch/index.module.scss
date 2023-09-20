@@ -1,0 +1,12 @@
+.switcher {
+  a, span {
+    font-family: 'Gilroy', sans-serif;
+    @apply text-base;
+  }
+
+  a {
+    &:hover {
+      color: white;
+    }
+  }
+}
