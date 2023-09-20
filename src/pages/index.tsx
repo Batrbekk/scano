@@ -7,7 +7,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Input from "@/components/atomic/Input";
 import Button from "@/components/atomic/Button";
 import { useRouter } from "next/router";
-import {useCookies} from "react-cookie";
+import { getCookie, setCookie } from 'cookies-next';
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
   const { locale } = ctx;
@@ -25,8 +25,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 const Homepage: NextPage = () => {
   const router = useRouter();
 
-  const [cookie, setCookie] = useCookies(["forgotPassword"]);
-
+  const forgotPassword = getCookie('forgotPassword');
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
 
@@ -56,7 +55,7 @@ const Homepage: NextPage = () => {
         <Image src={Logo} />
       </div>
       <div className="max-w-lg w-full flex flex-col gap-y-5">
-        {cookie && (
+        {forgotPassword === 'true' && (
           <div className="bg-[#eeeeee] rounded py-2 px-3 border-l-[8px] border-[#60CA23]">
             <p className="text-[#848484] font-['Work Sans',sans-serif] font-light prose-sm">Көрсетілген адреске хат жолданды</p>
           </div>

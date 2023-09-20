@@ -4,12 +4,13 @@ import Logo from "public/logo.svg";
 import Input from "@/components/atomic/Input";
 import Button from "@/components/atomic/Button";
 import React, { useState } from "react";
-import { useCookies } from 'react-cookie';
 import { useRouter } from "next/router";
+import { setCookie } from 'cookies-next';
 
 const forgot_password: NextPage = () => {
   const router = useRouter();
-  const [cookie, setCookie] = useCookies(["forgotPassword"]);
+
+  const [errorLogin, setErrorLogin] = useState(false);
   const [login, setLogin] = useState('');
 
   const handleLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,8 +18,12 @@ const forgot_password: NextPage = () => {
   };
 
   const handleClick = () => {
-    setCookie('forgotPassword', true);
-    router.push('/');
+    if (login) {
+      setCookie('forgotPassword', true);
+      router.push('/');
+    } else {
+      setErrorLogin(true);
+    }
   }
 
   return (
@@ -29,7 +34,9 @@ const forgot_password: NextPage = () => {
       <div className="max-w-lg w-full flex flex-col gap-y-5">
         <Input
           type="text"
+          error={errorLogin}
           placeholder="E-mail"
+          label="email енгізу қажет"
           value={login}
           onChange={handleLogin}
         />
