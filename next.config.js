@@ -2,7 +2,7 @@
 const { i18n } = require("./next-i18next.config");
 
 module.exports = {
-  reactStrictMode: false,
+  reactStrictMode: true,
   i18n,
   plugins: [
     require('@tailwindcss/typography'),
