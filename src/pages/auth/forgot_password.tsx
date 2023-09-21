@@ -1,11 +1,10 @@
 import { NextPage } from "next";
 import Image from "next/image";
 import Logo from "public/logo.svg";
-import Input from "@/components/atomic/Input";
-import Button from "@/components/atomic/Button";
+import Input from "@/components/atom/Input";
+import Button from "@/components/atom/Button";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import { setCookie } from 'cookies-next';
 
 const forgot_password: NextPage = () => {
   const router = useRouter();
@@ -29,7 +28,7 @@ const forgot_password: NextPage = () => {
   return (
     <div className="flex flex-col items-center justify-center h-screen relative">
       <div className="absolute top-20">
-        <Image src={Logo} />
+        <Image src={Logo} alt="logo" />
       </div>
       <div className="max-w-lg w-full flex flex-col gap-y-5">
         <Input
@@ -40,7 +39,7 @@ const forgot_password: NextPage = () => {
           value={login}
           onChange={handleLogin}
         />
-        <Button label="Жаңа пароль алу" onClick={handleClick}/>
+        <Button label="Жаңа пароль алу" onClick={handleClick} size="lg" />
       </div>
     </div>
   )

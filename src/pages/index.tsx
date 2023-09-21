@@ -4,10 +4,9 @@ import Image from "next/image";
 import { COMMON_TNS } from "@/lib/i18n/consts";
 import { GetStaticProps, NextPage } from "next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import Input from "@/components/atomic/Input";
-import Button from "@/components/atomic/Button";
+import Input from "@/components/atom/Input";
+import Button from "@/components/atom/Button";
 import { useRouter } from "next/router";
-import { getCookie, setCookie } from 'cookies-next';
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
   const { locale } = ctx;
@@ -58,7 +57,7 @@ const Homepage: NextPage = () => {
   return (
     <div className="flex flex-col items-center justify-center h-screen relative">
       <div className="absolute top-20">
-        <Image src={Logo} />
+        <Image src={Logo} alt="logo" />
       </div>
       <div className="max-w-lg w-full flex flex-col gap-y-5">
         {forgotPassword === 'APPROVE' && (
@@ -82,7 +81,7 @@ const Homepage: NextPage = () => {
           value={password}
           onChange={handlePassword}
         />
-        <Button label="Кіру" onClick={handleClick}/>
+        <Button label="Кіру" onClick={handleClick} size="lg"/>
         <a href="/auth/forgot_password" className="text-center font-['Work Sans',sans-serif] text-[#757575] hover:text-[#434445] prose-base">
           Парольді ұмыттыңызба?
         </a>

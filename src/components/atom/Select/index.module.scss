@@ -1,0 +1,15 @@
+.optionContainer {
+  .option {
+    &:first-child {
+      @apply rounded-t;
+    }
+    &:last-child {
+      @apply rounded-b;
+    }
+    &:hover {
+      p {
+        color: white!important;
+      }
+    }
+  }
+}

@@ -8,3 +8,12 @@ input:-webkit-autofill,
 input:-webkit-autofill:focus {
   transition: background-color 600000s 0s, color 600000s 0s;
 }
+
+thead {
+  @apply border-b;
+  @apply px-6;
+}
+
+a,p,span {
+  font-family: "Work Sans", sans-serif;
+}
