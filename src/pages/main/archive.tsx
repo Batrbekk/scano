@@ -10,8 +10,10 @@ import Footer from "@/components/molecule/Footer";
 
 import { ru } from "date-fns/locale";
 import "react-datepicker/dist/react-datepicker.css";
+import {useRouter} from "next/router";
 
 const archive: NextPage = () => {
+  const router = useRouter();
   const options = ['АО "Кселл"', 'option2', 'option3'];
 
   const [selectedOption, setSelectedOption] = useState(options[0]);
@@ -29,10 +31,14 @@ const archive: NextPage = () => {
       </div>
       <div className="flex items-start bg-[#F8F9FB] h-[80vh]">
         <div className="w-1/6 h-full bg-white py-4">
-          <div className="bg-gray-100 w-full py-2 px-4 cursor-pointer">
+          <div className="bg-gray-100 w-full py-2 px-4 cursor-pointer" onClick={() => {
+            router.push('/main/archive');
+          }}>
             <p className="prose prose-lg">Архивный сбор</p>
           </div>
-          <div className="w-full py-2 px-4 cursor-pointer border-b-2">
+          <div className="w-full py-2 px-4 cursor-pointer border-b" onClick={() => {
+            router.push('/main/history');
+          }}>
             <p className="prose prose-lg">История сборов</p>
           </div>
         </div>
