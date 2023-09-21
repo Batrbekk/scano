@@ -325,7 +325,7 @@ const mainIndex: NextPage = () => {
   const links = [
     {
       label: 'Архивный сбор',
-      href: '#'
+      href: '/main/archive'
     },
     {
       label: 'Добавление сообщений в тему',

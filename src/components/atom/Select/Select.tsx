@@ -7,9 +7,10 @@ interface Props {
   options: string[];
   value: string;
   onChange: (value: string) => void;
+  classSelect?: string;
 }
 
-export const Select: React.FC<Props> = ({options,value,onChange}) => {
+export const Select: React.FC<Props> = ({classSelect, options,value,onChange}) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
   const handleOptionClick = (option: string) => {
@@ -22,7 +23,7 @@ export const Select: React.FC<Props> = ({options,value,onChange}) => {
   };
 
   return (
-    <div className="select-wrapper w-48 cursor-pointer relative">
+    <div className={`select-wrapper w-48 cursor-pointer relative ${classSelect}`}>
       <div className="bg-white rounded border border-[#a0a5b1] py-1 px-4 flex items-center justify-between" onClick={toggleDropdown}>
         <p className="prose prose-base font-['Work Sans',sans-serif]">
           {value}
@@ -32,9 +33,9 @@ export const Select: React.FC<Props> = ({options,value,onChange}) => {
         </div>
       </div>
       {isDropdownOpen && (
-        <div className={`absolute ease-in duration-200 bg-white w-full rounded mt-1 flex flex-col shadow-lg ${styles.optionContainer}`}>
+        <div className={`absolute ease-in duration-200 bg-white w-full rounded mt-1 flex flex-col shadow-lg z-50 ${styles.optionContainer}`}>
           {options.map((item) => (
-            <div key={item} className={`px-4 py-2 hover:bg-[rgba(96,202,35)] ease-in duration-100 ${styles.option} ${item === value && 'bg-[#4780a9]'}`} onClick={() => handleOptionClick(item)}>
+            <div key={item} className={`px-4 py-2 hover:bg-[#60CA2399] ease-in duration-100 ${styles.option} ${item === value && 'bg-[#4780a9]'}`} onClick={() => handleOptionClick(item)}>
               <p className={`prose prose-base font-['Work Sans',sans-serif] ${item === value && 'text-white'}`}>{item}</p>
             </div>
           ))}

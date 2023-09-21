@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -15,6 +16,7 @@
     "@headlessui/react": "^1.7.14",
     "@nextui-org/table": "^2.0.23",
     "@tailwindcss/typography": "^0.5.10",
+    "@types/react-datepicker": "^4.15.0",
     "cookies-next": "^4.0.0",
     "highcharts": "^11.1.0",
     "highcharts-react-official": "^3.2.1",
@@ -24,6 +26,7 @@
     "next-themes": "^0.2.0",
     "react": "18.2.0",
     "react-cookie": "^6.1.1",
+    "react-datepicker": "^4.18.0",
     "react-dom": "18.2.0",
     "sass": "^1.62.1",
     "tailwindcss-animated": "^1.0.0",
@@ -33,7 +36,7 @@
     "@pandacss/dev": "^0.15.1",
     "@testing-library/jest-dom": "^5.15.0",
     "@testing-library/react": "^12.1.2",
-    "@types/react": "^17.0.21",
+    "@types/react": "^18.2.22",
     "@types/react-dom": "^17.0.9",
     "@types/react-slick": "^0.23.10",
     "@types/validator": "^13.7.17",
@@ -50,7 +53,7 @@
     "typescript": "^4.7.3"
   },
   "resolutions": {
-    "**/@types/react": "^17.0.21",
+    "**/@types/react": "^17.0.38",
     "**/@types/react-dom": "^17.0.9"
   }
 }

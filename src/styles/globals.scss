@@ -17,3 +17,12 @@ thead {
 a,p,span {
   font-family: "Work Sans", sans-serif;
 }
+
+.react-datepicker__input-container {
+  background-color: white;
+  color: #757575;
+  input {
+    padding: 4px 16px!important;
+    @apply focus-visible:outline-0 focus:border-[#757575] rounded border border-[#a0a5b1] prose prose-base;
+  }
+}
