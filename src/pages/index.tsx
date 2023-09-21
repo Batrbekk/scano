@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import Logo from "public/logo.svg";
 import Image from "next/image";
 import { COMMON_TNS } from "@/lib/i18n/consts";
@@ -24,13 +24,19 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 
 const Homepage: NextPage = () => {
   const router = useRouter();
-
-  const forgotPassword = getCookie('forgotPassword');
+  const [forgotPassword, setForgotPassword] = useState('');
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
 
   const [errorLogin, setErrorLogin] = useState(false);
   const [errorPassword, setErrorPassword] = useState(false);
+
+  useEffect(() => {
+    const statusForgot = localStorage.getItem('forgotPassword');
+    if (statusForgot) {
+      setForgotPassword(statusForgot);
+    }
+  }, []);
 
   const handleLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
     setLogin(e.target.value);
@@ -44,7 +50,7 @@ const Homepage: NextPage = () => {
     setErrorPassword(password !== 'admin');
 
     if (login === 'admin' && password === 'admin') {
-      setCookie('forgotPassword', false);
+      localStorage.setItem('forgotPassword', 'REJECT');
       router.push('/main/');
     }
   }
@@ -55,7 +61,7 @@ const Homepage: NextPage = () => {
         <Image src={Logo} />
       </div>
       <div className="max-w-lg w-full flex flex-col gap-y-5">
-        {forgotPassword === 'true' && (
+        {forgotPassword === 'APPROVE' && (
           <div className="bg-[#eeeeee] rounded py-2 px-3 border-l-[8px] border-[#60CA23]">
             <p className="text-[#848484] font-['Work Sans',sans-serif] font-light prose-sm">Көрсетілген адреске хат жолданды</p>
           </div>

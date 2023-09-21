@@ -19,7 +19,7 @@ const forgot_password: NextPage = () => {
 
   const handleClick = () => {
     if (login) {
-      setCookie('forgotPassword', true);
+      localStorage.setItem('forgotPassword', 'APPROVE')
       router.push('/');
     } else {
       setErrorLogin(true);
