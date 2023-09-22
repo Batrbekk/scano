@@ -343,7 +343,7 @@ const mainIndex: NextPage = () => {
 
   type Row = typeof tableRow[0];
 
-  const renderCell = useCallback((row: Row, columnKey: Key) => {
+  const renderCell = useCallback((row: Row, columnKey: Key): any  => {
     const cellValue = row[columnKey as keyof Row];
 
     switch (columnKey) {
@@ -387,21 +387,21 @@ const mainIndex: NextPage = () => {
       case 'today':
         return (
           <div className="flex flex-col py-4 px-8">
-            <p className="text-lg prose">{row.today.total}</p>
+            <p className="text-lg prose">{`${row.today.total}`}</p>
             <InlineChart positive={row.today.positive} negative={row.today.negative} neutral={row.today.neutral} />
           </div>
         )
       case 'week':
         return (
           <div className="flex flex-col py-4 px-8">
-            <p className="text-lg prose">{row.week.total}</p>
+            <p className="text-lg prose">{`${row.week.total}`}</p>
             <InlineChart positive={row.week.positive} negative={row.week.negative} neutral={row.week.neutral} />
           </div>
         )
       case 'total':
         return (
           <div className="flex flex-col py-4 px-8">
-            <p className="text-lg prose">{row.total.total}</p>
+            <p className="text-lg prose">{`${row.total.total}`}</p>
             <InlineChart positive={row.total.positive} negative={row.total.negative} neutral={row.total.neutral} />
           </div>
         )
@@ -416,6 +416,7 @@ const mainIndex: NextPage = () => {
     setSelectedOption(value);
   };
 
+  // @ts-ignore
   return (
     <div className="bg-[#F8F9FB] h-full">
       <div className="mb-6">

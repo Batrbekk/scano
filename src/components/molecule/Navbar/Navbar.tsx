@@ -5,7 +5,9 @@ import Image from "next/image";
 export const Navbar: React.FC = () => {
   return (
     <div className="bg-[#F8F9FB] w-screen flex items-center justify-between px-6 py-3">
-      <Image src={Logo} alt="logo" />
+      <a href="/main/">
+        <Image src={Logo} alt="logo" />
+      </a>
       <div className="flex items-center gap-4">
         <img
           className="h-9 w-9 rounded-full"

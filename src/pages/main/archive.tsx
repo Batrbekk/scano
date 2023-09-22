@@ -9,15 +9,14 @@ import Navbar from "@/components/molecule/Navbar";
 import Footer from "@/components/molecule/Footer";
 
 import { ru } from "date-fns/locale";
-import "react-datepicker/dist/react-datepicker.css";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 
 const archive: NextPage = () => {
   const router = useRouter();
   const options = ['АО "Кселл"', 'option2', 'option3'];
 
   const [selectedOption, setSelectedOption] = useState(options[0]);
-  const [dateRange, setDateRange] = useState([null, null]);
+  const [dateRange, setDateRange] = useState<any>([null, null]);
   const [startDate, endDate] = dateRange;
 
   const handleSelectChange = (value: string) => {
@@ -61,7 +60,6 @@ const archive: NextPage = () => {
                   startDate={startDate}
                   placeholderText="Выберите период"
                   onChange={(update) => {
-                    // @ts-ignore
                     setDateRange(update);
                   }}
                 />
