@@ -92,7 +92,6 @@ const history: NextPage = () => {
     }
   ];
 
-
   type Row = typeof tableRow[0];
 
   const renderCell = useCallback((row: Row, columnKey: Key) => {
@@ -101,43 +100,43 @@ const history: NextPage = () => {
     switch (columnKey) {
       case 'id':
         return (
-          <div className="py-2 px-4">
+          <div className="py-2 px-8">
             <p className="prose prose-sm">{row.id}</p>
           </div>
         )
       case 'theme':
         return (
-          <div className="py-2 px-4">
+          <div className="py-2 px-8">
             <p className="prose prose-sm">{row.theme}</p>
           </div>
         )
       case 'period':
         return (
-          <div className="py-2 px-4">
+          <div className="py-2 px-8">
             <p className="prose prose-sm">{row.period}</p>
           </div>
         )
       case 'message':
         return (
-          <div className="py-2 px-4">
+          <div className="py-2 px-8">
             <p className="prose prose-sm">{row.message}</p>
           </div>
         )
       case 'author':
         return (
-          <div className="py-2 px-4">
+          <div className="py-2 px-8">
             <p className="prose prose-sm">{row.author}</p>
           </div>
         )
       case 'date':
         return (
-          <div className="py-2 px-4">
+          <div className="py-2 px-8">
             <p className="prose prose-sm">{row.date}</p>
           </div>
         )
       case 'status':
         return (
-          <div className="py-2 px-4">
+          <div className="py-4 px-8">
             <p className="prose prose-sm">{row.status}</p>
           </div>
         )
@@ -169,7 +168,7 @@ const history: NextPage = () => {
           <Table aria-label="Example table with custom cells" className="bg-white rounded-lg">
             <TableHeader columns={tableColumn}>
               {(column) => (
-                <TableColumn key={column.uid} className="text-left py-2">
+                <TableColumn key={column.uid} className="text-left py-4 px-8">
                   <p className="prose prose-sm font-normal">{column.name}</p>
                 </TableColumn>
               )}

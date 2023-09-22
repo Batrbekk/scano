@@ -337,7 +337,7 @@ const mainIndex: NextPage = () => {
     },
     {
       label: 'Архив отчетов',
-      href: '#'
+      href: '/main/reportArchive'
     },
   ];
 
