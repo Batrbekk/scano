@@ -329,7 +329,7 @@ const mainIndex: NextPage = () => {
     },
     {
       label: 'Добавление сообщений в тему',
-      href: '#'
+      href: '/main/addMessage'
     },
     {
       label: 'Копирование настроек темы',

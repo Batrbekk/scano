@@ -6,15 +6,8 @@ class MyDocument extends Document {
   }
 
   render() {
-    return (
-      <Html>
-        <Head />
-        <body>
-          <Main />
-          <NextScript />
-        </body>
-      </Html>
-    );
+    // @ts-ignore
+    return <Html><Head /><body><Main /><NextScript /></body></Html>;
   }
 }
 

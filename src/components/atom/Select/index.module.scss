@@ -8,7 +8,7 @@
     }
     &:hover {
       p {
-        color: white!important;
+        @apply prose
       }
     }
   }

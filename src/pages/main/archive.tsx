@@ -44,7 +44,7 @@ const archive: NextPage = () => {
         <div className="py-4 px-6">
           <p className="prose prose-2xl font-semibold mb-6">Архивный сбор</p>
           <div className="flex items-center gap-x-8">
-            <div className="bg-white px-4 py-6 rounded-lg flex flex-col gap-y-4 w-[70vw]">
+            <div className="bg-white px-4 py-6 rounded-lg flex flex-col gap-y-6 w-[70vw]">
               <div className="flex flex-col gap-y-1 w-full">
                 <p className="prose prose-sm text-[#979ca9]">Тема</p>
                 <Select options={options} value={selectedOption} onChange={handleSelectChange} classSelect="w-full" />
