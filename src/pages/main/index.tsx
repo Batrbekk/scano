@@ -11,8 +11,11 @@ import Delete from "@public/assets/icons/delete.svg";
 import Structure from "@public/assets/icons/structure.png";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/table";
 import InlineChart from "@/components/atom/InlineChart";
+import {router} from "next/client";
+import {useRouter} from "next/router";
 
 const mainIndex: NextPage = () => {
+  const router = useRouter();
   const squares = [
     {
       id: 1,
@@ -359,7 +362,9 @@ const mainIndex: NextPage = () => {
       case 'name':
         return (
           <div className="flex flex-col py-4 px-8">
-            <p className="text-lg text-[#4870b7] cursor-pointer">{row.name}</p>
+            <p className="text-lg text-[#4870b7] cursor-pointer" onClick={() => {
+              router.push('/dashboard');
+            }}>{row.name}</p>
             <div className="flex items-center gap-x-4">
               <p className="prose prose-sm">Данные собираются с {row.date}</p>
               <div className="flex items-center gap-0.5">

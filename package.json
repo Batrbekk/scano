@@ -14,10 +14,13 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.14",
+    "@nextui-org/accordion": "^2.0.23",
+    "@nextui-org/react": "^2.1.13",
     "@nextui-org/table": "^2.0.23",
     "@tailwindcss/typography": "^0.5.10",
     "@types/react-datepicker": "^4.15.0",
     "cookies-next": "^4.0.0",
+    "framer-motion": "^10.16.4",
     "highcharts": "^11.1.0",
     "highcharts-react-official": "^3.2.1",
     "nanoid": "^3.1.30",

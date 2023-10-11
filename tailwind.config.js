@@ -1,10 +1,12 @@
 //const defaultTheme = require("tailwindcss/defaultTheme");
 const plugin = require("tailwindcss/plugin");
+const {nextui} = require("@nextui-org/react");
 
 module.exports = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx}",
     "./src/components/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"
   ],
   darkMode: "class", // or 'media' or 'class', also darkMode increases bundle size noticeably
   theme: {
@@ -17,9 +19,13 @@ module.exports = {
         lgh: { raw: `(min-height: 1280px)` },
         xlh: { raw: `(min-height: 1920px)` },
       },
+      margin: {
+        '2/12': '16.666667%'
+      }
     },
   },
   plugins: [
+    nextui(),
     require('tailwindcss-animated'),
     require('@tailwindcss/typography'),
     plugin(({ addUtilities }) => {
