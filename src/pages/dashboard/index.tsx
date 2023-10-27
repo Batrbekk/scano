@@ -255,7 +255,7 @@ const dashboardIndex: NextPage = () => {
                       <span className="text-[#716767]">3437</span>
                     </div>
                   </Checkbox>
-                  <Checkbox value="news">
+                  <Checkbox value="asd">
                     <div className="flex items-center justify-between w-full text-[#7191c6]">
                       Positive
                       <span className="text-[#716767]">570</span>
@@ -289,19 +289,19 @@ const dashboardIndex: NextPage = () => {
                       wrapper: 'font-light text-sm w-full [&_label]:!max-w-full [&_.select-none]:w-full'
                     }}
                   >
-                    <Checkbox value="social">
+                    <Checkbox value="russian">
                       <div className="flex items-center justify-between w-full text-[#7191c6]">
                         Russian
                         <span className="text-[#716767]">2861</span>
                       </div>
                     </Checkbox>
-                    <Checkbox value="news">
+                    <Checkbox value="english">
                       <div className="flex items-center justify-between w-full text-[#7191c6]">
                         English
                         <span className="text-[#716767]">118</span>
                       </div>
                     </Checkbox>
-                    <Checkbox value="news">
+                    <Checkbox value="kazakh">
                       <div className="flex items-center justify-between w-full text-[#7191c6]">
                         Kazakh
                         <span className="text-[#716767]">1976</span>

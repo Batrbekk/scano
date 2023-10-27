@@ -5,9 +5,12 @@ import React, {ReactNode, useEffect, useState} from "react";
 import Plus from "@public/assets/icons/plus.svg";
 import Copy from "@public/assets/icons/copy.svg";
 import Footer from "@/components/molecule/Footer";
+import Minus from "@public/assets/icons/minus.svg";
 import Message from "@public/assets/icons/message.svg"
+import NewMess from "@public/assets/icons/newMess.svg";
 import Analytic from "@public/assets/icons/analytic.svg";
 import LayoutNavbar from "@/components/molecule/LayoutNavbar";
+import WhiteNewMess from "@public/assets/icons/whiteNewMess.svg";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import WhiteMessage from "@public/assets/icons/whiteMessage.svg";
 
@@ -23,7 +26,6 @@ export const mainLayout: React.FC<MainLayoutProps> = ({children}) => {
     setPath(router.asPath.substring(1));
   }, []);
 
-
   return (
     <div className="flex w-screen">
       <div className="fixed h-screen bg-[#37475F] w-64 px-6 py-3">
@@ -36,7 +38,7 @@ export const mainLayout: React.FC<MainLayoutProps> = ({children}) => {
             <Accordion
               className="px-0"
               itemClasses={{
-                indicator: "data-[open=true]:rotate-0"
+                indicator: "data-[open=true]:rotate-180"
               }}
             >
               <AccordionItem
@@ -49,28 +51,31 @@ export const mainLayout: React.FC<MainLayoutProps> = ({children}) => {
                     <p className="font-['Montserrat',sans-serif] text-base font-semibold">Аналитика</p>
                   </div>
                 }
-                indicator={
-                  <div className="ml-auto">
-                    <Image src={Plus} alt="icon" />
-                  </div>
-                }
+                indicator={({isOpen}) => (isOpen ?
+                    <div className="ml-auto">
+                      <Image src={Minus} alt="icon" />
+                    </div>
+                    :
+                    <div className="ml-auto">
+                      <Image src={Plus} alt="icon" />
+                    </div>
+                )}
               >
                 asd
               </AccordionItem>
             </Accordion>
           </div>
-          <div>
+          <div className="mb-6">
             <p className="text-[#6481AD] uppercase mb-5 text-xs font-['Montserrat',sans-serif] font-semibold">Материалдар</p>
             <Accordion
               className="px-0"
-              defaultExpandedKeys={["1"]}
               itemClasses={{
-                indicator: "data-[open=true]:rotate-0"
+                indicator: "data-[open=true]:rotate-180"
               }}
             >
               <AccordionItem
                 key="1"
-                aria-label="Accordion 1"
+                aria-label="1"
                 className="text-[#6481AD] pl-2 [&_h2]:w-full [&_button]:p-0 [&_button]:justify-between"
                 startContent={
                   <div className="flex items-center gap-x-4">
@@ -78,13 +83,15 @@ export const mainLayout: React.FC<MainLayoutProps> = ({children}) => {
                     <p className="font-['Montserrat',sans-serif] text-base font-semibold">Материалдар</p>
                   </div>
                 }
-                indicator={
-                  <>
-                    <div className="ml-auto data-[open=true]:hidden">
+                indicator={({isOpen}) => (isOpen ?
+                    <div className="ml-auto">
+                      <Image src={Minus} alt="icon" />
+                    </div>
+                  :
+                    <div className="ml-auto">
                       <Image src={Plus} alt="icon" />
                     </div>
-                  </>
-                }
+                )}
               >
                 <div className="border-l-2 border-[#6481AD] ml-2 mt-4 cursor-pointer" onClick={() => {
                   router.push('/dashboard');
@@ -101,6 +108,12 @@ export const mainLayout: React.FC<MainLayoutProps> = ({children}) => {
             }}>
               <Image src={(path === 'message' || path === 'message/addMessage') ? WhiteMessage : Message} alt="icon" />
               <p className={`font-['Montserrat',sans-serif] text-base font-semibold ${(path === 'message' || path === 'message/addMessage') ? 'text-white' : 'text-[#6481AD]'}`}>Хабарламалар</p>
+            </div>
+            <div className={`pl-2 flex items-center gap-x-4 cursor-pointer py-2 ${(path === 'subscribe' || path === 'subscribe/addSubscribe') && 'bg-[#848F9F] rounded'}`} onClick={() => {
+              router.push('/subscribe');
+            }}>
+              <Image src={(path === 'subscribe' || path === 'subscribe/addSubscribe') ? WhiteNewMess : NewMess} alt="icon" />
+              <p className={`font-['Montserrat',sans-serif] text-base font-semibold ${(path === 'subscribe' || path === 'subscribe/addSubscribe') ? 'text-white' : 'text-[#6481AD]'}`}>Жазылымдар</p>
             </div>
           </div>
         </div>
