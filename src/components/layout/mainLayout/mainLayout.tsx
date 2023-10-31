@@ -8,11 +8,14 @@ import Footer from "@/components/molecule/Footer";
 import Minus from "@public/assets/icons/minus.svg";
 import Message from "@public/assets/icons/message.svg"
 import NewMess from "@public/assets/icons/newMess.svg";
+import Journal from "@public/assets/icons/journal.svg";
 import Analytic from "@public/assets/icons/analytic.svg";
 import LayoutNavbar from "@/components/molecule/LayoutNavbar";
 import WhiteNewMess from "@public/assets/icons/whiteNewMess.svg";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import WhiteMessage from "@public/assets/icons/whiteMessage.svg";
+import WhiteJournal from "@public/assets/icons/whiteJournal.svg";
+
 
 type MainLayoutProps = {
   children: ReactNode;
@@ -114,6 +117,12 @@ export const mainLayout: React.FC<MainLayoutProps> = ({children}) => {
             }}>
               <Image src={(path === 'subscribe' || path === 'subscribe/addSubscribe') ? WhiteNewMess : NewMess} alt="icon" />
               <p className={`font-['Montserrat',sans-serif] text-base font-semibold ${(path === 'subscribe' || path === 'subscribe/addSubscribe') ? 'text-white' : 'text-[#6481AD]'}`}>Жазылымдар</p>
+            </div>
+            <div className={`pl-2 flex items-center gap-x-4 cursor-pointer py-2 ${(path === 'journal') && 'bg-[#848F9F] rounded'}`} onClick={() => {
+              router.push('/journal');
+            }}>
+              <Image src={(path === 'journal') ? WhiteJournal : Journal} alt="icon" />
+              <p className={`font-['Montserrat',sans-serif] text-base font-semibold ${(path === 'journal') ? 'text-white' : 'text-[#6481AD]'}`}>Журнал</p>
             </div>
           </div>
         </div>
