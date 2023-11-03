@@ -3,6 +3,7 @@ import Logo from "@public/logo.svg";
 import {useRouter} from "next/router";
 import React, {ReactNode, useEffect, useState} from "react";
 import Plus from "@public/assets/icons/plus.svg";
+import Spam from "@public/assets/icons/spam.svg";
 import Copy from "@public/assets/icons/copy.svg";
 import Footer from "@/components/molecule/Footer";
 import Minus from "@public/assets/icons/minus.svg";
@@ -10,6 +11,7 @@ import Message from "@public/assets/icons/message.svg"
 import NewMess from "@public/assets/icons/newMess.svg";
 import Journal from "@public/assets/icons/journal.svg";
 import Analytic from "@public/assets/icons/analytic.svg";
+import WhiteSpam from "@public/assets/icons/whiteSpam.svg";
 import LayoutNavbar from "@/components/molecule/LayoutNavbar";
 import WhiteNewMess from "@public/assets/icons/whiteNewMess.svg";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
@@ -123,6 +125,12 @@ export const mainLayout: React.FC<MainLayoutProps> = ({children}) => {
             }}>
               <Image src={(path === 'journal') ? WhiteJournal : Journal} alt="icon" />
               <p className={`font-['Montserrat',sans-serif] text-base font-semibold ${(path === 'journal') ? 'text-white' : 'text-[#6481AD]'}`}>Журнал</p>
+            </div>
+            <div className={`pl-2 flex items-center gap-x-4 cursor-pointer py-2 ${(path === 'spam') && 'bg-[#848F9F] rounded'}`} onClick={() => {
+              router.push('/spam');
+            }}>
+              <Image src={(path === 'spam') ? WhiteSpam : Spam} alt="icon" />
+              <p className={`font-['Montserrat',sans-serif] text-base font-semibold ${(path === 'spam') ? 'text-white' : 'text-[#6481AD]'}`}>Спам</p>
             </div>
           </div>
         </div>

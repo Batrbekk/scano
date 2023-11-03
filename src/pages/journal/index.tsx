@@ -3,8 +3,57 @@ import MainLayout from "@/components/layout/mainLayout";
 import React, {Key, useCallback} from "react";
 import {Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from "@nextui-org/table";
 import {Button} from "@nextui-org/react";
+import Calendar from "@public/assets/icons/calendar.svg";
+import Image from "next/image";
+import Link from "next/link";
+import Export from "@public/assets/icons/export.svg";
 
 const journalIndex: NextPage = () => {
+  const themeLinks = [
+    {
+      name: 'АО Кселл',
+      link: '#'
+    },
+    {
+      name: 'НАК Казатомпром',
+      link: '#'
+    },
+    {
+      name: 'НК QazaqGaz',
+      link: '#'
+    },
+    {
+      name: 'ҚазТрансОйл',
+      link: '#'
+    },
+    {
+      name: 'Тау-Кен Самрук',
+      link: '#'
+    }
+  ];
+  const usersLinks = [
+    {
+      name: 'Aslan Abylkas',
+      link: '#'
+    },
+    {
+      name: 'Kuandyk Batyrbek',
+      link: '#'
+    },
+    {
+      name: 'Rakhimova Guzel',
+      link: '#'
+    },
+    {
+      name: 'Talapova Shyryn',
+      link: '#'
+    },
+    {
+      name: 'Absattarov Erkanat',
+      link: '#'
+    }
+  ];
+
   const tableColumn = [
     {name: 'Дата', uid: 'dates'},
     {name: 'Пользователь', uid: 'user'},
@@ -144,7 +193,13 @@ const journalIndex: NextPage = () => {
             </Table>
           </div>
           <div className="flex flex-col gap-y-4">
-            <p className="font-['Work Sans',sans-serif] text-[#35415A] prose prose-lg">Журнал активности</p>
+            <div className="flex items-center justify-between">
+              <p className="font-['Work Sans',sans-serif] text-[#35415A] prose prose-lg">Журнал активности</p>
+              <Button variant="light" className="flex items-center gap-x-2">
+                <Image src={Export} alt="icon" width={24} height={24} />
+                <p className="font-['Work Sans',sans-serif] prose">Экспорт</p>
+              </Button>
+            </div>
             <Table
               aria-label="Example table with custom cells"
               className="bg-white rounded-lg"
@@ -166,8 +221,37 @@ const journalIndex: NextPage = () => {
             </Table>
           </div>
         </div>
-        <div className="w-[20%] bg-black rounded-lg">
-          asd
+        <div className="w-[20%] bg-white py-2">
+          <div className="flex items-center gap-x-4 pb-2 border-b px-4">
+            <Image src={Calendar} alt="icon" />
+            <p className="font-['Work Sans',sans-serif] text-[#35415A] prose font-semibold">01 мая 2023 - 12 июн 2023</p>
+          </div>
+          <div className="flex flex-col">
+            <p className="font-['Work Sans',sans-serif] prose text-xs uppercase py-4 px-4 text-[#8c8f95]">Темы</p>
+            <div className="py-2 bg-gray-200 px-4">
+              <p className="font-['Work Sans',sans-serif] prose prose-sm">Все темы</p>
+            </div>
+            <div className="px-4 border-b pb-2">
+              {themeLinks.map((link) => (
+                <div className="py-2" key={link.link}>
+                  <Link href={link.link}><p className="prose prose-sm font-['Work Sans',sans-serif] text-[#6170b7]">{link.name}</p></Link>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-col">
+            <p className="font-['Work Sans',sans-serif] prose text-xs uppercase py-4 px-4 text-[#8c8f95]">Пользователи</p>
+            <div className="py-2 bg-gray-200 px-4">
+              <p className="font-['Work Sans',sans-serif] prose prose-sm">Все пользователи</p>
+            </div>
+            <div className="px-4">
+              {usersLinks.map((user) => (
+                <div className="py-2" key={user.link}>
+                  <Link href={user.link}><p className="prose prose-sm font-['Work Sans',sans-serif] text-[#6170b7]">{user.name}</p></Link>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </MainLayout>
