@@ -10,6 +10,7 @@ import Minus from "@public/assets/icons/minus.svg";
 import Message from "@public/assets/icons/message.svg"
 import NewMess from "@public/assets/icons/newMess.svg";
 import Journal from "@public/assets/icons/journal.svg";
+import Setting from "@public/assets/icons/setting.svg";
 import Analytic from "@public/assets/icons/analytic.svg";
 import WhiteSpam from "@public/assets/icons/whiteSpam.svg";
 import LayoutNavbar from "@/components/molecule/LayoutNavbar";
@@ -17,7 +18,6 @@ import WhiteNewMess from "@public/assets/icons/whiteNewMess.svg";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import WhiteMessage from "@public/assets/icons/whiteMessage.svg";
 import WhiteJournal from "@public/assets/icons/whiteJournal.svg";
-
 
 type MainLayoutProps = {
   children: ReactNode;
@@ -71,7 +71,7 @@ export const mainLayout: React.FC<MainLayoutProps> = ({children}) => {
             </Accordion>
           </div>
           <div className="mb-6">
-            <p className="text-[#6481AD] uppercase mb-5 text-xs font-['Montserrat',sans-serif] font-semibold">Материалдар</p>
+            <p className="text-[#6481AD] uppercase mb-4 text-xs font-['Montserrat',sans-serif] font-semibold">Материалдар</p>
             <Accordion
               className="px-0"
               itemClasses={{
@@ -131,6 +131,62 @@ export const mainLayout: React.FC<MainLayoutProps> = ({children}) => {
             }}>
               <Image src={(path === 'spam') ? WhiteSpam : Spam} alt="icon" />
               <p className={`font-['Montserrat',sans-serif] text-base font-semibold ${(path === 'spam') ? 'text-white' : 'text-[#6481AD]'}`}>Спам</p>
+            </div>
+            <div className="flex flex-col mt-6">
+              <p className="text-[#6481AD] uppercase mb-4 text-xs font-['Montserrat',sans-serif] font-semibold">Баптаулар</p>
+              <Accordion
+                className="px-0"
+                itemClasses={{
+                  indicator: "data-[open=true]:rotate-180"
+                }}
+              >
+                <AccordionItem
+                  key="1"
+                  aria-label="1"
+                  className="text-[#6481AD] pl-2 [&_h2]:w-full [&_button]:p-0 [&_button]:justify-between"
+                  startContent={
+                    <div className="flex items-center gap-x-4">
+                      <Image src={Setting} alt="icon" />
+                      <p className="font-['Montserrat',sans-serif] text-base font-semibold">Баптаулар</p>
+                    </div>
+                  }
+                  indicator={({isOpen}) => (isOpen ?
+                      <div className="ml-auto">
+                        <Image src={Minus} alt="icon" />
+                      </div>
+                      :
+                      <div className="ml-auto">
+                        <Image src={Plus} alt="icon" />
+                      </div>
+                  )}
+                >
+                  <div className="border-l-2 border-[#6481AD] ml-2 mt-4 cursor-pointer" onClick={() => {
+                    router.push('/setting/profile');
+                  }}>
+                    <p className={`prose prose-sm font-['Montserrat',sans-serif] font-semibold ${path === 'setting/profile' ? `text-white pl-2` : `text-[#6481AD]`}`}>— Профиль</p>
+                  </div>
+                  <div className="border-l-2 border-[#6481AD] ml-2 pt-4 cursor-pointer" onClick={() => {
+                    router.push('/setting/users');
+                  }}>
+                    <p className={`prose prose-sm font-['Montserrat',sans-serif] font-semibold ${path === 'setting/users' ? `text-white pl-2` : `text-[#6481AD]`}`}>— Қолданушылар</p>
+                  </div>
+                  <div className="border-l-2 border-[#6481AD] ml-2 pt-4 cursor-pointer" onClick={() => {
+                    router.push('/setting/integrations');
+                  }}>
+                    <p className={`prose prose-sm font-['Montserrat',sans-serif] font-semibold ${path === 'setting/integrations' ? `text-white pl-2` : `text-[#6481AD]`}`}>— Интеграциялар</p>
+                  </div>
+                  <div className="border-l-2 border-[#6481AD] ml-2 pt-4 cursor-pointer" onClick={() => {
+                    router.push('/setting/placeSettings');
+                  }}>
+                    <p className={`prose prose-sm font-['Montserrat',sans-serif] font-semibold ${path === 'setting/placeSettings' ? `text-white pl-2` : `text-[#6481AD]`}`}>— Мекеме баптаулары</p>
+                  </div>
+                  <div className="border-l-2 border-[#6481AD] ml-2 pt-4 cursor-pointer" onClick={() => {
+                    router.push('/setting/rules');
+                  }}>
+                    <p className={`prose prose-sm font-['Montserrat',sans-serif] font-semibold ${path === 'setting/rules' ? `text-white pl-2` : `text-[#6481AD]`}`}>— Правила</p>
+                  </div>
+                </AccordionItem>
+              </Accordion>
             </div>
           </div>
         </div>
