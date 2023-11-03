@@ -83,7 +83,7 @@ const Integrations: NextPage = () => {
           className="bg-white rounded-lg mt-8"
           bottomContent={
             <Button label="Подключить группу" onClick={() => {
-              router.push('/subscribe/addSubscribe');
+              console.log('asd')
             }} size="sm" classBtn="max-w-fit mt-4 ml-6" />
           }
         >

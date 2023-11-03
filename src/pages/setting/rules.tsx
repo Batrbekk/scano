@@ -77,7 +77,7 @@ const Rules: NextPage = () => {
           className="bg-white rounded-lg mt-8"
           bottomContent={
             <Button label="Добавить правило" onClick={() => {
-              router.push('/subscribe/addSubscribe');
+              router.push('/setting/addRule');
             }} size="sm" classBtn="max-w-fit mt-4 ml-6" />
           }
         >
