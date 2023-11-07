@@ -101,6 +101,12 @@ const Profile: NextPage = () => {
               </div>
             </div>
           </div>
+          <div className="flex items-start gap-x-2 opacity-0">
+            <Image src={Info} alt="icon" />
+            <p className="font-['Work Sans',sans-serif] prose prose-sm text-[#7a7c8d] w-1/2">
+              Часовой пояс пользователя влияет на просмотр данных в интерфейсе системы. Подписки и оповещения создаются по часовому поясу Супер Администратор аккаунта (UTC +6)
+            </p>
+          </div>
         </div>
         <div className="flex items-start gap-x-6 w-full">
           <div className="flex items-stretch w-2/3 gap-x-4">
