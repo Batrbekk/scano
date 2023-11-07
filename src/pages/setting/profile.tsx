@@ -1,160 +1,173 @@
 import {NextPage} from "next";
 import MainLayout from "@/components/layout/mainLayout";
-import {useRouter} from "next/router";
-import React, {Key, useCallback} from "react";
+import React, {Key, useCallback, useState} from "react";
 import Image from "next/image";
-import Edit from "@public/assets/icons/editBlue.svg";
-import Delete from "@public/assets/icons/deleteBlue.svg";
-import {Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from "@nextui-org/table";
 import Button from "@/components/atom/Button";
-import {Avatar} from "@nextui-org/avatar";
-import Ban from "@public/assets/icons/ban.svg";
+import { Button as ButtonUI } from "@nextui-org/button";
+import {Input} from "@nextui-org/input";
+import Info from "@public/assets/icons/info.svg";
+import {Checkbox, CheckboxGroup} from "@nextui-org/checkbox";
+import Select from "@/components/atom/Select";
+import User from "@public/assets/icons/user.svg";
+import Ask from "@public/assets/icons/ask.svg";
+import {Tooltip} from "@nextui-org/tooltip";
 
 const Profile: NextPage = () => {
-  const tableColumn = [
-    {name: '', uid: 'avatar'},
-    {name: 'Имя', uid: 'name'},
-    {name: 'E-mail', uid: 'mail'},
-    {name: 'Компания', uid: 'company'},
-    {name: 'Права', uid: 'role'},
-    {name: 'Действия', uid: 'action'}
-  ];
-  const tableRow = [
-    {
-      id: 1,
-      avatar: 'https://media.licdn.com/dms/image/C4D03AQFFLTZrS5dowg/profile-displayphoto-shrink_400_400/0/1561329448112?e=1704326400&v=beta&t=yGhMP7w9P5DmH7_asla7q7Fp5ZBjrmJxgOnihJn6sAM',
-      name: 'Aslan Abylkas',
-      mail: 'aslan_abylkas@gmail.com',
-      company: 'Monitoring project',
-      role: 'Супер администратор'
-    },
-    {
-      id: 2,
-      avatar: 'https://media.licdn.com/dms/image/C4D03AQFFLTZrS5dowg/profile-displayphoto-shrink_400_400/0/1561329448112?e=1704326400&v=beta&t=yGhMP7w9P5DmH7_asla7q7Fp5ZBjrmJxgOnihJn6sAM',
-      name: 'Islam Erkebayev',
-      mail: 'islam_erkebaev@gmail.com',
-      company: 'Giliano',
-      role: 'Администратор'
-    },
-    {
-      id: 3,
-      avatar: 'https://media.licdn.com/dms/image/C4D03AQFFLTZrS5dowg/profile-displayphoto-shrink_400_400/0/1561329448112?e=1704326400&v=beta&t=yGhMP7w9P5DmH7_asla7q7Fp5ZBjrmJxgOnihJn6sAM',
-      name: 'Aruzhan Abylkas',
-      mail: 'aruzhan_abylkas@gmail.com',
-      company: 'Giliano',
-      role: 'Администратор'
-    },
-    {
-      id: 4,
-      avatar: 'https://media.licdn.com/dms/image/C4D03AQFFLTZrS5dowg/profile-displayphoto-shrink_400_400/0/1561329448112?e=1704326400&v=beta&t=yGhMP7w9P5DmH7_asla7q7Fp5ZBjrmJxgOnihJn6sAM',
-      name: 'Batyrbek Kuandyk',
-      mail: 'batrbekk@gmail.com',
-      company: 'Mycar',
-      role: 'Модератор'
-    },
-    {
-      id: 5,
-      avatar: 'https://media.licdn.com/dms/image/C4D03AQFFLTZrS5dowg/profile-displayphoto-shrink_400_400/0/1561329448112?e=1704326400&v=beta&t=yGhMP7w9P5DmH7_asla7q7Fp5ZBjrmJxgOnihJn6sAM',
-      name: 'Maksat Tulegenov',
-      mail: 'maksat_tulegenov@gmail.com',
-      company: 'QazaqGaz',
-      role: 'Модератор'
-    },
-  ];
-  const router = useRouter();
+  const options = ['АО "Кселл"', 'option2', 'option3'];
+  const mode = ['модератор', 'супер администратор', 'автор'];
 
-  type Row = typeof tableRow[0];
+  const [summarySelect, setSummarySelect] = useState(['']);
+  const [selectedOption, setSelectedOption] = useState(options[0]);
+  const [adminOption, setAdminOption] = useState(mode[0]);
 
-  const renderCell = useCallback((row: Row, columnKey: Key) => {
-    const cellValue = row[columnKey as keyof Row];
+  const handleSelectChange = (value: string) => {
+    setSelectedOption(value);
+  };
 
-    switch (columnKey) {
-      case 'avatar':
-        return (
-          <div className="py-2 px-8">
-            <Avatar src={row.avatar} />
-          </div>
-        )
-      case 'name':
-        return (
-          <div className="py-2 px-8">
-            <p className="prose prose-sm text-[#6481AD]">{row.name}</p>
-          </div>
-        )
-      case 'mail':
-        return (
-          <div className="py-2 px-8">
-            <p className="prose prose-sm">{row.mail}</p>
-          </div>
-        )
-      case 'company':
-        return (
-          <div className="py-2 px-8">
-            <p className="prose prose-sm">{row.company}</p>
-          </div>
-        )
-      case 'role':
-        return (
-          <div className="py-2 px-8">
-            <p className="prose prose-sm">{row.role}</p>
-          </div>
-        )
-      case 'action':
-        return (
-          <div className="py-4 px-8 flex items-center justify-end gap-x-2">
-            {row.role === 'Супер администратор' && (
-              <button className="bg-[#ebf1fd] rounded p-2">
-                <Image src={Edit} width={14} height={14} alt="icon" />
-              </button>
-            )}
-            {row.role !== 'Супер администратор' && (
-              <>
-                <button className="bg-[#ebf1fd] rounded p-2">
-                  <Image src={Ban} width={14} height={14} alt="icon" />
-                </button>
-                <button className="bg-[#ebf1fd] rounded p-2">
-                  <Image src={Edit} width={14} height={14} alt="icon" />
-                </button>
-                <button className="bg-[#ebf1fd] rounded p-2">
-                  <Image src={Delete} width={14} height={14} alt="icon" />
-                </button>
-              </>
-            )}
-          </div>
-        )
-      default:
-        return cellValue;
-    }
-  }, []);
+  const handleAdminChange = (value: string) => {
+    setAdminOption(value);
+  };
 
-  return (
+  return(
     <MainLayout>
-      <div className="flex flex-col">
-        <p className="font-['Work Sans',sans-serif] text-[#35415A] prose prose-lg">Пользователи</p>
-        <Table
-          aria-label="Example table with custom cells"
-          className="bg-white rounded-lg mt-8"
-          bottomContent={
-            <Button label="Добавить пользователя" onClick={() => {
-              router.push('/setting/addProfile')
-            }} size="sm" classBtn="max-w-fit mt-4 ml-6" color="bg-[#5b85ce]" />
-          }
-        >
-          <TableHeader columns={tableColumn}>
-            {(column) => (
-              <TableColumn key={column.uid} className={`py-4 px-8 ${column.uid === 'action' ? 'text-right' : 'text-left'}`}>
-                <p className="prose prose-sm font-normal">{column.name}</p>
-              </TableColumn>
-            )}
-          </TableHeader>
-          <TableBody items={tableRow}>
-            {(item) => (
-              <TableRow key={item.id} className="border-b last:border-0 hover:bg-[#fcfcfd]">
-                {(columnKey) => <TableCell className="p-0">{renderCell(item, columnKey)}</TableCell>}
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+      <div className="flex flex-col gap-y-6 pb-10">
+        <div className="p-4 rounded-lg bg-white flex flex-col gap-y-4 w-2/3">
+          <div className="flex items-start gap-x-6">
+            <div className="w-32 h-32 rounded-lg bg-gray-200 flex items-center justify-center cursor-pointer">
+              <p className="font-['Work Sans',sans-serif] prose prose-sm leading-5 text-center">Добавить <br/> фото</p>
+            </div>
+            <div className="flex flex-col gap-y-2 w-1/2">
+              <div className="flex items-center gap-x-2">
+                <p className="font-['Work Sans',sans-serif] prose prose-xl font-semibold">Abylkas</p>
+                <Tooltip content="ИНФОРМАЦИЯ">
+                  <ButtonUI variant="light" isIconOnly className="p-0" disableAnimation={true}>
+                    <Image src={Ask} alt="icon" />
+                  </ButtonUI>
+                </Tooltip>
+              </div>
+              <div className="flex items-center gap-x-2">
+                <Image src={User} alt="icon" />
+                <p className="font-['Work Sans',sans-serif] prose prose-sm border-b border-dashed text-[#5b85ce] border-[#5b85ce]">Супер администратор</p>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-x-4">
+            <div className="flex flex-col gap-y-1 w-full">
+              <p className="font-['Work Sans',sans-serif] prose prose-sm text-[#979ca9]">Имя</p>
+              <Input
+                radius="none"
+                classNames={{
+                  input: [
+                    "placeholder:font-['Montserrat',sans-serif] placeholder:text-base placeholder:font-extralight w-full"
+                  ],
+                  inputWrapper: [
+                    "border border-[rgba(55,71,95,0.80)] bg-transparent rounded",
+                    "font-['Montserrat',sans-serif] text-base font-semibold",
+                    "min-h-unit-8 h-unit-8"
+                  ]
+                }}
+              />
+            </div>
+            <div className="flex flex-col gap-y-1 w-full">
+              <p className="font-['Work Sans',sans-serif] prose prose-sm text-[#979ca9]">Фамилия</p>
+              <Input
+                radius="none"
+                classNames={{
+                  input: [
+                    "placeholder:font-['Montserrat',sans-serif] placeholder:text-base placeholder:font-extralight w-full"
+                  ],
+                  inputWrapper: [
+                    "border border-[rgba(55,71,95,0.80)] bg-transparent rounded",
+                    "font-['Montserrat',sans-serif] text-base font-semibold",
+                    "min-h-unit-8 h-unit-8"
+                  ]
+                }}
+              />
+            </div>
+            <div className="flex flex-col gap-y-1 w-full">
+              <p className="font-['Work Sans',sans-serif] prose prose-sm text-[#979ca9]">Компания</p>
+              <Input
+                radius="none"
+                classNames={{
+                  input: [
+                    "placeholder:font-['Montserrat',sans-serif] placeholder:text-base placeholder:font-extralight w-full"
+                  ],
+                  inputWrapper: [
+                    "border border-[rgba(55,71,95,0.80)] bg-transparent rounded",
+                    "font-['Montserrat',sans-serif] text-base font-semibold",
+                    "min-h-unit-8 h-unit-8"
+                  ]
+                }}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="flex items-start gap-x-6">
+          <div className="p-4 rounded-lg bg-white w-2/3">
+            <div className="flex flex-col gap-y-1">
+              <p className="font-['Work Sans',sans-serif] text-[#35415A] prose prose-lg">Права</p>
+              <Checkbox value="admin" classNames={{
+                wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+              }}>
+                <p className="prose prose-sm text-[#5b5a5d]">Администратор</p>
+              </Checkbox>
+            </div>
+            <div className="flex items-start gap-x-10 mt-4 w-full">
+              <div className="flex flex-col gap-y-1">
+                <p className="font-['Work Sans',sans-serif] text-[#35415A] prose prose-lg">Темы</p>
+                <CheckboxGroup
+                  value={summarySelect}
+                  onValueChange={setSummarySelect}
+                >
+                  <Checkbox value="all" classNames={{
+                    wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                  }}>
+                    <p className="prose prose-sm text-[#5b5a5d] font-semibold">Все темы</p>
+                  </Checkbox>
+                  <Checkbox value="kzt" classNames={{
+                    wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                  }}>
+                    <p className="prose prose-sm text-[#5b5a5d]">КазАтомПром</p>
+                  </Checkbox>
+                  <Checkbox value="qazaqgaz" classNames={{
+                    wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                  }}>
+                    <p className="prose prose-sm text-[#5b5a5d]">АО QazaqGaz</p>
+                  </Checkbox>
+                  <Checkbox value="kcell" classNames={{
+                    wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                  }}>
+                    <p className="prose prose-sm text-[#5b5a5d]">АО Кселл</p>
+                  </Checkbox>
+                  <Checkbox value="newTheme" classNames={{
+                    wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                  }}>
+                    <p className="prose prose-sm text-[#5b5a5d]">Новые темы</p>
+                  </Checkbox>
+                </CheckboxGroup>
+              </div>
+              <div className="flex items-center gap-x-4 w-1/2">
+                <Select options={mode} value={adminOption} onChange={handleAdminChange} classSelect="w-full" />
+                <Select options={options} value={selectedOption} onChange={handleSelectChange} classSelect="w-full" />
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col gap-y-6">
+            <div className="flex items-start gap-x-2">
+              <Image src={Info} alt="icon" />
+              <p className="font-['Work Sans',sans-serif] prose prose-sm text-[#7a7c8d] w-1/2">
+                Администратору доступны все темы с модами модератора, а так же создание новых тем и добавление пользователей
+              </p>
+            </div>
+            <div className="flex items-start gap-x-2">
+              <Image src={Info} alt="icon" />
+              <p className="font-['Work Sans',sans-serif] prose prose-sm text-[#7a7c8d] w-1/2">
+                Модератор имеет возможность просматривать и редактировать темы, на которые у него есть права модератора. <span className="text-[#557abd] cursor-pointer">Подробнее</span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <Button label="Добавить пользователя" size="sm" classBtn="!w-fit" />
       </div>
     </MainLayout>
   )
