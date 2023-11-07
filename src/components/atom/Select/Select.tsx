@@ -1,5 +1,5 @@
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import React, { useState } from "react";
 import styles from "./index.module.scss";
 import Arrow from "@public/assets/icons/arrow.svg";
 
@@ -10,8 +10,9 @@ interface Props {
   classSelect?: string;
 }
 
-export const Select: React.FC<Props> = ({classSelect, options,value,onChange}) => {
+export const Select: React.FC<Props> = ({ classSelect, options, value, onChange }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const selectRef = useRef<HTMLDivElement>(null);
 
   const handleOptionClick = (option: string) => {
     onChange(option);
@@ -22,12 +23,23 @@ export const Select: React.FC<Props> = ({classSelect, options,value,onChange}) =
     setDropdownOpen(!isDropdownOpen);
   };
 
+  const handleClickOutside = (event: Event) => {
+    if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
+      setDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className={`select-wrapper w-48 cursor-pointer relative ${classSelect}`}>
+    <div ref={selectRef} className={`select-wrapper w-48 cursor-pointer relative ${classSelect}`}>
       <div className="bg-white rounded border border-[#a0a5b1] py-1 px-4 flex items-center justify-between" onClick={toggleDropdown}>
-        <p className="prose prose-base font-['Work Sans',sans-serif]">
-          {value}
-        </p>
+        <p className="prose prose-base font-['Work Sans',sans-serif]">{value}</p>
         <div className={`${isDropdownOpen ? 'rotate-180 ease-in duration-200' : 'ease-in duration-200'}`}>
           <Image src={Arrow} width={14} height={14} alt="icon" />
         </div>
@@ -42,7 +54,7 @@ export const Select: React.FC<Props> = ({classSelect, options,value,onChange}) =
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
 export default Select;
