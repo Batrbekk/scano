@@ -136,7 +136,7 @@ const Profile: NextPage = () => {
           className="bg-white rounded-lg mt-8"
           bottomContent={
             <Button label="Добавить пользователя" onClick={() => {
-              console.log('asd')
+              router.push('/setting/addProfile')
             }} size="sm" classBtn="max-w-fit mt-4 ml-6" color="bg-[#5b85ce]" />
           }
         >

@@ -163,7 +163,7 @@ export const mainLayout: React.FC<MainLayoutProps> = ({children}) => {
                   <div className="border-l-2 border-[#6481AD] ml-2 mt-4 cursor-pointer" onClick={() => {
                     router.push('/setting/profile');
                   }}>
-                    <p className={`prose prose-sm font-['Montserrat',sans-serif] font-semibold ${path === 'setting/profile' ? `text-white pl-2` : `text-[#6481AD]`}`}>— Профиль</p>
+                    <p className={`prose prose-sm font-['Montserrat',sans-serif] font-semibold ${(path === 'setting/profile' || path === 'setting/addProfile') ? `text-white pl-2` : `text-[#6481AD]`}`}>— Профиль</p>
                   </div>
                   <div className="border-l-2 border-[#6481AD] ml-2 pt-4 cursor-pointer" onClick={() => {
                     router.push('/setting/users');
@@ -183,7 +183,7 @@ export const mainLayout: React.FC<MainLayoutProps> = ({children}) => {
                   <div className="border-l-2 border-[#6481AD] ml-2 pt-4 cursor-pointer" onClick={() => {
                     router.push('/setting/rules');
                   }}>
-                    <p className={`prose prose-sm font-['Montserrat',sans-serif] font-semibold ${path === 'setting/rules' ? `text-white pl-2` : `text-[#6481AD]`}`}>— Правила</p>
+                    <p className={`prose prose-sm font-['Montserrat',sans-serif] font-semibold ${(path === 'setting/rules' || path === 'setting/addRule') ? `text-white pl-2` : `text-[#6481AD]`}`}>— Правила</p>
                   </div>
                 </AccordionItem>
               </Accordion>
