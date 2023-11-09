@@ -54,6 +54,21 @@ const Homepage: NextPage = () => {
     }
   }
 
+  useEffect(() => {
+    const keyDownHandler = (e: KeyboardEvent) => {
+      if (e.code === 'Enter') {
+        handleClick();
+      }
+    };
+
+    document.addEventListener('keydown', keyDownHandler);
+
+    // clean up
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler);
+    };
+  }, [login, password]);
+
   return (
     <div className="flex flex-col items-center justify-center h-screen relative">
       <div className="absolute top-20">
