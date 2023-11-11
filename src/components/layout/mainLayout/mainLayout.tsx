@@ -18,12 +18,19 @@ import WhiteNewMess from "@public/assets/icons/whiteNewMess.svg";
 import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import WhiteMessage from "@public/assets/icons/whiteMessage.svg";
 import WhiteJournal from "@public/assets/icons/whiteJournal.svg";
+import WhiteAnalytic from "@public/assets/icons/whiteAnalytic.svg";
 
 type MainLayoutProps = {
   children: ReactNode;
+  withPadding?: boolean;
 };
 
-export const mainLayout: React.FC<MainLayoutProps> = ({children}) => {
+const defaultProps: MainLayoutProps = {
+  children: null, // You can provide a default value for children or set it as null
+  withPadding: true,
+};
+
+export const mainLayout: React.FC<MainLayoutProps> = ({children, withPadding = defaultProps.withPadding}) => {
   const router = useRouter();
   const [path, setPath] = useState('');
 
@@ -40,35 +47,12 @@ export const mainLayout: React.FC<MainLayoutProps> = ({children}) => {
         <div className="mt-12">
           <div className="mb-6">
             <p className="text-[#6481AD] uppercase mb-5 text-xs font-['Montserrat',sans-serif] font-semibold">Аналитика</p>
-            <Accordion
-              className="px-0"
-              itemClasses={{
-                indicator: "data-[open=true]:rotate-180"
-              }}
-            >
-              <AccordionItem
-                key="1"
-                aria-label="Accordion 1"
-                className="text-[#6481AD] pl-2 [&_h2]:w-full [&_button]:p-0 [&_button]:justify-between"
-                startContent={
-                  <div className="flex items-center gap-x-4">
-                    <Image src={Analytic} alt="icon" />
-                    <p className="font-['Montserrat',sans-serif] text-base font-semibold">Аналитика</p>
-                  </div>
-                }
-                indicator={({isOpen}) => (isOpen ?
-                    <div className="ml-auto">
-                      <Image src={Minus} alt="icon" />
-                    </div>
-                    :
-                    <div className="ml-auto">
-                      <Image src={Plus} alt="icon" />
-                    </div>
-                )}
-              >
-                asd
-              </AccordionItem>
-            </Accordion>
+            <div className={`pl-2 flex items-center gap-x-4 cursor-pointer py-2 ${(path === 'analytic') && 'bg-[#848F9F] rounded'}`} onClick={() => {
+              router.push('/analytic');
+            }}>
+              <Image src={(path === 'analytic') ? WhiteAnalytic : Analytic} alt="icon" />
+              <p className={`font-['Montserrat',sans-serif] text-base font-semibold ${(path === 'analytic') ? 'text-white' : 'text-[#6481AD]'}`}>Аналитика</p>
+            </div>
           </div>
           <div className="mb-6">
             <p className="text-[#6481AD] uppercase mb-4 text-xs font-['Montserrat',sans-serif] font-semibold">Материалдар</p>
@@ -194,7 +178,7 @@ export const mainLayout: React.FC<MainLayoutProps> = ({children}) => {
       <div className="ml-64 flex flex-col w-full h-screen justify-between bg-[#F8F9FB]">
         <div>
           <LayoutNavbar />
-          <div className="bg-[#F8F9FB] px-6">
+          <div className={`bg-[#F8F9FB] px-6 ${!withPadding && '!px-0'}`}>
             {children}
           </div>
         </div>
