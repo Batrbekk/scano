@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.14",
+    "@highcharts/map-collection": "^2.1.0",
     "@nextui-org/accordion": "^2.0.23",
     "@nextui-org/react": "^2.1.13",
     "@nextui-org/table": "^2.0.23",
