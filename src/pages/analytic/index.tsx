@@ -13,6 +13,9 @@ import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import Select from "@/components/atom/Select";
 import Download from "@public/assets/icons/download.svg";
+import {Tab, Tabs} from "@nextui-org/tabs";
+import MapChart from "src/components/atom/MapChart";
+import PieBlock from "src/components/atom/PieBlock";
 
 const chooseFilter = [
   {
@@ -65,6 +68,62 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
       },
     ],
   };
+
+  const tabs = [
+    {
+      id: 'index',
+      label: 'Обзор',
+      content: (
+        <div className="bg-white rounded-lg px-2 py-6">
+          <div className="flex items-center justify-end gap-x-6">
+            <Select options={optionsSelect} value={selectedOption} onChange={handleSelectChange} />
+            <button className="bg-[#ebf1fd] rounded w-[36px] h-[36px] flex items-center justify-center">
+              <Image src={Download} alt="icon" width={24} height={24} />
+            </button>
+          </div>
+          <HighchartsReact
+            highcharts={Highcharts}
+            options={options}
+            ref={chartComponentRef}
+            {...props}
+          />
+        </div>
+      )
+    },
+    {
+      id: 'src',
+      label: 'Источники',
+      content: (
+        <p>src</p>
+      )
+    },
+    {
+      id: 'author',
+      label: 'Авторы',
+      content: (
+        <p>author</p>
+      )
+    },
+    {
+      id: 'geography',
+      label: 'География',
+      content: (
+        <div className="px-6 flex flex-col gap-y-4">
+          <MapChart/>
+          <div className="w-1/3">
+            <PieBlock />
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 'tags',
+      label: 'Теги',
+      content: (
+        <p>tags</p>
+      )
+    }
+  ];
 
   return (
     <MainLayout withPadding={false}>
@@ -142,23 +201,24 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
             </button>
           </div>
         </div>
-        <div></div>
-        <div className="px-6">
-          <div className="bg-white rounded-lg px-2 py-6">
-            <div className="flex items-center justify-end gap-x-6">
-              <Select options={optionsSelect} value={selectedOption} onChange={handleSelectChange} />
-              <button className="bg-[#ebf1fd] rounded w-[36px] h-[36px] flex items-center justify-center">
-                <Image src={Download} alt="icon" width={24} height={24} />
-              </button>
-            </div>
-            <HighchartsReact
-              highcharts={Highcharts}
-              options={options}
-              ref={chartComponentRef}
-              {...props}
-            />
-          </div>
-        </div>
+        <Tabs
+          aria-label="Dynamic tabs"
+          variant="underlined"
+          items={tabs}
+          classNames={{
+            base: 'bg-white flex items-center justify-between w-full',
+            tabList: 'justify-between w-full',
+            tab: '[&_span]:!opacity-0 py-8',
+            cursor: 'group-data-[selected=true]:bg-transparent border-none',
+            tabContent: `group-data-[selected=true]:text-[#008eff] prose prose-lg`
+          }}
+        >
+          {(item) => (
+            <Tab key={item.id} title={item.label}>
+              {item.content}
+            </Tab>
+          )}
+        </Tabs>
       </div>
     </MainLayout>
   )
