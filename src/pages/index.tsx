@@ -44,15 +44,42 @@ const Homepage: NextPage = () => {
     setPassword(e.target.value);
   };
 
-  const handleClick = () => {
-    setErrorLogin(login !== 'admin');
-    setErrorPassword(password !== 'admin');
-
-    if (login === 'admin' && password === 'admin') {
-      localStorage.setItem('forgotPassword', 'REJECT');
-      router.push('/main/');
+  const handleClick = async () => {
+    if (!login || !password) {
+      setErrorLogin(!login);
+      setErrorPassword(!password);
+      return;
     }
-  }
+    try {
+      setErrorLogin(false);
+      setErrorPassword(false);
+      const res = await fetch(
+        'https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/login',
+        {
+          method: 'POST', // Assuming you are sending a POST request
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: login,
+            password: password,
+          }),
+        }
+      );
+
+      if (res.ok) {
+        localStorage.setItem('forgotPassword', 'REJECT');
+        router.push('/main/');
+      } else {
+        console.error('Login failed');
+        setErrorLogin(true);
+        setErrorPassword(true);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
 
   useEffect(() => {
     const keyDownHandler = (e: KeyboardEvent) => {
