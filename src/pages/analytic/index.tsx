@@ -8,7 +8,7 @@ import DatePicker from "react-datepicker";
 import {ru} from "date-fns/locale";
 import {Chip} from "@nextui-org/chip";
 import Filter from "@public/assets/icons/filter.svg";
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import Select from "@/components/atom/Select";
@@ -16,6 +16,11 @@ import Download from "@public/assets/icons/download.svg";
 import {Tab, Tabs} from "@nextui-org/tabs";
 import MapChart from "src/components/atom/MapChart";
 import PieBlock from "src/components/atom/PieBlock";
+import exporting from 'highcharts/modules/exporting';
+
+if (typeof Highcharts === 'object') {
+  exporting(Highcharts);
+}
 
 const chooseFilter = [
   {
@@ -41,6 +46,33 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
+  };
+
+  useEffect(() => {
+    // Update the chart after the component mounts to ensure the exporting module is available
+    if (chartComponentRef.current) {
+      chartComponentRef.current.chart.update({
+        exporting: {
+          enabled: true,
+        },
+      });
+    }
+  }, []);
+
+  const downloadChart = () => {
+    const chart = chartComponentRef.current?.chart;
+
+    if (chart) {
+      // Use exportChart method with required chart options
+      chart.exportChart({
+        type: 'image/png',
+        filename: 'chart',
+      }, {
+        chart: {
+          backgroundColor: '#ffffff',
+        },
+      });
+    }
   };
 
   const handleSelectChange = (value: string) => {
@@ -77,7 +109,7 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
         <div className="bg-white rounded-lg px-2 py-6">
           <div className="flex items-center justify-end gap-x-6">
             <Select options={optionsSelect} value={selectedOption} onChange={handleSelectChange} />
-            <button className="bg-[#ebf1fd] rounded w-[36px] h-[36px] flex items-center justify-center">
+            <button className="bg-[#ebf1fd] rounded w-[36px] h-[36px] flex items-center justify-center" onClick={downloadChart}>
               <Image src={Download} alt="icon" width={24} height={24} />
             </button>
           </div>

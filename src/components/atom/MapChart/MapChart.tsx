@@ -1,11 +1,44 @@
-import React from 'react'
+import React, {useEffect, useRef} from 'react'
 import HighchartsReact from 'highcharts-react-official'
 import Image from "next/image";
 import Download from "@public/assets/icons/download.svg";
 import Highcharts from "highcharts/highmaps";
 import worldMap from "@highcharts/map-collection/custom/world.geo.json";
+import exporting from 'highcharts/modules/exporting';
+
+if (typeof Highcharts === 'object') {
+  exporting(Highcharts);
+}
 
 export const MapChart = () => {
+  const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
+
+  useEffect(() => {
+    // Update the chart after the component mounts to ensure the exporting module is available
+    if (chartComponentRef.current) {
+      chartComponentRef.current.chart.update({
+        exporting: {
+          enabled: true,
+        },
+      });
+    }
+  }, []);
+
+  const downloadChart = () => {
+    const chart = chartComponentRef.current?.chart;
+
+    if (chart) {
+      // Use exportChart method with required chart options
+      chart.exportChart({
+        type: 'image/png',
+        filename: 'chart',
+      }, {
+        chart: {
+          backgroundColor: '#ffffff',
+        },
+      });
+    }
+  };
 
   const mapOptions = {
     title: {
@@ -257,6 +290,7 @@ export const MapChart = () => {
       ]
     }]
   }
+
   return (
     <div className="flex flex-col gap-y-2">
       <div className="flex items-center justify-between">
@@ -268,7 +302,7 @@ export const MapChart = () => {
             <p className="text-sm text-gray-500">Отчет предоставлен только по тем авторам, для которых есть данные по местоположению.</p>
             <p className="text-sm text-gray-500">Страна: 44.07% от всех авторов темы; город: 32.81%;</p>
           </div>
-          <button className="bg-[#ebf1fd] rounded w-[36px] h-[36px] flex items-center justify-center">
+          <button className="bg-[#ebf1fd] rounded w-[36px] h-[36px] flex items-center justify-center" onClick={downloadChart}>
             <Image src={Download} alt="icon" width={24} height={24} />
           </button>
         </div>
@@ -276,6 +310,7 @@ export const MapChart = () => {
           highcharts={Highcharts}
           constructorType={'mapChart'}
           options={mapOptions}
+          ref={chartComponentRef}
         />
       </div>
     </div>
