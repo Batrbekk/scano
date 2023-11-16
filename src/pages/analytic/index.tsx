@@ -17,6 +17,7 @@ import {Tab, Tabs} from "@nextui-org/tabs";
 import MapChart from "src/components/atom/MapChart";
 import PieBlock from "src/components/atom/PieBlock";
 import exporting from 'highcharts/modules/exporting';
+import BarBlock from "src/components/atom/BarBlock";
 
 if (typeof Highcharts === 'object') {
   exporting(Highcharts);
@@ -133,7 +134,11 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
       id: 'author',
       label: 'Авторы',
       content: (
-        <p>author</p>
+        <div className="px-6 flex flex-col gap-y-4">
+          <div className="w-1/3">
+            <BarBlock />
+          </div>
+        </div>
       )
     },
     {
