@@ -7,7 +7,7 @@ import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 import Input from "@/components/atom/Input";
 import Button from "@/components/atom/Button";
 import { useRouter } from "next/router";
-import { setCookie } from 'cookies-next';
+import {getCookie, setCookie} from 'cookies-next';
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
   const { locale } = ctx;

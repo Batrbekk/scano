@@ -5,7 +5,7 @@ import Select from "@/components/atom/Select";
 import Edit from "@public/assets/icons/edit.svg";
 import Navbar from "@/components/molecule/Navbar";
 import Footer from "@/components/molecule/Footer";
-import { Key, useCallback, useState } from "react";
+import {Key, useCallback, useEffect, useState} from "react";
 import Pause from "@public/assets/icons/pause.svg";
 import Delete from "@public/assets/icons/delete.svg";
 import Structure from "@public/assets/icons/structure.png";
@@ -13,6 +13,8 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from 
 import InlineChart from "@/components/atom/InlineChart";
 import {router} from "next/client";
 import {useRouter} from "next/router";
+import {getCookie, setCookie} from "cookies-next";
+import {Profile} from "@/types";
 
 const mainIndex: NextPage = () => {
   const router = useRouter();
@@ -343,6 +345,8 @@ const mainIndex: NextPage = () => {
       href: '/main/reportArchive'
     },
   ];
+  const token = getCookie('scano_acess_token');
+  const [profile, setProfile] = useState<Profile>();
 
   type Row = typeof tableRow[0];
 
@@ -421,11 +425,40 @@ const mainIndex: NextPage = () => {
     setSelectedOption(value);
   };
 
+  const handleData = async () => {
+    try {
+      const res = await fetch(
+        'https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/me',
+        {
+          method: 'GET', // Assuming you are sending a POST request
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+        }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setCookie('profile', data);
+        setProfile(data);
+        console.log(data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    handleData();
+  }, []);
+
   // @ts-ignore
   return (
     <div className="bg-[#F8F9FB] h-full">
       <div className="mb-6">
-        <Navbar />
+        {profile && (
+          <Navbar email={profile.email} role={profile.role} first_name={profile.first_name} last_name={profile.last_name} photo_url={profile.photo_url} />
+        )}
       </div>
       <div className="mb-8 px-6">
         <div className="flex items-center justify-between mb-8">

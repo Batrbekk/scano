@@ -4,7 +4,7 @@
 const { i18n } = require("./next-i18next.config");
 
 module.exports = {
-  reactStrictMode: true,
+  reactStrictMode: false,
   i18n,
   images: {
     domains: ['static.vecteezy.com'],

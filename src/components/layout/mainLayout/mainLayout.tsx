@@ -19,6 +19,8 @@ import { Accordion, AccordionItem } from "@nextui-org/accordion";
 import WhiteMessage from "@public/assets/icons/whiteMessage.svg";
 import WhiteJournal from "@public/assets/icons/whiteJournal.svg";
 import WhiteAnalytic from "@public/assets/icons/whiteAnalytic.svg";
+import {Profile} from "@/types";
+import {getCookie} from "cookies-next";
 
 type MainLayoutProps = {
   children: ReactNode;
@@ -34,11 +36,16 @@ export const mainLayout: React.FC<MainLayoutProps> = ({children, withPadding = d
   const router = useRouter();
   const [path, setPath] = useState('');
   const [routerRoot, setRouterRoot] = useState('');
+  const profileCookie = getCookie('profile');
+  const [profile, setProfile] = useState<Profile>();
 
   useEffect(() => {
+    if(profileCookie) {
+      setProfile(JSON.parse(profileCookie));
+    }
     setPath(router.asPath.substring(1));
     setRouterRoot(router.asPath.split('/').filter(Boolean)[0]);
-  }, [router]);
+  }, [router, profileCookie]);
 
   return (
     <div className="flex w-screen">
@@ -183,7 +190,9 @@ export const mainLayout: React.FC<MainLayoutProps> = ({children, withPadding = d
       )}
       <div className="ml-64 flex flex-col w-full h-screen justify-between bg-[#F8F9FB]">
         <div>
-          <LayoutNavbar />
+          {profile && (
+            <LayoutNavbar email={profile.email} role={profile.role} first_name={profile.first_name} last_name={profile.last_name} photo_url={profile.photo_url} />
+          )}
           <div className={`bg-[#F8F9FB] px-6 ${!withPadding && '!px-0'}`}>
             {children}
           </div>
