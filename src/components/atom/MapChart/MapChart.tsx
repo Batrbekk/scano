@@ -45,7 +45,19 @@ export const MapChart = () => {
       text: ''
     },
     chart: {
-      map: worldMap
+      map: worldMap,
+      height: 600,
+      events: {
+        load: function() {
+          // @ts-ignore
+          this.series[0].data[74].zoomTo();
+        }
+      }
+    },
+    navigation: {
+      buttonOptions: {
+        enabled: false,
+      },
     },
     colorAxis: {
       min: 0,

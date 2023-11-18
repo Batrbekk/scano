@@ -47,6 +47,11 @@ const PieBlock = () => {
     title: {
       text: '',
     },
+    navigation: {
+      buttonOptions: {
+        enabled: false,
+      },
+    },
     series: [
       {
         data: [

@@ -88,6 +88,11 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
     title: {
       text: '',
     },
+    navigation: {
+      buttonOptions: {
+        enabled: false,
+      },
+    },
     series: [
       {
         name: 'Количество упоминаний',
