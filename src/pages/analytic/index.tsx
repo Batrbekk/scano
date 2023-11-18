@@ -247,7 +247,7 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
             tabList: 'justify-between w-full',
             tab: '[&_span]:!opacity-0 py-8',
             cursor: 'group-data-[selected=true]:bg-transparent border-none',
-            tabContent: `group-data-[selected=true]:text-[#008eff] prose prose-lg`
+            tabContent: `group-data-[selected=true]:text-[#008eff] text-black font-medium prose prose-xl`
           }}
         >
           {(item) => (
