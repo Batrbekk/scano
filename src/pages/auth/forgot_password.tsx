@@ -5,6 +5,7 @@ import Input from "@/components/atom/Input";
 import Button from "@/components/atom/Button";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
+import {setCookie} from "cookies-next";
 
 const forgot_password: NextPage = () => {
   const router = useRouter();
@@ -16,10 +17,30 @@ const forgot_password: NextPage = () => {
     setLogin(e.target.value);
   };
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (login) {
-      localStorage.setItem('forgotPassword', 'APPROVE')
-      router.push('/');
+      try {
+        const res = await fetch(
+          'https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/forgot-password',
+          {
+            method: 'POST', // Assuming you are sending a POST request
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: login,
+            }),
+          }
+        );
+        if (res.ok) {
+          localStorage.setItem('forgotPassword', 'APPROVE')
+          await router.push('/');
+        } else {
+          console.error('forgot_password failed');
+        }
+      } catch (err) {
+        console.error(err);
+      }
     } else {
       setErrorLogin(true);
     }
