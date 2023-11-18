@@ -9,3 +9,16 @@ export interface Profile {
   photo_url: string | null,
   role: string
 }
+
+export interface Theme {
+  _id: string,
+  name: string,
+  group_id?: string | null,
+  user_id: string,
+  theme_type: string,
+  keywords: Array<string>,
+  minus_keywords: Array<string>,
+  source_types: Array<string>,
+  material_types: Array<string>,
+  search_domains: Array<string>
+}

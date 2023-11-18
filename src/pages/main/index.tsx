@@ -5,16 +5,16 @@ import Select from "@/components/atom/Select";
 import Edit from "@public/assets/icons/edit.svg";
 import Navbar from "@/components/molecule/Navbar";
 import Footer from "@/components/molecule/Footer";
-import {Key, useCallback, useEffect, useState} from "react";
+import React, {Key, useCallback, useEffect, useState} from "react";
 import Pause from "@public/assets/icons/pause.svg";
 import Delete from "@public/assets/icons/delete.svg";
 import Structure from "@public/assets/icons/structure.png";
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from "@nextui-org/table";
 import InlineChart from "@/components/atom/InlineChart";
-import {router} from "next/client";
 import {useRouter} from "next/router";
 import {getCookie, setCookie} from "cookies-next";
-import {Profile} from "@/types";
+import {Profile, Theme} from "@/types";
+import {CircularProgress} from "@nextui-org/react";
 
 const mainIndex: NextPage = () => {
   const router = useRouter();
@@ -79,7 +79,7 @@ const mainIndex: NextPage = () => {
   ];
   const options = ['Все группы', 'option2', 'option3'];
   const tableColumn = [
-    {name: '#', uid: 'id'},
+    {name: '#', uid: '_id'},
     {name: 'Название', uid: 'name'},
     {name: 'Сегодня', uid: 'today'},
     {name: 'Неделя', uid: 'week'},
@@ -87,7 +87,7 @@ const mainIndex: NextPage = () => {
   ];
   const tableRow = [
     {
-      id: 1,
+      _id: 1,
       type: 'CM',
       name: 'АО Кселл',
       date: '19.06.21',
@@ -110,222 +110,6 @@ const mainIndex: NextPage = () => {
         total: 1007
       },
     },
-    {
-      id: 2,
-      type: 'CM',
-      name: 'ООО Прогресс',
-      date: '20.06.21',
-      today: {
-        positive: 0,
-        neutral: 1,
-        negative: 0,
-        total: 1
-      },
-      week: {
-        positive: 10,
-        neutral: 12,
-        negative: 5,
-        total: 27,
-      },
-      total: {
-        positive: 1000,
-        neutral: 5,
-        negative: 10,
-        total: 1015
-      },
-    },
-    {
-      id: 3,
-      type: 'CM',
-      name: 'ЗАО Развитие',
-      date: '21.06.21',
-      today: {
-        positive: 0,
-        neutral: 1,
-        negative: 1,
-        total: 2
-      },
-      week: {
-        positive: 15,
-        neutral: 5,
-        negative: 8,
-        total: 28,
-      },
-      total: {
-        positive: 988,
-        neutral: 4,
-        negative: 31,
-        total: 1023
-      },
-    },
-    {
-      id: 4,
-      type: 'CM',
-      name: 'ОАО Перспектива',
-      date: '22.06.21',
-      today: {
-        positive: 1,
-        neutral: 1,
-        negative: 1,
-        total: 3
-      },
-      week: {
-        positive: 14,
-        neutral: 7,
-        negative: 8,
-        total: 29,
-      },
-      total: {
-        positive: 999,
-        neutral: 3,
-        negative: 29,
-        total: 1031
-      },
-    },
-    {
-      id: 5,
-      type: 'CM',
-      name: 'ИП Старт',
-      date: '23.06.21',
-      today: {
-        positive: 1,
-        neutral: 2,
-        negative: 1,
-        total: 4
-      },
-      week: {
-        positive: 12,
-        neutral: 15,
-        negative: 3,
-        total: 30,
-      },
-      total: {
-        positive: 998,
-        neutral: 6,
-        negative: 35,
-        total: 1039
-      },
-    },
-    {
-      id: 6,
-      type: 'CM',
-      name: 'ООО Успех',
-      date: '24.06.21',
-      today: {
-        positive: 2,
-        neutral: 1,
-        negative: 2,
-        total: 5
-      },
-      week: {
-        positive: 11,
-        neutral: 13,
-        negative: 7,
-        total: 31,
-      },
-      total: {
-        positive: 999,
-        neutral: 11,
-        negative: 37,
-        total: 1047
-      },
-    },
-    {
-      id: 7,
-      type: 'CM',
-      name: 'АО Процветание',
-      date: '25.06.21',
-      today: {
-        positive: 4,
-        neutral: 0,
-        negative: 2,
-        total: 6
-      },
-      week: {
-        positive: 8,
-        neutral: 16,
-        negative: 8,
-        total: 32,
-      },
-      total: {
-        positive: 999,
-        neutral: 4,
-        negative: 52,
-        total: 1055
-      },
-    },
-    {
-      id: 8,
-      type: 'CM',
-      name: 'ЗАО Рост',
-      date: '26.06.21',
-      today: {
-        positive: 7,
-        neutral: 0,
-        negative: 0,
-        total: 7
-      },
-      week: {
-        positive: 19,
-        neutral: 3,
-        negative: 11,
-        total: 33,
-      },
-      total: {
-        positive: 1000,
-        neutral: 2,
-        negative: 61,
-        total: 1063
-      },
-    },
-    {
-      id: 9,
-      type: 'CM',
-      name: 'ООО Благополучие',
-      date: '27.06.21',
-      today: {
-        positive: 2,
-        neutral: 4,
-        negative: 2,
-        total: 8
-      },
-      week: {
-        positive: 18,
-        neutral: 9,
-        negative: 7,
-        total: 34,
-      },
-      total: {
-        positive: 1000,
-        neutral: 8,
-        negative: 63,
-        total: 1071
-      },
-    },
-    {
-      id: 10,
-      type: 'CM',
-      name: 'АО Фортуна',
-      date: '28.06.21',
-      today: {
-        positive: 0,
-        neutral: 2,
-        negative: 7,
-        total: 9
-      },
-      week: {
-        positive: 13,
-        neutral: 17,
-        negative: 5,
-        total: 35,
-      },
-      total: {
-        positive: 1000,
-        neutral: 10,
-        negative: 69,
-        total: 1079
-      },
-    }
   ];
   const links = [
     {
@@ -347,17 +131,18 @@ const mainIndex: NextPage = () => {
   ];
   const token = getCookie('scano_acess_token');
   const [profile, setProfile] = useState<Profile>();
-
+  const [themes, setThemes] = useState<ReadonlyArray<Theme>>();
+  const [generatedRow, setGeneratedRow] = useState<ReadonlyArray<Theme>>([]);
   type Row = typeof tableRow[0];
 
-  const renderCell = useCallback((row: Row, columnKey: Key): any  => {
+  const renderCell = useCallback((row: any, columnKey: Key): any  => {
     const cellValue = row[columnKey as keyof Row];
 
     switch (columnKey) {
-      case 'id':
+      case '_id':
         return (
           <div className="py-4 px-8 flex items-center gap-x-8">
-            <p className="prose prose-sm">{row.id}</p>
+            <p className="prose prose-sm">{row._id}</p>
             <div className="rounded-xl bg-[#ebecef] py-1 px-3 w-fit">
               <p className="text-xs text-black">{row.type}</p>
             </div>
@@ -421,6 +206,33 @@ const mainIndex: NextPage = () => {
 
   const [selectedOption, setSelectedOption] = useState(options[0]);
 
+  const generateRandomTableRow = (theme: Theme) => {
+    return {
+      _id: theme._id,
+      type: 'CM',
+      name: theme.name,
+      date: '19.06.21',
+      today: {
+        positive: 0,
+        neutral: 0,
+        negative: 0,
+        total: 0
+      },
+      week: {
+        positive: 6,
+        neutral: 19,
+        negative: 1,
+        total: 26,
+      },
+      total: {
+        positive: 999,
+        neutral: 6,
+        negative: 2,
+        total: 1007
+      },
+    };
+  };
+
   const handleSelectChange = (value: string) => {
     setSelectedOption(value);
   };
@@ -448,8 +260,32 @@ const mainIndex: NextPage = () => {
     }
   };
 
+  const getTheme = async () => {
+    try {
+      const res = await fetch(
+        'https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/',
+        {
+          method: 'GET', // Assuming you are sending a POST request
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+        }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setThemes(data);
+        setGeneratedRow(data.map((theme: Theme) => generateRandomTableRow(theme)));
+        console.log(data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   useEffect(() => {
     handleData();
+    getTheme();
   }, []);
 
   // @ts-ignore
@@ -493,28 +329,34 @@ const mainIndex: NextPage = () => {
             </div>
           </div>
         </div>
-        <Table aria-label="Example table with custom cells" className="bg-white rounded-lg">
-          <TableHeader columns={tableColumn}>
-            {(column) => (
-              <TableColumn key={column.uid} className="text-left py-4 px-8">
-                {column.uid !== 'name' ? (
-                  <p className="prose prose-sm">{column.name}</p>
-                ) : (
-                  <div className="rounded-2xl bg-[#ebecef] py-1 px-2 w-fit">
+        {themes ? (
+          <Table aria-label="Example table with custom cells" className="bg-white rounded-lg">
+            <TableHeader columns={tableColumn}>
+              {(column) => (
+                <TableColumn key={column.uid} className="text-left py-4 px-8">
+                  {column.uid !== 'name' ? (
                     <p className="prose prose-sm">{column.name}</p>
-                  </div>
-                )}
-              </TableColumn>
-            )}
-          </TableHeader>
-          <TableBody items={tableRow}>
-            {(item) => (
-              <TableRow key={item.id} className="border-b hover:bg-[#fcfcfd]">
-                {(columnKey) => <TableCell className="p-0">{renderCell(item, columnKey)}</TableCell>}
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+                  ) : (
+                    <div className="rounded-2xl bg-[#ebecef] py-1 px-2 w-fit">
+                      <p className="prose prose-sm">{column.name}</p>
+                    </div>
+                  )}
+                </TableColumn>
+              )}
+            </TableHeader>
+            <TableBody items={generatedRow}>
+              {(item) => (
+                <TableRow key={item._id} className="border-b hover:bg-[#fcfcfd]">
+                  {(columnKey) => <TableCell className="p-0">{renderCell(item, columnKey)}</TableCell>}
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        ) : (
+          <div className="h-screen flex items-center justify-center">
+            <CircularProgress size="lg" color="success" aria-label="Loading..."/>
+          </div>
+        )}
       </div>
       <div className="mb-4 px-14 flex items-center justify-between">
         <div className="flex items-center gap-x-4">
