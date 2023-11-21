@@ -63,6 +63,7 @@ const forgot_password: NextPage = () => {
             }
           );
           if (res.ok) {
+            localStorage.setItem('forgotPassword', 'REJECT');
             await router.push('/');
           } else {
             setPending(false);
