@@ -3,46 +3,80 @@ import Image from "next/image";
 import Logo from "public/logo.svg";
 import Input from "@/components/atom/Input";
 import Button from "@/components/atom/Button";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useRouter } from "next/router";
-import {setCookie} from "cookies-next";
+import {useSearchParams} from "next/navigation";
+import {Spinner} from "@nextui-org/spinner";
 
 const forgot_password: NextPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams()
 
-  const [errorLogin, setErrorLogin] = useState(false);
-  const [login, setLogin] = useState('');
+  const [pending, setPending] = useState(false);
+  const [code, setCode] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleLogin = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLogin(e.target.value);
+  const [confirmErrorPassword, setConfirmErrorPassword] = useState(false);
+  const [errorPassword, setErrorPassword] = useState(false);
+
+  const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
   };
 
+  const handleConfirmPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setConfirmPassword(e.target.value);
+  };
+
+  useEffect(() => {
+    console.log(searchParams.get('code'));
+    const code = searchParams.get('code')
+    if (code) {
+      setCode(code);
+    }
+    if (pending) {
+      setErrorPassword(false);
+      setConfirmErrorPassword(false);
+    }
+  }, []);
+
   const handleClick = async () => {
-    if (login) {
-      try {
-        const res = await fetch(
-          'https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/forgot-password',
-          {
-            method: 'POST', // Assuming you are sending a POST request
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              email: login,
-            }),
-          }
-        );
-        if (res.ok) {
-          localStorage.setItem('forgotPassword', 'APPROVE')
-          await router.push('/');
-        } else {
-          console.error('forgot_password failed');
-        }
-      } catch (err) {
-        console.error(err);
-      }
+    if (password !== confirmPassword) {
+      setErrorPassword(false);
+      setConfirmErrorPassword(true);
     } else {
-      setErrorLogin(true);
+      if (password && confirmPassword) {
+        try {
+          setPending(true);
+          const res = await fetch(
+            'https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/set-password',
+            {
+              method: 'POST', // Assuming you are sending a POST request
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                password: password,
+                confirm_password: confirmPassword,
+                code: code
+              }),
+            }
+          );
+          if (res.ok) {
+            localStorage.setItem('forgotPassword', 'APPROVE')
+            await router.push('/');
+          } else {
+            setPending(false);
+            console.error('send_password failed');
+          }
+        } catch (err) {
+          setPending(false);
+          console.error(err);
+        }
+      } else {
+        setErrorPassword(true);
+        setConfirmErrorPassword(true);
+      }
     }
   }
 
@@ -53,14 +87,26 @@ const forgot_password: NextPage = () => {
       </div>
       <div className="max-w-lg w-full flex flex-col gap-y-5">
         <Input
-          type="text"
-          error={errorLogin}
-          placeholder="E-mail"
-          label="email енгізу қажет"
-          value={login}
-          onChange={handleLogin}
+          type="password"
+          error={errorPassword}
+          placeholder="Введите новый пароль"
+          label="Необходимо ввести новый пароль"
+          value={password}
+          onChange={handlePassword}
         />
-        <Button label="Жаңа пароль алу" onClick={handleClick} size="lg" />
+        <Input
+          type="password"
+          error={confirmErrorPassword}
+          placeholder="Подтвердите новый пароль"
+          label={
+            (confirmErrorPassword && !errorPassword) ? 'Пароли не совпадают' : 'Необходимо подтвердить новый пароль'
+          }
+          value={confirmPassword}
+          onChange={handleConfirmPassword}
+        />
+        <Button label={
+          pending ? (<Spinner color="white" size="sm" />) : 'Отправить новый пароль'
+        } onClick={handleClick} size="lg" />
       </div>
     </div>
   )

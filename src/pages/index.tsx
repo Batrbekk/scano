@@ -127,7 +127,7 @@ const Homepage: NextPage = () => {
           onChange={handlePassword}
         />
         <Button label="Кіру" onClick={handleClick} size="lg"/>
-        <a href="/auth/forgot_password" className="text-center font-['Work Sans',sans-serif] text-[#757575] hover:text-[#434445] prose-base">
+        <a href="/auth/send_password" className="text-center font-['Work Sans',sans-serif] text-[#757575] hover:text-[#434445] prose-base">
           Парольді ұмыттыңызба?
         </a>
       </div>

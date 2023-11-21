@@ -1,7 +1,7 @@
 import React, { ButtonHTMLAttributes } from "react";
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
-  label: string;
+  label: any;
   color?: string;
   size: 'lg' | 'md' | 'sm';
   classBtn?: string;
