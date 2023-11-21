@@ -15,6 +15,7 @@ import {useRouter} from "next/router";
 import {getCookie, setCookie} from "cookies-next";
 import {Profile, Theme} from "@/types";
 import {CircularProgress} from "@nextui-org/react";
+import { format } from "date-fns";
 
 const mainIndex: NextPage = () => {
   const router = useRouter();
@@ -88,9 +89,9 @@ const mainIndex: NextPage = () => {
   const tableRow = [
     {
       _id: 1,
-      type: 'CM',
+      theme_type: 'CM',
       name: 'АО Кселл',
-      date: '19.06.21',
+      created_at: '19.06.21',
       today: {
         positive: 0,
         neutral: 0,
@@ -132,7 +133,6 @@ const mainIndex: NextPage = () => {
   const token = getCookie('scano_acess_token');
   const [profile, setProfile] = useState<Profile>();
   const [themes, setThemes] = useState<ReadonlyArray<Theme>>();
-  const [generatedRow, setGeneratedRow] = useState<ReadonlyArray<Theme>>([]);
   type Row = typeof tableRow[0];
 
   const renderCell = useCallback((row: any, columnKey: Key): any  => {
@@ -144,7 +144,7 @@ const mainIndex: NextPage = () => {
           <div className="py-4 px-8 flex items-center gap-x-8">
             <p className="prose prose-sm">{row._id}</p>
             <div className="rounded-xl bg-[#ebecef] py-1 px-3 w-fit">
-              <p className="text-xs text-black">{row.type}</p>
+              <p className="text-xs text-black">{row.theme_type}</p>
             </div>
           </div>
         )
@@ -155,7 +155,7 @@ const mainIndex: NextPage = () => {
               router.push('/dashboard');
             }}>{row.name}</p>
             <div className="flex items-center gap-x-4">
-              <p className="prose prose-sm">Данные собираются с {row.date}</p>
+              <p className="prose prose-sm">Данные собираются с {format(new Date(row.created_at), 'dd/MM/yyyy')}</p>
               <div className="flex items-center gap-0.5">
                 {squares.map(item => (
                   <div className={`rounded-sm w-1.5 h-2 ${item.status === 'FULL' ? 'bg-[#60CA23]' : 'bg-[#cbcfd8]'}`} key={item.id} />
@@ -206,33 +206,6 @@ const mainIndex: NextPage = () => {
 
   const [selectedOption, setSelectedOption] = useState(options[0]);
 
-  const generateRandomTableRow = (theme: Theme) => {
-    return {
-      _id: theme._id,
-      type: 'CM',
-      name: theme.name,
-      date: '19.06.21',
-      today: {
-        positive: 0,
-        neutral: 0,
-        negative: 0,
-        total: 0
-      },
-      week: {
-        positive: 6,
-        neutral: 19,
-        negative: 1,
-        total: 26,
-      },
-      total: {
-        positive: 999,
-        neutral: 6,
-        negative: 2,
-        total: 1007
-      },
-    };
-  };
-
   const handleSelectChange = (value: string) => {
     setSelectedOption(value);
   };
@@ -275,7 +248,6 @@ const mainIndex: NextPage = () => {
       if (res.ok) {
         const data = await res.json();
         setThemes(data);
-        setGeneratedRow(data.map((theme: Theme) => generateRandomTableRow(theme)));
         console.log(data);
       }
     } catch (e) {
@@ -344,8 +316,8 @@ const mainIndex: NextPage = () => {
                 </TableColumn>
               )}
             </TableHeader>
-            <TableBody items={generatedRow}>
-              {(item) => (
+            <TableBody items={themes}>
+              {(item: Theme) => (
                 <TableRow key={item._id} className="border-b hover:bg-[#fcfcfd]">
                   {(columnKey) => <TableCell className="p-0">{renderCell(item, columnKey)}</TableCell>}
                 </TableRow>
