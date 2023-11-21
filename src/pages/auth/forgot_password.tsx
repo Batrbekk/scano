@@ -38,7 +38,7 @@ const forgot_password: NextPage = () => {
       setErrorPassword(false);
       setConfirmErrorPassword(false);
     }
-  }, []);
+  }, [router]);
 
   const handleClick = async () => {
     if (password !== confirmPassword) {
@@ -63,7 +63,6 @@ const forgot_password: NextPage = () => {
             }
           );
           if (res.ok) {
-            localStorage.setItem('forgotPassword', 'APPROVE')
             await router.push('/');
           } else {
             setPending(false);
