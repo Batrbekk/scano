@@ -16,6 +16,7 @@ import {Checkbox} from "@nextui-org/checkbox";
 import {Input} from "@nextui-org/input";
 import GraySearch from "@public/assets/icons/graySearch.svg";
 import {useRouter} from "next/router";
+import ProtectLayout from "@/components/layout/protectLayout";
 
 const spamIndex: NextPage = () => {
   const message = [
@@ -109,160 +110,142 @@ const spamIndex: NextPage = () => {
   const router = useRouter();
 
   return (
-    <MainLayout>
-      <div className="flex items-start justify-between gap-x-6 pb-10">
-        <div className="flex w-[80%]">
-          <div className="flex flex-col gap-y-4 w-full">
-            <div className="flex items-center gap-x-2">
-              <p className="font-['Work Sans',sans-serif] text-[#35415A] prose prose-xl font-medium">Корзина</p>
-              <Tooltip content="Это спам">
-                <Image src={InfoGray} alt="icon" width={32} height={32} />
-              </Tooltip>
-            </div>
-            <div className="rounded-lg bg-white w-full py-4 px-16 flex items-center justify-around">
-              <div className="flex flex-col items-center">
-                <p className="prose prose-sm font-['Work Sans',sans-serif] text-[#bcbec6]">Сообщения</p>
-                <p className="prose prose-2xl font-['Work Sans',sans-serif] text-[#5e626c]">3</p>
+    <ProtectLayout>
+      <MainLayout>
+        <div className="flex items-start justify-between gap-x-6 pb-10">
+          <div className="flex w-[80%]">
+            <div className="flex flex-col gap-y-4 w-full">
+              <div className="flex items-center gap-x-2">
+                <p className="font-['Work Sans',sans-serif] text-[#35415A] prose prose-xl font-medium">Корзина</p>
+                <Tooltip content="Это спам">
+                  <Image src={InfoGray} alt="icon" width={32} height={32} />
+                </Tooltip>
               </div>
-              <div className="flex flex-col items-center">
-                <p className="prose prose-sm font-['Work Sans',sans-serif] text-[#bcbec6]">Авторы</p>
-                <p className="prose prose-2xl font-['Work Sans',sans-serif] text-[#5e626c]">0/3</p>
-              </div>
-              <div className="flex flex-col items-center">
-                <p className="prose prose-sm font-['Work Sans',sans-serif] text-[#bcbec6]">Сообщества</p>
-                <p className="prose prose-2xl font-['Work Sans',sans-serif] text-[#5e626c]">0/0</p>
-              </div>
-              <div className="flex flex-col items-center">
-                <p className="prose prose-sm font-['Work Sans',sans-serif] text-[#bcbec6]">Места</p>
-                <p className="prose prose-2xl font-['Work Sans',sans-serif] text-[#5e626c]">0/0</p>
-              </div>
-            </div>
-            <div className="mt-4">
-              <Tabs variant="light" disabledKeys={["videos"]} aria-label="Tabs" radius="full" classNames={{
-                cursor: 'group-data-[selected=true]:bg-[#e4e7ec] group-data-[selected=true]:border-[#e4e7ec]',
-                tabContent: ''
-              }}>
-                <Tab key="photos" title="Дата"/>
-                <Tab key="music" title="Аудитория"/>
-              </Tabs>
-            </div>
-            <div className="mt-4 flex flex-col gap-y-4">
-              {message.map((card) => (
-                <SpamCard
-                  name={card.name}
-                  text={card.text}
-                  shortText={card.shortText}
-                  src={card.src}
-                  followers={card.followers}
-                  mainAuthorName={card.mainAuthorName}
-                  mainAuthorFollowers={card.mainAuthorFollowers}
-                  messageType={card.messageType}
-                  date={card.date}
-                  avatar={card.avatar}
-                  srcIcon={card.srcIcon}
-                />
-              ))}
-            </div>
-            <div className="mt-4 bg-white rounded-lg p-4 flex justify-between items-center">
-              <div className="flex items-center">
-                <Button variant="light">
-                  <p className="prose font-['Work Sans',sans-serif] prose-sm">Выбрать все</p>
-                </Button>
-                <Button variant="light">
-                  <p className="prose font-['Work Sans',sans-serif] prose-sm">Восстановить</p>
-                </Button>
-              </div>
-              <Select
-                variant="bordered"
-                labelPlacement="outside-left"
-                className="max-w-[92px]"
-                classNames={{
-                  base: '[&_button]:rounded border-light'
-                }}
-              >
-                {count.map((item) => (
-                  <SelectItem key={item} value={item}>
-                    {item}
-                  </SelectItem>
-                ))}
-              </Select>
-            </div>
-            <div className="mt-4 flex justify-center items-center">
-              <Button
-                disabled={currentPage === 1}
-                variant="light"
-                disableAnimation={true}
-                className="data-[hover=true]:bg-transparent cursor-pointer"
-                onClick={() => {
-                  setCurrentPage(currentPage-1);
-                }}
-              >
-                <p className={`prose text-xs ${currentPage === 1 && 'text-[#ced1db]'}`}>Предыдущая</p>
-              </Button>
-              <Pagination
-                total={totalPagination}
-                page={currentPage}
-                onChange={setCurrentPage}
-                classNames={{
-                  item: "prose font-['Work Sans',sans-serif] text-red min-w-8 w-8 h-8 bg-transparent",
-                  cursor: "prose font-['Work Sans',sans-serif] text-red min-w-8 w-8 h-8 bg-[#e4e7ec]",
-                }}
-              />
-              <Button
-                disabled={currentPage === totalPagination}
-                variant="light"
-                disableAnimation={true}
-                className="data-[hover=true]:bg-transparent cursor-pointer"
-                onClick={() => {
-                  setCurrentPage(currentPage+1);
-                }}
-              >
-                <p className={`prose text-xs ${currentPage === totalPagination && 'text-[#ced1db]'}`}>Следующая</p>
-              </Button>
-            </div>
-          </div>
-        </div>
-        <div className="w-[20%] bg-white py-2 px-4">
-          <div className="flex items-center gap-x-4 pb-2">
-            <Image src={Calendar} alt="icon" />
-            <p className="font-['Work Sans',sans-serif] text-[#35415A] prose font-semibold">01 мая 2023 - 12 июн 2023</p>
-          </div>
-          <div className="py-2 px-4 bg-[#f6f6f7] rounded-lg">
-            <div className="flex items-center gap-x-2">
-              <Image src={BlackSpam} alt="icon" />
-              <p className="font-['Work Sans',sans-serif] text-[#35415A] prose font-semibold">Корзина</p>
-            </div>
-            <div className="mt-2">
-              {spamLinks.map((item) => (
-                <Link key={item.label} href={item.href}>
-                  <p className="prose prose-sm font-['Work Sans',sans-serif] text-[#4e70b8]">{item.label}</p>
-                </Link>
-              ))}
-            </div>
-          </div>
-          <div className="flex flex-col gap-y-4 mt-4">
-            <div className="flex flex-col gap-y-1 border-b pb-4">
-              <p className="font-['Work Sans',sans-serif] prose text-xs uppercase text-[#8c8f95] mb-1">Тип удаления</p>
-              <Checkbox
-                size="md"
-                className="w-full max-w-full"
-                classNames={{
-                  base: 'rounded',
-                  wrapper: 'rounded before:rounded before:border after:rounded',
-                  label: 'w-full'
-                }}
-              >
-                <div className="flex items-center justify-between">
-                  <p className="prose prose-sm font-['Work Sans',sans-serif] text-[#4e70b8]">Вручную</p>
-                  <p className="text-[#575b66] prose prose-sm font-['Work Sans',sans-serif]">1088</p>
+              <div className="rounded-lg bg-white w-full py-4 px-16 flex items-center justify-around">
+                <div className="flex flex-col items-center">
+                  <p className="prose prose-sm font-['Work Sans',sans-serif] text-[#bcbec6]">Сообщения</p>
+                  <p className="prose prose-2xl font-['Work Sans',sans-serif] text-[#5e626c]">3</p>
                 </div>
-              </Checkbox>
+                <div className="flex flex-col items-center">
+                  <p className="prose prose-sm font-['Work Sans',sans-serif] text-[#bcbec6]">Авторы</p>
+                  <p className="prose prose-2xl font-['Work Sans',sans-serif] text-[#5e626c]">0/3</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <p className="prose prose-sm font-['Work Sans',sans-serif] text-[#bcbec6]">Сообщества</p>
+                  <p className="prose prose-2xl font-['Work Sans',sans-serif] text-[#5e626c]">0/0</p>
+                </div>
+                <div className="flex flex-col items-center">
+                  <p className="prose prose-sm font-['Work Sans',sans-serif] text-[#bcbec6]">Места</p>
+                  <p className="prose prose-2xl font-['Work Sans',sans-serif] text-[#5e626c]">0/0</p>
+                </div>
+              </div>
+              <div className="mt-4">
+                <Tabs variant="light" disabledKeys={["videos"]} aria-label="Tabs" radius="full" classNames={{
+                  cursor: 'group-data-[selected=true]:bg-[#e4e7ec] group-data-[selected=true]:border-[#e4e7ec]',
+                  tabContent: ''
+                }}>
+                  <Tab key="photos" title="Дата"/>
+                  <Tab key="music" title="Аудитория"/>
+                </Tabs>
+              </div>
+              <div className="mt-4 flex flex-col gap-y-4">
+                {message.map((card) => (
+                  <SpamCard
+                    name={card.name}
+                    text={card.text}
+                    shortText={card.shortText}
+                    src={card.src}
+                    followers={card.followers}
+                    mainAuthorName={card.mainAuthorName}
+                    mainAuthorFollowers={card.mainAuthorFollowers}
+                    messageType={card.messageType}
+                    date={card.date}
+                    avatar={card.avatar}
+                    srcIcon={card.srcIcon}
+                  />
+                ))}
+              </div>
+              <div className="mt-4 bg-white rounded-lg p-4 flex justify-between items-center">
+                <div className="flex items-center">
+                  <Button variant="light">
+                    <p className="prose font-['Work Sans',sans-serif] prose-sm">Выбрать все</p>
+                  </Button>
+                  <Button variant="light">
+                    <p className="prose font-['Work Sans',sans-serif] prose-sm">Восстановить</p>
+                  </Button>
+                </div>
+                <Select
+                  variant="bordered"
+                  labelPlacement="outside-left"
+                  className="max-w-[92px]"
+                  classNames={{
+                    base: '[&_button]:rounded border-light'
+                  }}
+                >
+                  {count.map((item) => (
+                    <SelectItem key={item} value={item}>
+                      {item}
+                    </SelectItem>
+                  ))}
+                </Select>
+              </div>
+              <div className="mt-4 flex justify-center items-center">
+                <Button
+                  disabled={currentPage === 1}
+                  variant="light"
+                  disableAnimation={true}
+                  className="data-[hover=true]:bg-transparent cursor-pointer"
+                  onClick={() => {
+                    setCurrentPage(currentPage-1);
+                  }}
+                >
+                  <p className={`prose text-xs ${currentPage === 1 && 'text-[#ced1db]'}`}>Предыдущая</p>
+                </Button>
+                <Pagination
+                  total={totalPagination}
+                  page={currentPage}
+                  onChange={setCurrentPage}
+                  classNames={{
+                    item: "prose font-['Work Sans',sans-serif] text-red min-w-8 w-8 h-8 bg-transparent",
+                    cursor: "prose font-['Work Sans',sans-serif] text-red min-w-8 w-8 h-8 bg-[#e4e7ec]",
+                  }}
+                />
+                <Button
+                  disabled={currentPage === totalPagination}
+                  variant="light"
+                  disableAnimation={true}
+                  className="data-[hover=true]:bg-transparent cursor-pointer"
+                  onClick={() => {
+                    setCurrentPage(currentPage+1);
+                  }}
+                >
+                  <p className={`prose text-xs ${currentPage === totalPagination && 'text-[#ced1db]'}`}>Следующая</p>
+                </Button>
+              </div>
             </div>
-            <div className="flex flex-col gap-y-1 border-b pb-4">
-              <p className="font-['Work Sans',sans-serif] prose text-xs uppercase text-[#8c8f95] mb-1">Источники</p>
-              {srcCount.map((item) => (
+          </div>
+          <div className="w-[20%] bg-white py-2 px-4">
+            <div className="flex items-center gap-x-4 pb-2">
+              <Image src={Calendar} alt="icon" />
+              <p className="font-['Work Sans',sans-serif] text-[#35415A] prose font-semibold">01 мая 2023 - 12 июн 2023</p>
+            </div>
+            <div className="py-2 px-4 bg-[#f6f6f7] rounded-lg">
+              <div className="flex items-center gap-x-2">
+                <Image src={BlackSpam} alt="icon" />
+                <p className="font-['Work Sans',sans-serif] text-[#35415A] prose font-semibold">Корзина</p>
+              </div>
+              <div className="mt-2">
+                {spamLinks.map((item) => (
+                  <Link key={item.label} href={item.href}>
+                    <p className="prose prose-sm font-['Work Sans',sans-serif] text-[#4e70b8]">{item.label}</p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-col gap-y-4 mt-4">
+              <div className="flex flex-col gap-y-1 border-b pb-4">
+                <p className="font-['Work Sans',sans-serif] prose text-xs uppercase text-[#8c8f95] mb-1">Тип удаления</p>
                 <Checkbox
-                  key={item.src}
                   size="md"
                   className="w-full max-w-full"
                   classNames={{
@@ -272,38 +255,58 @@ const spamIndex: NextPage = () => {
                   }}
                 >
                   <div className="flex items-center justify-between">
-                    <p className="prose prose-sm font-['Work Sans',sans-serif] text-[#4e70b8]">{item.src}</p>
-                    <p className="text-[#575b66] prose prose-sm font-['Work Sans',sans-serif]">{item.count}</p>
+                    <p className="prose prose-sm font-['Work Sans',sans-serif] text-[#4e70b8]">Вручную</p>
+                    <p className="text-[#575b66] prose prose-sm font-['Work Sans',sans-serif]">1088</p>
                   </div>
                 </Checkbox>
-              ))}
+              </div>
+              <div className="flex flex-col gap-y-1 border-b pb-4">
+                <p className="font-['Work Sans',sans-serif] prose text-xs uppercase text-[#8c8f95] mb-1">Источники</p>
+                {srcCount.map((item) => (
+                  <Checkbox
+                    key={item.src}
+                    size="md"
+                    className="w-full max-w-full"
+                    classNames={{
+                      base: 'rounded',
+                      wrapper: 'rounded before:rounded before:border after:rounded',
+                      label: 'w-full'
+                    }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <p className="prose prose-sm font-['Work Sans',sans-serif] text-[#4e70b8]">{item.src}</p>
+                      <p className="text-[#575b66] prose prose-sm font-['Work Sans',sans-serif]">{item.count}</p>
+                    </div>
+                  </Checkbox>
+                ))}
 
+              </div>
+              <Input
+                type="text"
+                labelPlacement="outside-left"
+                placeholder="Поиск источника"
+                variant="bordered"
+                className="w-full [&_.h-full]:w-full [&_.relative]:rounded-lg [&_.relative]:border"
+                endContent={
+                  <Image src={GraySearch} alt="icon" />
+                }
+                classNames={{
+                  base: '[&_button]:rounded border-light'
+                }}
+              />
             </div>
-            <Input
-              type="text"
-              labelPlacement="outside-left"
-              placeholder="Поиск источника"
-              variant="bordered"
-              className="w-full [&_.h-full]:w-full [&_.relative]:rounded-lg [&_.relative]:border"
-              endContent={
-                <Image src={GraySearch} alt="icon" />
-              }
-              classNames={{
-                base: '[&_button]:rounded border-light'
-              }}
-            />
+            <Button className="w-full mt-4 rounded bg-[#5b85ce]">
+              <p className="prose font-['Work Sans',sans-serif] prose-sm text-white">Отфильтровать</p>
+            </Button>
+            <Button className="w-full mt-4 rounded bg-[#5b85ce]" onClick={() => {
+              router.push('/tag/addTags');
+            }}>
+              <p className="prose font-['Work Sans',sans-serif] prose-sm text-white">Для создание тегов</p>
+            </Button>
           </div>
-          <Button className="w-full mt-4 rounded bg-[#5b85ce]">
-            <p className="prose font-['Work Sans',sans-serif] prose-sm text-white">Отфильтровать</p>
-          </Button>
-          <Button className="w-full mt-4 rounded bg-[#5b85ce]" onClick={() => {
-            router.push('/tag/addTags');
-          }}>
-            <p className="prose font-['Work Sans',sans-serif] prose-sm text-white">Для создание тегов</p>
-          </Button>
         </div>
-      </div>
-    </MainLayout>
+      </MainLayout>
+    </ProtectLayout>
   )
 }
 

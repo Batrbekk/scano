@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Logo from "@public/logo.svg";
 import {useRouter} from "next/router";
-import React, {ReactNode, useEffect, useState} from "react";
+import React, {FC, ReactNode, useEffect, useState} from "react";
 import Plus from "@public/assets/icons/plus.svg";
 import Spam from "@public/assets/icons/spam.svg";
 import Copy from "@public/assets/icons/copy.svg";
@@ -32,7 +32,7 @@ const defaultProps: MainLayoutProps = {
   withPadding: true,
 };
 
-export const mainLayout: React.FC<MainLayoutProps> = ({children, withPadding = defaultProps.withPadding}) => {
+const mainLayout: FC<MainLayoutProps> = ({children, withPadding = defaultProps.withPadding}) => {
   const router = useRouter();
   const [path, setPath] = useState('');
   const [routerRoot, setRouterRoot] = useState('');

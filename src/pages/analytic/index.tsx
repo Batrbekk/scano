@@ -18,6 +18,7 @@ import MapChart from "src/components/atom/MapChart";
 import PieBlock from "src/components/atom/PieBlock";
 import exporting from 'highcharts/modules/exporting';
 import BarBlock from "src/components/atom/BarBlock";
+import ProtectLayout from "@/components/layout/protectLayout";
 
 if (typeof Highcharts === 'object') {
   exporting(Highcharts);
@@ -168,101 +169,103 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
   ];
 
   return (
-    <MainLayout withPadding={false}>
-      <div className="flex flex-col pb-10">
-        <div className="flex flex-col px-6">
-          <div className="flex items-center justify-between w-full">
-            <div className="flex items-center gap-x-6">
-              <p className="text-[#35415A] font-['Montserrat',sans-serif] text-base font-semibold w-full">Меню атауы</p>
-              <Input
-                value={search}
-                onChange={handleSearchChange}
-                placeholder="Тақырыптың ішінен іздеу"
-                radius="none"
-                classNames={{
-                  input: [
-                    "w-[324px]",
-                    "placeholder:font-['Montserrat',sans-serif] placeholder:text-base placeholder:font-extralight"
-                  ],
-                  inputWrapper: [
-                    "border border-[rgba(55,71,95,0.80)] bg-transparent rounded",
-                    "font-['Montserrat',sans-serif] text-base font-semibold",
-                  ]
-                }}
-                endContent={
-                  <Image src={Search} width={16} height={16} alt="icon" />
-                }
-              />
-            </div>
-            <div className="flex items-center gap-x-6">
-              <button className="flex items-center gap-x-1">
-                <Image src={Export} alt="icon" />
-                <p className="font-['Montserrat',sans-serif] text-base font-semibold text-[#35415A]">Экспорт</p>
-              </button>
-              <div>
-                <DatePicker
-                  showIcon
-                  locale={ru}
-                  endDate={endDate}
-                  selectsRange={true}
-                  startDate={startDate}
-                  placeholderText="Выберите период"
-                  onChange={(update) => {
-                    setDateRange(update);
+    <ProtectLayout>
+      <MainLayout withPadding={false}>
+        <div className="flex flex-col pb-10">
+          <div className="flex flex-col px-6">
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center gap-x-6">
+                <p className="text-[#35415A] font-['Montserrat',sans-serif] text-base font-semibold w-full">Меню атауы</p>
+                <Input
+                  value={search}
+                  onChange={handleSearchChange}
+                  placeholder="Тақырыптың ішінен іздеу"
+                  radius="none"
+                  classNames={{
+                    input: [
+                      "w-[324px]",
+                      "placeholder:font-['Montserrat',sans-serif] placeholder:text-base placeholder:font-extralight"
+                    ],
+                    inputWrapper: [
+                      "border border-[rgba(55,71,95,0.80)] bg-transparent rounded",
+                      "font-['Montserrat',sans-serif] text-base font-semibold",
+                    ]
                   }}
+                  endContent={
+                    <Image src={Search} width={16} height={16} alt="icon" />
+                  }
                 />
               </div>
-            </div>
-          </div>
-          <div className="flex items-center justify-between w-full py-6">
-            <div className="flex items-center gap-x-6">
-              <p className="text-[#35415A] font-['Montserrat',sans-serif] text-base font-semibold w-full">Фильтр:</p>
-              <div className="flex items-center gap-x-3">
-                {filterItems.map((item) => (
-                  <div className="flex items-center gap-x-1" key={item.id}>
-                    <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">{item.title}:</p>
-                    <Chip
-                      variant="light"
-                      classNames={{
-                        base: "[&_path]:fill-[#ff0000]",
-                        content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold`
-                      }}
-                      onClose={() => removeFilter(item.id)}
-                    >
-                      {item.value}
-                    </Chip>
-                  </div>
-                ))}
+              <div className="flex items-center gap-x-6">
+                <button className="flex items-center gap-x-1">
+                  <Image src={Export} alt="icon" />
+                  <p className="font-['Montserrat',sans-serif] text-base font-semibold text-[#35415A]">Экспорт</p>
+                </button>
+                <div>
+                  <DatePicker
+                    showIcon
+                    locale={ru}
+                    endDate={endDate}
+                    selectsRange={true}
+                    startDate={startDate}
+                    placeholderText="Выберите период"
+                    onChange={(update) => {
+                      setDateRange(update);
+                    }}
+                  />
+                </div>
               </div>
             </div>
-            <button
-              className={`bg-[#60CA23] prose prose-base text-white font-['Work Sans',sans-serif] py-1 px-4 rounded flex gap-x-2 items-center`}
-            >
-              <Image src={Filter} alt="icon" />
-              Фильтр
-            </button>
+            <div className="flex items-center justify-between w-full py-6">
+              <div className="flex items-center gap-x-6">
+                <p className="text-[#35415A] font-['Montserrat',sans-serif] text-base font-semibold w-full">Фильтр:</p>
+                <div className="flex items-center gap-x-3">
+                  {filterItems.map((item) => (
+                    <div className="flex items-center gap-x-1" key={item.id}>
+                      <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">{item.title}:</p>
+                      <Chip
+                        variant="light"
+                        classNames={{
+                          base: "[&_path]:fill-[#ff0000]",
+                          content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold`
+                        }}
+                        onClose={() => removeFilter(item.id)}
+                      >
+                        {item.value}
+                      </Chip>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <button
+                className={`bg-[#60CA23] prose prose-base text-white font-['Work Sans',sans-serif] py-1 px-4 rounded flex gap-x-2 items-center`}
+              >
+                <Image src={Filter} alt="icon" />
+                Фильтр
+              </button>
+            </div>
           </div>
+          <Tabs
+            aria-label="Dynamic tabs"
+            variant="underlined"
+            items={tabs}
+            classNames={{
+              base: 'bg-white flex items-center justify-between w-full',
+              tabList: 'justify-between w-full',
+              tab: '[&_span]:!opacity-0 py-8',
+              cursor: 'group-data-[selected=true]:bg-transparent border-none',
+              tabContent: `group-data-[selected=true]:text-[#008eff] text-black font-medium prose prose-xl`
+            }}
+          >
+            {(item) => (
+              <Tab key={item.id} title={item.label}>
+                {item.content}
+              </Tab>
+            )}
+          </Tabs>
         </div>
-        <Tabs
-          aria-label="Dynamic tabs"
-          variant="underlined"
-          items={tabs}
-          classNames={{
-            base: 'bg-white flex items-center justify-between w-full',
-            tabList: 'justify-between w-full',
-            tab: '[&_span]:!opacity-0 py-8',
-            cursor: 'group-data-[selected=true]:bg-transparent border-none',
-            tabContent: `group-data-[selected=true]:text-[#008eff] text-black font-medium prose prose-xl`
-          }}
-        >
-          {(item) => (
-            <Tab key={item.id} title={item.label}>
-              {item.content}
-            </Tab>
-          )}
-        </Tabs>
-      </div>
-    </MainLayout>
+      </MainLayout>
+    </ProtectLayout>
   )
 }
 

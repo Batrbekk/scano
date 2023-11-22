@@ -4,6 +4,7 @@ import React, { Key, useCallback } from "react";
 import Navbar from "@/components/molecule/Navbar";
 import Footer from "@/components/molecule/Footer";
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/table";
+import ProtectLayout from "@/components/layout/protectLayout";
 
 const history: NextPage = () => {
   const router = useRouter();
@@ -146,45 +147,47 @@ const history: NextPage = () => {
   }, []);
 
   return (
-    <div className="bg-[#F8F9FB] h-full">
-      <div className="mb-6">
-        <Navbar />
-      </div>
-      <div className="flex items-start bg-[#F8F9FB] h-[80vh]">
-        <div className="w-1/6 h-full bg-white py-4">
-          <div className="w-full py-2 px-4 cursor-pointer border-b" onClick={() => {
-            router.push('/main/archive');
-          }}>
-            <p className="prose prose-lg">Архивный сбор</p>
+    <ProtectLayout>
+      <div className="bg-[#F8F9FB] h-full">
+        <div className="mb-6">
+          <Navbar />
+        </div>
+        <div className="flex items-start bg-[#F8F9FB] h-[80vh]">
+          <div className="w-1/6 h-full bg-white py-4">
+            <div className="w-full py-2 px-4 cursor-pointer border-b" onClick={() => {
+              router.push('/main/archive');
+            }}>
+              <p className="prose prose-lg">Архивный сбор</p>
+            </div>
+            <div className="bg-gray-100 w-full py-2 px-4 cursor-pointer" onClick={() => {
+              router.push('/main/history');
+            }}>
+              <p className="prose prose-lg">История сборов</p>
+            </div>
           </div>
-          <div className="bg-gray-100 w-full py-2 px-4 cursor-pointer" onClick={() => {
-            router.push('/main/history');
-          }}>
-            <p className="prose prose-lg">История сборов</p>
+          <div className="py-4 w-5/6 px-6 overflow-auto">
+            <p className="prose prose-2xl font-semibold mb-6">История сборов</p>
+            <Table aria-label="Example table with custom cells" className="bg-white rounded-lg">
+              <TableHeader columns={tableColumn}>
+                {(column) => (
+                  <TableColumn key={column.uid} className="text-left py-4 px-8">
+                    <p className="prose prose-sm font-normal">{column.name}</p>
+                  </TableColumn>
+                )}
+              </TableHeader>
+              <TableBody items={tableRow}>
+                {(item) => (
+                  <TableRow key={item.id} className="border-b last:border-0 hover:bg-[#fcfcfd]">
+                    {(columnKey) => <TableCell className="p-0">{renderCell(item, columnKey)}</TableCell>}
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
           </div>
         </div>
-        <div className="py-4 w-5/6 px-6 overflow-auto">
-          <p className="prose prose-2xl font-semibold mb-6">История сборов</p>
-          <Table aria-label="Example table with custom cells" className="bg-white rounded-lg">
-            <TableHeader columns={tableColumn}>
-              {(column) => (
-                <TableColumn key={column.uid} className="text-left py-4 px-8">
-                  <p className="prose prose-sm font-normal">{column.name}</p>
-                </TableColumn>
-              )}
-            </TableHeader>
-            <TableBody items={tableRow}>
-              {(item) => (
-                <TableRow key={item.id} className="border-b last:border-0 hover:bg-[#fcfcfd]">
-                  {(columnKey) => <TableCell className="p-0">{renderCell(item, columnKey)}</TableCell>}
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    </ProtectLayout>
   )
 }
 

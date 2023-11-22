@@ -8,6 +8,7 @@ import Input from "@/components/atom/Input";
 import Button from "@/components/atom/Button";
 import { useRouter } from "next/router";
 import {getCookie, setCookie} from 'cookies-next';
+import {Spinner} from "@nextui-org/spinner";
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
   const { locale } = ctx;
@@ -27,6 +28,7 @@ const Homepage: NextPage = () => {
   const [forgotPassword, setForgotPassword] = useState('');
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
+  const [pending, setPending] = useState(false);
 
   const [errorLogin, setErrorLogin] = useState(false);
   const [errorPassword, setErrorPassword] = useState(false);
@@ -52,6 +54,7 @@ const Homepage: NextPage = () => {
       return;
     }
     try {
+      setPending(true);
       setErrorLogin(false);
       setErrorPassword(false);
       const res = await fetch(
@@ -69,16 +72,19 @@ const Homepage: NextPage = () => {
       );
 
       if (res.ok) {
+        setPending(false);
         const data = await res.json();
         localStorage.setItem('forgotPassword', 'REJECT');
         setCookie('scano_acess_token', data.access_token);
         await router.push('/main/');
       } else {
+        setPending(false);
         console.error('Login failed');
         setErrorLogin(true);
         setErrorPassword(true);
       }
     } catch (err) {
+      setPending(false);
       console.error(err);
     }
   };
@@ -126,7 +132,9 @@ const Homepage: NextPage = () => {
           value={password}
           onChange={handlePassword}
         />
-        <Button label="Кіру" onClick={handleClick} size="lg"/>
+        <Button label={
+          pending ? (<Spinner color="white" size="sm" />) : 'Войти'
+        } onClick={handleClick} size="lg"/>
         <a href="/auth/send_password" className="text-center font-['Work Sans',sans-serif] text-[#757575] hover:text-[#434445] prose-base">
           Парольді ұмыттыңызба?
         </a>

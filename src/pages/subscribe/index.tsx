@@ -7,6 +7,7 @@ import Edit from "@public/assets/icons/editBlue.svg";
 import Delete from "@public/assets/icons/deleteBlue.svg";
 import {Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from "@nextui-org/table";
 import Button from "@/components/atom/Button";
+import ProtectLayout from "@/components/layout/protectLayout";
 
 const subscribeIndex: NextPage = () => {
   const tableColumn = [
@@ -117,35 +118,37 @@ const subscribeIndex: NextPage = () => {
   }, []);
 
   return (
-    <MainLayout>
-      <div className="flex flex-col">
-        <p className="font-['Work Sans',sans-serif] text-[#35415A] prose prose-lg">Настройка оповещений</p>
-        <Table
-          aria-label="Example table with custom cells"
-          className="bg-white rounded-lg mt-8"
-          bottomContent={
-            <Button label="Добавить подписку" onClick={() => {
-              router.push('/subscribe/addSubscribe');
-            }} size="sm" classBtn="max-w-fit mt-4 ml-6" />
-          }
-        >
-          <TableHeader columns={tableColumn}>
-            {(column) => (
-              <TableColumn key={column.uid} className="text-left py-4 px-8">
-                <p className="prose prose-sm font-normal">{column.name}</p>
-              </TableColumn>
-            )}
-          </TableHeader>
-          <TableBody items={tableRow}>
-            {(item) => (
-              <TableRow key={item.id} className="border-b last:border-0 hover:bg-[#fcfcfd]">
-                {(columnKey) => <TableCell className="p-0">{renderCell(item, columnKey)}</TableCell>}
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-    </MainLayout>
+    <ProtectLayout>
+      <MainLayout>
+        <div className="flex flex-col">
+          <p className="font-['Work Sans',sans-serif] text-[#35415A] prose prose-lg">Настройка оповещений</p>
+          <Table
+            aria-label="Example table with custom cells"
+            className="bg-white rounded-lg mt-8"
+            bottomContent={
+              <Button label="Добавить подписку" onClick={() => {
+                router.push('/subscribe/addSubscribe');
+              }} size="sm" classBtn="max-w-fit mt-4 ml-6" />
+            }
+          >
+            <TableHeader columns={tableColumn}>
+              {(column) => (
+                <TableColumn key={column.uid} className="text-left py-4 px-8">
+                  <p className="prose prose-sm font-normal">{column.name}</p>
+                </TableColumn>
+              )}
+            </TableHeader>
+            <TableBody items={tableRow}>
+              {(item) => (
+                <TableRow key={item.id} className="border-b last:border-0 hover:bg-[#fcfcfd]">
+                  {(columnKey) => <TableCell className="p-0">{renderCell(item, columnKey)}</TableCell>}
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </MainLayout>
+    </ProtectLayout>
   )
 }
 

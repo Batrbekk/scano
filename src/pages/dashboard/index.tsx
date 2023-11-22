@@ -12,6 +12,7 @@ import MainLayout from "@/components/layout/mainLayout";
 import { Checkbox, CheckboxGroup } from "@nextui-org/checkbox";
 import {Accordion, AccordionItem} from "@nextui-org/accordion";
 import MaterialCard from "@/components/molecule/MaterialCard";
+import ProtectLayout from "@/components/layout/protectLayout";
 
 const chooseFilter = [
   {
@@ -128,7 +129,7 @@ const dashboardIndex: NextPage = () => {
   };
 
   return (
-    <>
+    <ProtectLayout>
       <MainLayout>
         <div className="flex flex-col">
           <div className="flex items-center justify-between w-full">
@@ -361,7 +362,7 @@ const dashboardIndex: NextPage = () => {
           </div>
         </div>
       </MainLayout>
-    </>
+    </ProtectLayout>
   )
 }
 

@@ -7,6 +7,7 @@ import Footer from "@/components/molecule/Footer";
 import BlueDelete from "@public/assets/icons/blueDelete.svg";
 import Download from "@public/assets/icons/download.svg";
 import {Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from "@nextui-org/table";
+import ProtectLayout from "@/components/layout/protectLayout";
 
 export const reportArchive: NextPage = () => {
   const router = useRouter();
@@ -149,42 +150,44 @@ export const reportArchive: NextPage = () => {
   }, []);
 
   return (
-    <div className="bg-[#F8F9FB] h-full">
-      <div className="mb-6">
-        <Navbar />
-      </div>
-      <div className="flex items-start bg-[#F8F9FB]">
-        <div className="py-4 px-6 w-full">
-          <div className="flex items-center justify-between mb-6">
-            <p className="prose prose-2xl font-semibold">Архив отчетов</p>
-            <p className="prose prose-base">Отчеты хранятся не более 3-х месяцев</p>
-          </div>
-          <Table aria-label="Example table with custom cells" className="bg-white rounded-lg">
-            <TableHeader columns={tableColumn}>
-              {(column) => (
-                <TableColumn key={column.uid} className="text-left py-4 px-8">
-                  {column.uid === 'created' ? (
-                    <div className="rounded-2xl bg-[#ebecef] py-1 px-4 w-fit">
-                      <p className="prose prose-sm font-normal">{column.name}</p>
-                    </div>
-                    ) : (
-                    <p className="prose prose-sm font-normal">{column.name}</p>
-                  )}
-                </TableColumn>
-              )}
-            </TableHeader>
-            <TableBody items={tableRow}>
-              {(item) => (
-                <TableRow key={item.theme} className="border-b last:border-0 hover:bg-[#fcfcfd]">
-                  {(columnKey) => <TableCell className="p-0">{renderCell(item, columnKey)}</TableCell>}
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+    <ProtectLayout>
+      <div className="bg-[#F8F9FB] h-full">
+        <div className="mb-6">
+          <Navbar />
         </div>
+        <div className="flex items-start bg-[#F8F9FB]">
+          <div className="py-4 px-6 w-full">
+            <div className="flex items-center justify-between mb-6">
+              <p className="prose prose-2xl font-semibold">Архив отчетов</p>
+              <p className="prose prose-base">Отчеты хранятся не более 3-х месяцев</p>
+            </div>
+            <Table aria-label="Example table with custom cells" className="bg-white rounded-lg">
+              <TableHeader columns={tableColumn}>
+                {(column) => (
+                  <TableColumn key={column.uid} className="text-left py-4 px-8">
+                    {column.uid === 'created' ? (
+                      <div className="rounded-2xl bg-[#ebecef] py-1 px-4 w-fit">
+                        <p className="prose prose-sm font-normal">{column.name}</p>
+                      </div>
+                    ) : (
+                      <p className="prose prose-sm font-normal">{column.name}</p>
+                    )}
+                  </TableColumn>
+                )}
+              </TableHeader>
+              <TableBody items={tableRow}>
+                {(item) => (
+                  <TableRow key={item.theme} className="border-b last:border-0 hover:bg-[#fcfcfd]">
+                    {(columnKey) => <TableCell className="p-0">{renderCell(item, columnKey)}</TableCell>}
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    </ProtectLayout>
   )
 }
 
