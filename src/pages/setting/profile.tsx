@@ -58,7 +58,7 @@ const Profile: NextPage = () => {
         setSurname(data.last_name);
         setCompany(data.company_name);
         setProfileAuth(data);
-        if (data.timezone === 'null') {
+        if (data.timezone === null) {
           setSelectedOption('Не указано');
         } else {
           setSelectedOption(data.timezone);
