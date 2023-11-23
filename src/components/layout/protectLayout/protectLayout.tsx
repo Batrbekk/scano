@@ -17,15 +17,9 @@ const protectLayout: FC<ProtectLayoutProps> = ({children}) => {
     }
   }, [token]);
   return (
-    <main>
-      {token ? (
-        children
-      ) : (
-        <div className="w-full h-screen flex items-center justify-center">
-          <Spinner color="success" size="lg" />
-        </div>
-      )}
-    </main>
+    <div>
+      {token && children}
+    </div>
   )
 }
 

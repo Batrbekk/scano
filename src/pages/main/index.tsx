@@ -391,12 +391,8 @@ const mainIndex: NextPage = () => {
                   <p>Вы уверены что хотите удалить данную тему?</p>
                 </ModalBody>
                 <ModalFooter>
-                  <ButtonUI color="primary" onPress={onClose}>
-                    Отмена
-                  </ButtonUI>
-                  <ButtonUI color="danger" onPress={() => {deleteTheme()}}>
-                    Удалить
-                  </ButtonUI>
+                  <Button label="Отмена" size="sm" color="bg-[#5b85ce]" onClick={onClose} />
+                  <Button label="Удалить" size="sm" color="bg-[#cf6662]" onClick={() => deleteTheme()} />
                 </ModalFooter>
               </>
             )}
