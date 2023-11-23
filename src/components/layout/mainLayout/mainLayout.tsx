@@ -40,11 +40,13 @@ const mainLayout: FC<MainLayoutProps> = ({children, withPadding = defaultProps.w
   const [profile, setProfile] = useState<Profile>();
 
   useEffect(() => {
-    if(profileCookie) {
-      setProfile(JSON.parse(profileCookie));
+    if (process.browser && window) {
+      if(profileCookie) {
+        setProfile(JSON.parse(profileCookie));
+      }
+      setPath(router.asPath.substring(1));
+      setRouterRoot(router.asPath.split('/').filter(Boolean)[0]);
     }
-    setPath(router.asPath.substring(1));
-    setRouterRoot(router.asPath.split('/').filter(Boolean)[0]);
   }, [router, profileCookie]);
 
   return (

@@ -14,9 +14,7 @@ import InlineChart from "@/components/atom/InlineChart";
 import {useRouter} from "next/router";
 import {getCookie, setCookie} from "cookies-next";
 import {Profile, Theme} from "@/types";
-import { Button as ButtonUI } from "@nextui-org/button";
 import {
-  CircularProgress,
   Modal,
   ModalBody,
   ModalContent,
@@ -26,6 +24,8 @@ import {
 } from "@nextui-org/react";
 import { format } from "date-fns";
 import ProtectLayout from "@/components/layout/protectLayout";
+import {Spinner} from "@nextui-org/spinner";
+import {CircularProgress} from "@nextui-org/progress";
 
 const mainIndex: NextPage = () => {
   const router = useRouter();
@@ -96,32 +96,6 @@ const mainIndex: NextPage = () => {
     {name: 'Неделя', uid: 'week'},
     {name: 'Всего', uid: 'total'}
   ];
-  const tableRow = [
-    {
-      _id: 1,
-      theme_type: 'CM',
-      name: 'АО Кселл',
-      created_at: '19.06.21',
-      today: {
-        positive: 0,
-        neutral: 0,
-        negative: 0,
-        total: 0
-      },
-      week: {
-        positive: 6,
-        neutral: 19,
-        negative: 1,
-        total: 26,
-      },
-      total: {
-        positive: 999,
-        neutral: 6,
-        negative: 2,
-        total: 1007
-      },
-    },
-  ];
   const links = [
     {
       label: 'Архивный сбор',
@@ -142,13 +116,13 @@ const mainIndex: NextPage = () => {
   ];
   const token = getCookie('scano_acess_token');
   const [profile, setProfile] = useState<Profile>();
-  const [themes, setThemes] = useState<ReadonlyArray<Theme>>();
+  const [themes, setThemes] = useState<ReadonlyArray<Theme>>([]);
   const [deleteThemeId, setDeleteThemeId] = useState('');
+  const [pending, setPending] = useState<boolean>(false);
   const {isOpen, onOpen, onClose} = useDisclosure();
-  type Row = typeof tableRow[0];
 
   const renderCell = useCallback((row: any, columnKey: Key): any  => {
-    const cellValue = row[columnKey as keyof Row];
+    const cellValue = row[columnKey as keyof Theme];
 
     switch (columnKey) {
       case '_id':
@@ -247,6 +221,7 @@ const mainIndex: NextPage = () => {
 
   const getTheme = async () => {
     try {
+      setPending(true);
       const res = await fetch(
         'https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/',
         {
@@ -260,7 +235,10 @@ const mainIndex: NextPage = () => {
       if (res.ok) {
         const data = await res.json();
         setThemes(data);
+        setPending(false);
         console.log(data);
+      } else {
+        setPending(false);
       }
     } catch (e) {
       console.error(e);
@@ -341,34 +319,41 @@ const mainIndex: NextPage = () => {
               </div>
             </div>
           </div>
-          {themes ? (
-            <Table aria-label="Example table with custom cells" className="bg-white rounded-lg">
-              <TableHeader columns={tableColumn}>
-                {(column) => (
-                  <TableColumn key={column.uid} className="text-left py-4 px-8">
-                    {column.uid !== 'name' ? (
+          <Table aria-label="Example table with custom cells" className="bg-white rounded-lg">
+            <TableHeader columns={tableColumn}>
+              {(column) => (
+                <TableColumn key={column.uid} className="text-left py-4 px-8">
+                  {column.uid !== 'name' ? (
+                    <p className="prose prose-sm">{column.name}</p>
+                  ) : (
+                    <div className="rounded-2xl bg-[#ebecef] py-1 px-2 w-fit">
                       <p className="prose prose-sm">{column.name}</p>
-                    ) : (
-                      <div className="rounded-2xl bg-[#ebecef] py-1 px-2 w-fit">
-                        <p className="prose prose-sm">{column.name}</p>
-                      </div>
-                    )}
-                  </TableColumn>
-                )}
-              </TableHeader>
-              <TableBody items={themes}>
-                {(item: Theme) => (
-                  <TableRow key={item._id} className="border-b hover:bg-[#fcfcfd]">
-                    {(columnKey) => <TableCell className="p-0">{renderCell(item, columnKey)}</TableCell>}
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          ) : (
-            <div className="h-screen flex items-center justify-center">
-              <CircularProgress size="lg" color="success" aria-label="Loading..."/>
-            </div>
-          )}
+                    </div>
+                  )}
+                </TableColumn>
+              )}
+            </TableHeader>
+            <TableBody
+              items={themes}
+              isLoading={pending}
+              loadingContent={
+                <div className="flex items-center justify-center h-10">
+                  <Spinner label="Загрузка..." />
+                </div>
+              }
+              emptyContent={
+                <p className={`${pending && ('opacity-0')}`}>
+                  Нету данных...
+                </p>
+              }
+            >
+              {(item: Theme) => (
+                <TableRow key={item._id} className="border-b hover:bg-[#fcfcfd]">
+                  {(columnKey) => <TableCell className="p-0">{renderCell(item, columnKey)}</TableCell>}
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
         </div>
         <div className="mb-4 px-14 flex items-center justify-between">
           <div className="flex items-center gap-x-4">

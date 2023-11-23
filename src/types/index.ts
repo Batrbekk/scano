@@ -12,6 +12,7 @@ export interface Profile {
 }
 
 export interface Theme {
+  created_at: string,
   _id: string,
   name: string,
   group_id?: string | null,

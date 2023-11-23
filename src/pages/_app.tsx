@@ -8,7 +8,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   const AnyComponent = Component as any;
   return (
-    <AnyComponent {...pageProps} />
+    <AnyComponent {...pageProps}  />
   );
 }
 export default appWithTranslation(MyApp);
