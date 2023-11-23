@@ -6,6 +6,7 @@ import {Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} 
 import Profile from "@public/assets/icons/profile.svg";
 import Exit from "@public/assets/icons/exit.svg";
 import Logo from "@public/logo.svg";
+import {deleteCookie} from "cookies-next";
 
 interface Props {
   email?: string,
@@ -22,6 +23,16 @@ export const LayoutNavbar: React.FC<Props> = ({email, first_name, last_name, rol
   useEffect(() => {
     setMenu(router.asPath.substring(1));
   }, []);
+
+  const dropFunction = (key: React.Key) => {
+    if (key === 'profile') {
+      router.push('/setting/profile')
+    }
+    if (key === 'exit') {
+      deleteCookie('scano_acess_token');
+      router.push('/');
+    }
+  };
 
   return (
     <div className="bg-[#F8F9FB] w-full flex items-center justify-between p-6">
@@ -45,7 +56,10 @@ export const LayoutNavbar: React.FC<Props> = ({email, first_name, last_name, rol
               <p className="text-[#35415A] prose-base font-['Work Sans',sans-serif] font-semibold">{first_name ? first_name : 'Не указано'} {last_name}</p>
             </div>
           </DropdownTrigger>
-          <DropdownMenu aria-label="actions">
+          <DropdownMenu
+            aria-label="actions"
+            onAction={(key) => dropFunction(key)}
+          >
             <DropdownSection showDivider>
               <DropdownItem>
                 <div className="flex flex-col">

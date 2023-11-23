@@ -4,6 +4,8 @@ import Image from "next/image";
 import Exit from "@public/assets/icons/exit.svg";
 import Profile from "@public/assets/icons/profile.svg";
 import {Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from "@nextui-org/dropdown";
+import {deleteCookie} from "cookies-next";
+import {useRouter} from "next/router";
 
 interface Props {
   email?: string,
@@ -14,6 +16,18 @@ interface Props {
 }
 
 export const Navbar: React.FC<Props> = ({email, first_name, last_name, role, photo_url}) => {
+  const router = useRouter();
+
+  const dropFunction = (key: React.Key) => {
+    if (key === 'profile') {
+      router.push('/setting/profile')
+    }
+    if (key === 'exit') {
+      deleteCookie('scano_acess_token');
+      router.push('/');
+    }
+  };
+
   return (
     <div className="bg-[#F8F9FB] w-screen flex items-center justify-between px-6 py-3">
       <a href="/main/">
@@ -30,7 +44,10 @@ export const Navbar: React.FC<Props> = ({email, first_name, last_name, role, pho
             <p className="text-[#35415A] prose-base font-['Work Sans',sans-serif] font-semibold">{first_name ? first_name : 'Не указано'} {last_name}</p>
           </div>
         </DropdownTrigger>
-        <DropdownMenu aria-label="actions">
+        <DropdownMenu
+          aria-label="actions"
+          onAction={(key) => dropFunction(key)}
+        >
           <DropdownSection showDivider>
             <DropdownItem>
               <div className="flex flex-col">

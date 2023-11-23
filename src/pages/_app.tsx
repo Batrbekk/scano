@@ -6,7 +6,9 @@ import { CookiesProvider } from 'react-cookie';
 
 function MyApp({ Component, pageProps }: AppProps) {
 
-  // @ts-ignore
-  return <CookiesProvider><Component {...pageProps} /></CookiesProvider>
+  const AnyComponent = Component as any;
+  return (
+    <AnyComponent {...pageProps} />
+  );
 }
 export default appWithTranslation(MyApp);
