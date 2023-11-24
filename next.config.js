@@ -1,11 +1,11 @@
-/**
- * @type {import('next').NextConfig}
- */
-const { i18n } = require("./next-i18next.config");
-
 module.exports = {
   reactStrictMode: false,
-  i18n,
+  i18n: {
+    locales: ['en', 'ru', 'kk'],
+    defaultLocale: 'ru',
+    localeDetection: false,
+  },
+  trailingSlash: true,
   images: {
     domains: ['static.vecteezy.com'],
   },

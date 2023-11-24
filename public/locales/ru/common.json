@@ -1,5 +1,7 @@
 {
-  "portfolio": "Портфолио",
+  "portfolio": {
+    "base": "епт"
+  },
   "blog": "Блог",
   "events": "Ивенты",
   "vacancy": "Вакансии",

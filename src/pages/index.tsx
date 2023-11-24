@@ -10,19 +10,6 @@ import { useRouter } from "next/router";
 import {getCookie, setCookie} from 'cookies-next';
 import {Spinner} from "@nextui-org/spinner";
 
-export const getStaticProps: GetStaticProps = async (ctx) => {
-  const { locale } = ctx;
-
-  return {
-    props: {
-      ...(await serverSideTranslations(locale || "en", [
-        COMMON_TNS,
-      ])),
-      // Will be passed to the page component as props
-    },
-  };
-};
-
 const Homepage: NextPage = () => {
   const router = useRouter();
   const [forgotPassword, setForgotPassword] = useState('');

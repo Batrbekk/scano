@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { COMMON_TNS } from "@/lib/i18n/consts";
 
 type Props = {
-    className: string,
+    className?: string,
 };
 
 export const Switch: React.FC<Props> = (props) => {
