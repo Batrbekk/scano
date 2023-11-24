@@ -15,11 +15,24 @@ import Eye from "@public/assets/icons/eye.svg";
 import CloseEye from "@public/assets/icons/closeEye.svg";
 import ProtectLayout from "@/components/layout/protectLayout";
 import {getCookie, setCookie} from "cookies-next";
-import {Profile} from "@/types";
+import {Mode, Profile} from "@/types";
 import {Spinner} from "@nextui-org/spinner";
 
 const Profile: NextPage = () => {
-  const options = ['UCT +6', 'UCT +7', 'UCT +8'];
+  const options = [
+    {
+      label: 'UCT +6',
+      key: 'UCT +6'
+    },
+    {
+      label: 'UCT +7',
+      key: 'UCT +7'
+    },
+    {
+      label: 'UCT +8',
+      key: 'UCT +8'
+    }
+  ];
 
   const token = getCookie('scano_acess_token');
   const [selectedOption, setSelectedOption] = useState(options[0]);
@@ -33,7 +46,7 @@ const Profile: NextPage = () => {
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-  const handleSelectChange = (value: string) => {
+  const handleSelectChange = (value: Mode) => {
     setSelectedOption(value);
   };
 
@@ -59,7 +72,10 @@ const Profile: NextPage = () => {
         setCompany(data.company_name);
         setProfileAuth(data);
         if (data.timezone === null) {
-          setSelectedOption('Не указано');
+          setSelectedOption({
+            label: 'Не указано',
+            key: ''
+          });
         } else {
           setSelectedOption(data.timezone);
         }
