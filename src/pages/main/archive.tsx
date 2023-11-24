@@ -11,16 +11,30 @@ import Footer from "@/components/molecule/Footer";
 import { ru } from "date-fns/locale";
 import { useRouter } from "next/router";
 import ProtectLayout from "@/components/layout/protectLayout";
+import {Mode} from "@/types";
 
 const archive: NextPage = () => {
   const router = useRouter();
-  const options = ['АО "Кселл"', 'option2', 'option3'];
+  const options = [
+    {
+      label: 'АО "Кселл"',
+      key: 'kcell'
+    },
+    {
+      label: 'option2',
+      key: 'option2'
+    },
+    {
+      label: 'option3',
+      key: 'option3'
+    }
+  ];
 
   const [selectedOption, setSelectedOption] = useState(options[0]);
   const [dateRange, setDateRange] = useState<any>([null, null]);
   const [startDate, endDate] = dateRange;
 
-  const handleSelectChange = (value: string) => {
+  const handleSelectChange = (value: Mode) => {
     setSelectedOption(value);
   };
 

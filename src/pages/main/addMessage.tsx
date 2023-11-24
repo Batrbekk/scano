@@ -7,11 +7,25 @@ import Select from "@/components/atom/Select";
 import Input from "@/components/atom/Input";
 import Button from "@/components/atom/Button";
 import ProtectLayout from "@/components/layout/protectLayout";
+import {Mode} from "@/types";
 
 export const addMessage: NextPage = () => {
   const router = useRouter();
 
-  const options = ['АО "Кселл"', 'option2', 'option3'];
+  const options = [
+    {
+      label: 'АО "Кселл"',
+      key: 'kcell'
+    },
+    {
+      label: 'option2',
+      key: 'option2'
+    },
+    {
+      label: 'option3',
+      key: 'option3'
+    }
+  ];
   const squares = [
     {
       id: 1,
@@ -58,7 +72,7 @@ export const addMessage: NextPage = () => {
   const [selectedOption, setSelectedOption] = useState(options[0]);
   const [link, setLink] = useState('');
 
-  const handleSelectChange = (value: string) => {
+  const handleSelectChange = (value: Mode) => {
     setSelectedOption(value);
   };
 

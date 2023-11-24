@@ -13,7 +13,7 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from 
 import InlineChart from "@/components/atom/InlineChart";
 import {useRouter} from "next/router";
 import {getCookie, setCookie} from "cookies-next";
-import {Profile, Theme} from "@/types";
+import {Mode, Profile, Theme} from "@/types";
 import {
   Modal,
   ModalBody,
@@ -88,7 +88,20 @@ const mainIndex: NextPage = () => {
       label: 'Негатив'
     }
   ];
-  const options = ['Все группы', 'option2', 'option3'];
+  const options = [
+    {
+      label: 'Все группы',
+      key: 'kcell'
+    },
+    {
+      label: 'option2',
+      key: 'option2'
+    },
+    {
+      label: 'option3',
+      key: 'option3'
+    }
+  ];
   const tableColumn = [
     {name: '#', uid: '_id'},
     {name: 'Название', uid: 'name'},
@@ -192,7 +205,7 @@ const mainIndex: NextPage = () => {
 
   const [selectedOption, setSelectedOption] = useState(options[0]);
 
-  const handleSelectChange = (value: string) => {
+  const handleSelectChange = (value: Mode) => {
     setSelectedOption(value);
   };
 

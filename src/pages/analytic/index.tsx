@@ -19,6 +19,7 @@ import PieBlock from "src/components/atom/PieBlock";
 import exporting from 'highcharts/modules/exporting';
 import BarBlock from "src/components/atom/BarBlock";
 import ProtectLayout from "@/components/layout/protectLayout";
+import {Mode} from "@/types";
 
 if (typeof Highcharts === 'object') {
   exporting(Highcharts);
@@ -38,7 +39,16 @@ const chooseFilter = [
 ];
 
 const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
-  const optionsSelect = ['По дням', 'По неделям'];
+  const optionsSelect = [
+    {
+      label: 'По дням',
+      key: 'day'
+    },
+    {
+      label: 'По неделям',
+      key: 'week'
+    }
+  ];
   const [filterItems, setFilterItems] = useState(chooseFilter);
   const [search, setSearch] = useState('');
   const [dateRange, setDateRange] = useState<any>([null, null]);
@@ -77,7 +87,7 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
     }
   };
 
-  const handleSelectChange = (value: string) => {
+  const handleSelectChange = (value: Mode) => {
     setSelectedOption(value);
   };
 

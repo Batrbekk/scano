@@ -8,11 +8,51 @@ import MainLayout from "@/components/layout/mainLayout";
 import {Checkbox, CheckboxGroup} from "@nextui-org/checkbox";
 import Notification from "@public/assets/icons/notification.svg";
 import ProtectLayout from "@/components/layout/protectLayout";
+import {Mode} from "@/types";
 
 const addMessage: NextPage = () => {
-  const options = ['АО "Кселл"', 'option2', 'option3'];
-  const notif = ['пришло сообщение', 'option2', 'option3'];
-  const users = ['Abylkas Aslan', 'Kuandyk Batyrbek'];
+  const options = [
+    {
+      label: 'Все группы',
+      key: 'kcell'
+    },
+    {
+      label: 'option2',
+      key: 'option2'
+    },
+    {
+      label: 'option3',
+      key: 'option3'
+    }
+  ];
+  const notif = [
+    {
+      label: 'Пришло сообщение',
+      key: 'kcell'
+    },
+    {
+      label: 'option2',
+      key: 'option2'
+    },
+    {
+      label: 'option3',
+      key: 'option3'
+    }
+  ];
+  const users = [
+    {
+      label: 'Имя фамилия',
+      key: 'name'
+    },
+    {
+      label: 'option2',
+      key: 'option2'
+    },
+    {
+      label: 'option3',
+      key: 'option3'
+    }
+  ];
 
   const [count, setCount] = useState<string | undefined>('0');
   const [selectedOption, setSelectedOption] = useState(options[0]);
@@ -25,19 +65,19 @@ const addMessage: NextPage = () => {
     setCount(event.target.value);
   };
 
-  const handleSelectUserTelegram = (value: string) => {
+  const handleSelectUserTelegram = (value: Mode) => {
     setSelectedUsersTelegram(value);
   };
 
-  const handleSelectUser = (value: string) => {
+  const handleSelectUser = (value: Mode) => {
     setSelectedUsers(value);
   };
 
-  const handleSelectChange = (value: string) => {
+  const handleSelectChange = (value: Mode) => {
     setSelectedOption(value);
   };
 
-  const handleSelectNotif = (value: string) => {
+  const handleSelectNotif = (value: Mode) => {
     setSelectedNotif(value);
   };
 

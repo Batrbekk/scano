@@ -11,12 +11,40 @@ import {Radio, RadioGroup} from "@nextui-org/radio";
 import MainLayout from "@/components/layout/mainLayout";
 import {Checkbox, CheckboxGroup} from "@nextui-org/checkbox";
 import ProtectLayout from "@/components/layout/protectLayout";
+import {Mode} from "@/types";
 
 const addSubscribe: NextPage = () => {
-  const options = ['АО "Кселл"', 'option2', 'option3'];
-  const periodOption = ['Раз в день', '2 раза в день', '1 раз в неделю'];
-  const hourOption = ['00 ч.', '1 ч.', '2 ч.'];
-  const minuteOption = ['00 мин.', '15мин.', '30мин.'];
+  const options = [
+    {
+      label: 'АО "Кселл"',
+      key: 'kcell'
+    },
+    {
+      label: 'option2',
+      key: 'option2'
+    },
+    {
+      label: 'option3',
+      key: 'option3'
+    }
+  ];
+  const periodOption = [
+    { label: 'Раз в день', key: 'Раз в день' },
+    { label: '2 раза в день', key: '2 раза в день' },
+    { label: '1 раз в неделю', key: '1 раз в неделю' }
+  ];
+
+  const hourOption = [
+    { label: '00 ч.', key: '00 ч.' },
+    { label: '1 ч.', key: '1 ч.' },
+    { label: '2 ч.', key: '2 ч.' }
+  ];
+
+  const minuteOption = [
+    { label: '00 мин.', key: '00 мин.' },
+    { label: '15 мин.', key: '15 мин.' },
+    { label: '30 мин.', key: '30 мин.' }
+  ];
   const docFormat = [
     {
       value: 'Excel',
@@ -36,19 +64,19 @@ const addSubscribe: NextPage = () => {
   const [templateTab, setTemplateTab] = useState('default');
   const [summarySelect, setSummarySelect] = useState(['index', 'dynamic']);
 
-  const handleSelectChange = (value: string) => {
+  const handleSelectChange = (value: Mode) => {
     setSelectedOption(value);
   };
 
-  const handlePeriodSelectChange = (value: string) => {
+  const handlePeriodSelectChange = (value: Mode) => {
     setPeriodSelectedOption(value);
   };
 
-  const handleHourSelectChange = (value: string) => {
+  const handleHourSelectChange = (value: Mode) => {
     setHourSelectedOption(value);
   };
 
-  const handleMinuteSelectChange = (value: string) => {
+  const handleMinuteSelectChange = (value: Mode) => {
     setMinuteSelectedOption(value);
   };
 

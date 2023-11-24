@@ -9,14 +9,28 @@ import Image from "next/image";
 import Button from "@/components/atom/Button";
 import {Button as ButtonUI} from "@nextui-org/button";
 import ProtectLayout from "@/components/layout/protectLayout";
+import {Mode} from "@/types";
 
 const AddRule: NextPage = () => {
-  const options = ['АО "Кселл"', 'option2', 'option3'];
+  const options = [
+    {
+      label: 'АО "Кселл"',
+      key: 'kcell'
+    },
+    {
+      label: 'option2',
+      key: 'option2'
+    },
+    {
+      label: 'option3',
+      key: 'option3'
+    }
+  ];
 
   const [selectedOption, setSelectedOption] = useState(options[0]);
   const [summarySelect, setSummarySelect] = useState(['']);
 
-  const handleSelectChange = (value: string) => {
+  const handleSelectChange = (value: Mode) => {
     setSelectedOption(value);
   };
 
