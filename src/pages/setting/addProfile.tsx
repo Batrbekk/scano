@@ -1,29 +1,113 @@
 import {NextPage} from "next";
 import MainLayout from "@/components/layout/mainLayout";
 import {Input} from "@nextui-org/input";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Info from "@public/assets/icons/info.svg";
 import Image from "next/image";
 import {Checkbox, CheckboxGroup} from "@nextui-org/checkbox";
 import Select from "@/components/atom/Select";
 import Button from "@/components/atom/Button";
 import ProtectLayout from "@/components/layout/protectLayout";
+import {getCookie} from "cookies-next";
+import {useRouter} from "next/router";
+import {Mode} from "@/types";
+import {Spinner} from "@nextui-org/spinner";
 
 const addProfile: NextPage = () => {
-  const options = ['АО "Кселл"', 'option2', 'option3'];
-  const mode = ['модератор', 'супер администратор', 'автор'];
+  const mode = [
+    {
+      label: 'Администратор',
+      key: 'admin'
+    },
+    {
+      label: 'Супер администратор',
+      key: 'super_admin'
+    },
+    {
+      label: 'Модератор',
+      key: 'moderator'
+    },
+    {
+      label: 'Гость',
+      key: 'guest'
+    }
+  ];
+  const themes = [
+    {
+      key: 'kzt',
+      label: 'КазАтомПром'
+    },
+    {
+      key: 'qazaqgaz',
+      label: 'АО QazaqGaz'
+    },
+    {
+      key: 'kcell',
+      label: 'АО Кселл'
+    },
+    {
+      key: 'newTheme',
+      label: 'Новые темы'
+    }
+  ]
 
-  const [summarySelect, setSummarySelect] = useState(['']);
-  const [selectedOption, setSelectedOption] = useState(options[0]);
-  const [adminOption, setAdminOption] = useState(mode[0]);
+  const [summarySelect, setSummarySelect] = useState<Array<string>>(['']);
+  const [adminOption, setAdminOption] = useState<Mode>(mode[0]);
 
-  const handleSelectChange = (value: string) => {
-    setSelectedOption(value);
-  };
+  const router = useRouter();
+  const token = getCookie('scano_acess_token');
+  const [pending, setPending] = useState<boolean>(false);
 
-  const handleAdminChange = (value: string) => {
+  const [name, setName] = useState('');
+  const [surname, setSurname] = useState('');
+  const [email, setEmail] = useState('');
+  const [company, setCompany] = useState('');
+  const [chooseAll, setChooseAll] = useState(false);
+
+  const handleAdminChange = (value: Mode) => {
     setAdminOption(value);
   };
+
+  const createProfile = async () => {
+    try {
+      setPending(true);
+      const res = await fetch(
+        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/`,
+        {
+          method: 'POST', // Assuming you are sending a POST request
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            first_name: name,
+            last_name: surname,
+            company_name: company,
+            role: adminOption.key,
+            email: email,
+            theme_ids: summarySelect
+          }),
+        }
+      );
+      if (res.ok) {
+        setPending(false);
+        await router.push('/setting/users');
+      } else {
+        setPending(false);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  useEffect(() => {
+    const allKeys = themes.map(theme => theme.key);
+    if (chooseAll) {
+      setSummarySelect(allKeys);
+    } else {
+      setSummarySelect([]);
+    }
+  }, [chooseAll]);
 
   return(
     <ProtectLayout>
@@ -37,9 +121,11 @@ const addProfile: NextPage = () => {
                 </div>
                 <div className="flex flex-col gap-y-2 w-1/2">
                   <div className="flex flex-col gap-y-1 w-full">
-                    <p className="font-['Work Sans',sans-serif] prose prose-sm text-[#979ca9]">Логин</p>
+                    <p className="font-['Work Sans',sans-serif] prose prose-sm text-[#979ca9]">Имя</p>
                     <Input
                       radius="none"
+                      value={name}
+                      onValueChange={setName}
                       classNames={{
                         input: [
                           "placeholder:font-['Montserrat',sans-serif] placeholder:text-base placeholder:font-extralight w-full"
@@ -53,12 +139,14 @@ const addProfile: NextPage = () => {
                     />
                   </div>
                   <div className="flex flex-col gap-y-1 w-full">
-                    <p className="font-['Work Sans',sans-serif] prose prose-sm text-[#979ca9]">E-mail</p>
+                    <p className="font-['Work Sans',sans-serif] prose prose-sm text-[#979ca9]">Фамилия</p>
                     <Input
                       radius="none"
+                      value={surname}
+                      onValueChange={setSurname}
                       classNames={{
                         input: [
-                          "placeholder:font-['Montserrat',sans-serif] placeholder:text-base placeholder:font-extralight"
+                          "placeholder:font-['Montserrat',sans-serif] placeholder:text-base placeholder:font-extralight w-full"
                         ],
                         inputWrapper: [
                           "border border-[rgba(55,71,95,0.80)] bg-transparent rounded",
@@ -72,28 +160,14 @@ const addProfile: NextPage = () => {
               </div>
               <div className="flex items-center gap-x-4">
                 <div className="flex flex-col gap-y-1 w-full">
-                  <p className="font-['Work Sans',sans-serif] prose prose-sm text-[#979ca9]">Имя</p>
+                  <p className="font-['Work Sans',sans-serif] prose prose-sm text-[#979ca9]">E-mail</p>
                   <Input
                     radius="none"
+                    value={email}
+                    onValueChange={setEmail}
                     classNames={{
                       input: [
-                        "placeholder:font-['Montserrat',sans-serif] placeholder:text-base placeholder:font-extralight w-full"
-                      ],
-                      inputWrapper: [
-                        "border border-[rgba(55,71,95,0.80)] bg-transparent rounded",
-                        "font-['Montserrat',sans-serif] text-base font-semibold",
-                        "min-h-unit-8 h-unit-8"
-                      ]
-                    }}
-                  />
-                </div>
-                <div className="flex flex-col gap-y-1 w-full">
-                  <p className="font-['Work Sans',sans-serif] prose prose-sm text-[#979ca9]">Фамилия</p>
-                  <Input
-                    radius="none"
-                    classNames={{
-                      input: [
-                        "placeholder:font-['Montserrat',sans-serif] placeholder:text-base placeholder:font-extralight w-full"
+                        "placeholder:font-['Montserrat',sans-serif] placeholder:text-base placeholder:font-extralight"
                       ],
                       inputWrapper: [
                         "border border-[rgba(55,71,95,0.80)] bg-transparent rounded",
@@ -107,6 +181,8 @@ const addProfile: NextPage = () => {
                   <p className="font-['Work Sans',sans-serif] prose prose-sm text-[#979ca9]">Компания</p>
                   <Input
                     radius="none"
+                    value={company}
+                    onValueChange={setCompany}
                     classNames={{
                       input: [
                         "placeholder:font-['Montserrat',sans-serif] placeholder:text-base placeholder:font-extralight w-full"
@@ -132,49 +208,30 @@ const addProfile: NextPage = () => {
             <div className="p-4 rounded-lg bg-white w-2/3">
               <div className="flex flex-col gap-y-1">
                 <p className="font-['Work Sans',sans-serif] text-[#35415A] prose prose-lg">Права</p>
-                <Checkbox value="admin" classNames={{
-                  wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
-                }}>
-                  <p className="prose prose-sm text-[#5b5a5d]">Администратор</p>
-                </Checkbox>
+                <Select options={mode} value={adminOption} onChange={handleAdminChange} classSelect="!w-1/2" />
               </div>
               <div className="flex items-start gap-x-10 mt-4 w-full">
                 <div className="flex flex-col gap-y-1">
                   <p className="font-['Work Sans',sans-serif] text-[#35415A] prose prose-lg">Темы</p>
-                  <CheckboxGroup
-                    value={summarySelect}
-                    onValueChange={setSummarySelect}
-                  >
-                    <Checkbox value="all" classNames={{
+                  <div className="mb-1">
+                    <Checkbox isSelected={chooseAll} onValueChange={setChooseAll} classNames={{
                       wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
                     }}>
                       <p className="prose prose-sm text-[#5b5a5d] font-semibold">Все темы</p>
                     </Checkbox>
-                    <Checkbox value="kzt" classNames={{
-                      wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
-                    }}>
-                      <p className="prose prose-sm text-[#5b5a5d]">КазАтомПром</p>
-                    </Checkbox>
-                    <Checkbox value="qazaqgaz" classNames={{
-                      wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
-                    }}>
-                      <p className="prose prose-sm text-[#5b5a5d]">АО QazaqGaz</p>
-                    </Checkbox>
-                    <Checkbox value="kcell" classNames={{
-                      wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
-                    }}>
-                      <p className="prose prose-sm text-[#5b5a5d]">АО Кселл</p>
-                    </Checkbox>
-                    <Checkbox value="newTheme" classNames={{
-                      wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
-                    }}>
-                      <p className="prose prose-sm text-[#5b5a5d]">Новые темы</p>
-                    </Checkbox>
+                  </div>
+                  <CheckboxGroup
+                    value={summarySelect}
+                    onValueChange={setSummarySelect}
+                  >
+                    {themes.map((item) => (
+                      <Checkbox value={item.key} classNames={{
+                        wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                      }}>
+                        <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
+                      </Checkbox>
+                    ))}
                   </CheckboxGroup>
-                </div>
-                <div className="flex items-center gap-x-4 w-1/2">
-                  <Select options={mode} value={adminOption} onChange={handleAdminChange} classSelect="w-full" />
-                  <Select options={options} value={selectedOption} onChange={handleSelectChange} classSelect="w-full" />
                 </div>
               </div>
             </div>
@@ -193,7 +250,13 @@ const addProfile: NextPage = () => {
               </div>
             </div>
           </div>
-          <Button label="Добавить пользователя" size="sm" classBtn="!w-fit" />
+          <Button label={
+            pending ? (
+              <Spinner size="sm" color="white" />
+            ) : (
+              "Добавить пользователя"
+            )
+          } size="sm" classBtn="!w-fit" onClick={createProfile} />
         </div>
       </MainLayout>
     </ProtectLayout>

@@ -24,3 +24,8 @@ export interface Theme {
   material_types: Array<string>,
   search_domains: Array<string>
 }
+
+export interface Mode {
+  key: string,
+  label: string
+}

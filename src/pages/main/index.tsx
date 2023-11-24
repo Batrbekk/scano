@@ -290,13 +290,14 @@ const mainIndex: NextPage = () => {
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-x-8">
               <p className="font-semibold prose prose-xl">Темы</p>
-              <Select options={options} value={selectedOption} onChange={handleSelectChange} />
               <div className="flex items-center gap-0.5">
                 {squares.map(item => (
                   <div className={`rounded-sm w-3 h-3 ${item.status === 'FULL' ? 'bg-[#60CA23]' : 'bg-[#cbcfd8]'}`} key={item.id} />
                 ))}
               </div>
-              <Button label="Добавить новую тему" size="sm" />
+              <Button label="Добавить новую тему" size="sm" onClick={() => {
+                router.push('setting/placeSettings');
+              }} />
             </div>
             <div className="flex items-center gap-x-8">
               <button className="flex items-center gap-x-2">
@@ -357,7 +358,9 @@ const mainIndex: NextPage = () => {
         </div>
         <div className="mb-4 px-14 flex items-center justify-between">
           <div className="flex items-center gap-x-4">
-            <Button label="Добавить новую тему" size="sm" />
+            <Button label="Добавить новую тему" size="sm" onClick={() => {
+              router.push('setting/placeSettings');
+            }} />
             <Button label="Поиск по архиву за год" size="sm" color="bg-[#5b85ce]" />
           </div>
           <div className="flex items-center gap-x-2">

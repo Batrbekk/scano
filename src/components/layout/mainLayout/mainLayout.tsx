@@ -177,7 +177,7 @@ const mainLayout: FC<MainLayoutProps> = ({children, withPadding = defaultProps.w
                   <div className="border-l-2 border-[#6481AD] ml-2 pt-4 cursor-pointer" onClick={() => {
                     router.push('/setting/placeSettings');
                   }}>
-                    <p className={`prose prose-sm font-['Montserrat',sans-serif] font-semibold ${path === 'setting/placeSettings' ? `text-white pl-2` : `text-[#6481AD]`}`}>— Мекеме баптаулары</p>
+                    <p className={`prose prose-sm font-['Montserrat',sans-serif] font-semibold ${path === 'setting/placeSettings' ? `text-white pl-2` : `text-[#6481AD]`}`}>— Создать тему</p>
                   </div>
                   <div className="border-l-2 border-[#6481AD] ml-2 pt-4 cursor-pointer" onClick={() => {
                     router.push('/setting/rules');
