@@ -162,7 +162,7 @@ const mainIndex: NextPage = () => {
               </div>
             </div>
             <div className="mt-2 flex items-center gap-x-4">
-              <button className="flex items-center gap-x-1">
+              <button className="flex items-center gap-x-1" onClick={() => {updateTheme(row._id)}}>
                 <Image src={Edit} alt="icon" width={14} height={14} />
                 <p className="prose text-xs text-[#4870b7]">Редактировать</p>
               </button>
@@ -202,12 +202,6 @@ const mainIndex: NextPage = () => {
         return cellValue;
     }
   }, []);
-
-  const [selectedOption, setSelectedOption] = useState(options[0]);
-
-  const handleSelectChange = (value: Mode) => {
-    setSelectedOption(value);
-  };
 
   const handleData = async () => {
     try {
@@ -262,6 +256,12 @@ const mainIndex: NextPage = () => {
     console.log(id);
     setDeleteThemeId(id);
     onOpen();
+  };
+
+  const updateTheme = (id: string) => {
+    console.log(id);
+    setCookie('currentTheme', id);
+    router.push('main/editTheme');
   };
 
   const deleteTheme = async () => {
