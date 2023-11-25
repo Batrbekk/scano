@@ -25,6 +25,32 @@ export interface Theme {
   search_domains: Array<string>
 }
 
+export interface Material {
+  title: string,
+  description: string,
+  created_at: string,
+  updated_at: string,
+  _id: string,
+  language: string,
+  url: string,
+  comments_number: number,
+  likes_number: number,
+  reposts_number: number,
+  views_number: number,
+  source: {
+    source_type: string,
+    name: string,
+    url: string
+  },
+  country_id: string | null,
+  city_id: string | null,
+  author_id: string | null,
+  theme_id: string,
+  sentiment: string | null,
+  tags: ReadonlyArray<any>,
+  real_created_at: String
+}
+
 export interface Mode {
   key: string,
   label: string

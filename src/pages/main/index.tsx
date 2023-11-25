@@ -152,6 +152,7 @@ const mainIndex: NextPage = () => {
           <div className="flex flex-col py-4 px-8">
             <p className="text-lg text-[#4870b7] cursor-pointer" onClick={() => {
               router.push('/dashboard');
+              setCookie('currentTheme', row._id);
             }}>{row.name}</p>
             <div className="flex items-center gap-x-4">
               <p className="prose prose-sm">Данные собираются с {format(new Date(row.created_at), 'dd/MM/yyyy')}</p>

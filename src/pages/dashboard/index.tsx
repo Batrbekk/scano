@@ -2,7 +2,7 @@ import Image from "next/image";
 import {NextPage} from "next";
 import {ru} from "date-fns/locale";
 import {Chip} from "@nextui-org/chip";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Input} from "@nextui-org/input";
 import DatePicker from "react-datepicker";
 import Search from "@public/assets/icons/search.svg";
@@ -13,6 +13,8 @@ import { Checkbox, CheckboxGroup } from "@nextui-org/checkbox";
 import {Accordion, AccordionItem} from "@nextui-org/accordion";
 import MaterialCard from "@/components/molecule/MaterialCard";
 import ProtectLayout from "@/components/layout/protectLayout";
+import {Material} from "@/types";
+import {getCookie, setCookie} from "cookies-next";
 
 const chooseFilter = [
   {
@@ -27,98 +29,40 @@ const chooseFilter = [
   }
 ];
 
-const cards = [
-  {
-    id: 0,
-    title: 'Приказом министра просвещения РК Тимур Абильмажинов назначен руководителем аппарата Министерства просвещения РК',
-    date: '01.01.21 23:11',
-    text: '...государственного контроля и организационно-территориальной работы Администрации Президента РК. С ноября 2020 года и по настоящее время являлся государственным инспектором Администрации Президента...',
-    tags: [
-      {
-        id: 0,
-        title: 'Самолет',
-      },
-      {
-        id: 1,
-        title: 'Авиация',
-      }
-    ],
-    links: {
-      text: 'Scano.kz',
-      value: 'www.google.kz'
-    },
-    img: 'https://static.vecteezy.com/system/resources/thumbnails/006/299/370/original/world-breaking-news-digital-earth-hud-rotating-globe-rotating-free-video.jpg'
-  },
-  {
-    id: 1,
-    title: 'Приказом министра просвещения РК Тимур Абильмажинов назначен руководителем аппарата Министерства просвещения РК',
-    date: '01.01.21 23:11',
-    text: '...государственного контроля и организационно-территориальной работы Администрации Президента РК. С ноября 2020 года и по настоящее время являлся государственным инспектором Администрации Президента...',
-    tags: [
-      {
-        id: 0,
-        title: 'Самолет',
-      },
-      {
-        id: 1,
-        title: 'Авиация',
-      }
-    ],
-    links: {
-      text: 'Scano.kz',
-      value: 'www.google.kz'
-    },
-    img: 'https://static.vecteezy.com/system/resources/thumbnails/006/299/370/original/world-breaking-news-digital-earth-hud-rotating-globe-rotating-free-video.jpg'
-  },
-  {
-    id: 2,
-    title: 'Приказом министра просвещения РК Тимур Абильмажинов назначен руководителем аппарата Министерства просвещения РК',
-    date: '01.01.21 23:11',
-    text: '...государственного контроля и организационно-территориальной работы Администрации Президента РК. С ноября 2020 года и по настоящее время являлся государственным инспектором Администрации Президента...',
-    tags: [
-      {
-        id: 0,
-        title: 'Самолет',
-      },
-      {
-        id: 1,
-        title: 'Авиация',
-      }
-    ],
-    links: {
-      text: 'Scano.kz',
-      value: 'www.google.kz'
-    },
-    img: 'https://static.vecteezy.com/system/resources/thumbnails/006/299/370/original/world-breaking-news-digital-earth-hud-rotating-globe-rotating-free-video.jpg'
-  },
-  {
-    id: 3,
-    title: 'Приказом министра просвещения РК Тимур Абильмажинов назначен руководителем аппарата Министерства просвещения РК',
-    date: '01.01.21 23:11',
-    text: '...государственного контроля и организационно-территориальной работы Администрации Президента РК. С ноября 2020 года и по настоящее время являлся государственным инспектором Администрации Президента...',
-    tags: [
-      {
-        id: 0,
-        title: 'Самолет',
-      },
-      {
-        id: 1,
-        title: 'Авиация',
-      }
-    ],
-    links: {
-      text: 'Scano.kz',
-      value: 'www.google.kz'
-    },
-    img: 'https://static.vecteezy.com/system/resources/thumbnails/006/299/370/original/world-breaking-news-digital-earth-hud-rotating-globe-rotating-free-video.jpg'
-  }
-]
-
 const dashboardIndex: NextPage = () => {
   const [search, setSearch] = useState('');
   const [dateRange, setDateRange] = useState<any>([null, null]);
   const [startDate, endDate] = dateRange;
   const [filterItems, setFilterItems] = useState(chooseFilter);
+  const [material, setMaterial] = useState<ReadonlyArray<Material>>([]);
+  const [pending, setPending] = useState<boolean>(false);
+  const id = getCookie('currentTheme');
+  const token = getCookie('scano_acess_token');
+
+  const getMaterial = async () => {
+    try {
+      setPending(true);
+      const res = await fetch(
+        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/${id}/materials`,
+        {
+          method: 'GET', // Assuming you are sending a POST request
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+        }
+      );
+      if (res.ok) {
+        setPending(false);
+        const data = await res.json();
+        setMaterial(data);
+        console.log(data);
+      }
+    } catch (err) {
+      setPending(false);
+      console.error(err);
+    }
+  };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
@@ -127,6 +71,12 @@ const dashboardIndex: NextPage = () => {
   const removeFilter = (idToRemove: number) => {
     setFilterItems(filterItems.filter(item => item.id !== idToRemove));
   };
+
+  useEffect(() => {
+    if (token && id) {
+      getMaterial();
+    }
+  }, [token, id]);
 
   return (
     <ProtectLayout>
@@ -205,15 +155,17 @@ const dashboardIndex: NextPage = () => {
           </div>
           <div className="flex items-start gap-x-4 w-full">
             <div className="w-[80%] flex flex-col gap-y-2">
-              {cards.map((card) => (
+              {material.map((card) => (
                 <MaterialCard
-                  key={card.id}
+                  key={card._id}
+                  id={card._id}
                   title={card.title}
-                  date={card.date}
-                  text={card.text}
+                  date={card.created_at}
+                  text={card.description}
                   tags={card.tags}
-                  links={card.links}
-                  img={card.img}
+                  links={card.url}
+                  src_name={card.source.name}
+                  img="https://static.vecteezy.com/system/resources/thumbnails/006/299/370/original/world-breaking-news-digital-earth-hud-rotating-globe-rotating-free-video.jpg"
                 />
               ))}
             </div>
