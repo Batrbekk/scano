@@ -10,7 +10,7 @@ import Button from "@/components/atom/Button";
 import ProtectLayout from "@/components/layout/protectLayout";
 import {getCookie} from "cookies-next";
 import {useRouter} from "next/router";
-import {Mode} from "@/types";
+import {Mode, Theme} from "@/types";
 import {Spinner} from "@nextui-org/spinner";
 
 const addProfile: NextPage = () => {
@@ -32,25 +32,6 @@ const addProfile: NextPage = () => {
       key: 'guest'
     }
   ];
-  const themes = [
-    {
-      key: 'kzt',
-      label: 'КазАтомПром'
-    },
-    {
-      key: 'qazaqgaz',
-      label: 'АО QazaqGaz'
-    },
-    {
-      key: 'kcell',
-      label: 'АО Кселл'
-    },
-    {
-      key: 'newTheme',
-      label: 'Новые темы'
-    }
-  ]
-
   const [summarySelect, setSummarySelect] = useState<Array<string>>(['']);
   const [adminOption, setAdminOption] = useState<Mode>(mode[0]);
 
@@ -63,9 +44,36 @@ const addProfile: NextPage = () => {
   const [email, setEmail] = useState('');
   const [company, setCompany] = useState('');
   const [chooseAll, setChooseAll] = useState(false);
+  const [themes, setThemes] = useState<ReadonlyArray<Theme>>([]);
 
   const handleAdminChange = (value: Mode) => {
     setAdminOption(value);
+  };
+
+  const getTheme = async () => {
+    try {
+      setPending(true);
+      const res = await fetch(
+        'https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/',
+        {
+          method: 'GET', // Assuming you are sending a POST request
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+        }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setThemes(data);
+        setPending(false);
+        console.log(data);
+      } else {
+        setPending(false);
+      }
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const createProfile = async () => {
@@ -101,7 +109,11 @@ const addProfile: NextPage = () => {
   }
 
   useEffect(() => {
-    const allKeys = themes.map(theme => theme.key);
+    getTheme();
+  }, []);
+
+  useEffect(() => {
+    const allKeys = themes.map(theme => theme._id);
     if (chooseAll) {
       setSummarySelect(allKeys);
     } else {
@@ -225,10 +237,10 @@ const addProfile: NextPage = () => {
                     onValueChange={setSummarySelect}
                   >
                     {themes.map((item) => (
-                      <Checkbox value={item.key} classNames={{
+                      <Checkbox value={item._id} classNames={{
                         wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
                       }}>
-                        <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
+                        <p className="prose prose-sm text-[#5b5a5d]">{item.name}</p>
                       </Checkbox>
                     ))}
                   </CheckboxGroup>
