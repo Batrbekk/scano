@@ -20,6 +20,7 @@ import exporting from 'highcharts/modules/exporting';
 import BarBlock from "src/components/atom/BarBlock";
 import ProtectLayout from "@/components/layout/protectLayout";
 import {Mode} from "@/types";
+import SocialBlock from "@/components/atom/SocialBlock";
 
 if (typeof Highcharts === 'object') {
   exporting(Highcharts);
@@ -143,7 +144,9 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
       id: 'src',
       label: 'Источники',
       content: (
-        <p>src</p>
+        <div className="w-1/3">
+          <SocialBlock />
+        </div>
       )
     },
     {
