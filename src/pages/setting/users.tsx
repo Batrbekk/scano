@@ -44,6 +44,7 @@ const Users: NextPage = () => {
       if (res.ok) {
         setPending(false);
         const data = await res.json();
+        setUsers(data);
         console.log(data);
       } else {
         setPending(false);
@@ -70,7 +71,9 @@ const Users: NextPage = () => {
       case 'name':
         return (
           <div className="py-2 px-8">
-            <p className="prose prose-sm text-[#6481AD]">{row.first_name} {row.last_name}</p>
+            <p className="prose prose-sm text-[#6481AD]">
+              {row.first_name ? (row.first_name + ' ' + row.last_name) : 'Не указано'}
+            </p>
           </div>
         )
       case 'mail':
@@ -82,7 +85,7 @@ const Users: NextPage = () => {
       case 'company':
         return (
           <div className="py-2 px-8">
-            <p className="prose prose-sm">{row.company_name}</p>
+            <p className="prose prose-sm">{row.company_name ? row.company_name : 'Не указано'}</p>
           </div>
         )
       case 'role':
@@ -130,7 +133,7 @@ const Users: NextPage = () => {
             bottomContent={
               <Button label="Добавить пользователя" onClick={() => {
                 router.push('/setting/addProfile')
-              }} size="sm" classBtn="max-w-fit mt-4 ml-6" color="bg-[#5b85ce]" />
+              }} size="sm" classBtn="max-w-fit mt-4" color="bg-[#5b85ce]" />
             }
           >
             <TableHeader columns={tableColumn}>
