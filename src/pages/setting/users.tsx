@@ -10,7 +10,7 @@ import Delete from "@public/assets/icons/deleteBlue.svg";
 import {Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from "@nextui-org/table";
 import Button from "@/components/atom/Button";
 import ProtectLayout from "@/components/layout/protectLayout";
-import {getCookie} from "cookies-next";
+import {getCookie, setCookie} from "cookies-next";
 import {Spinner} from "@nextui-org/spinner";
 import {Profile} from "@/types";
 
@@ -107,7 +107,11 @@ const Users: NextPage = () => {
                 <button className="bg-[#ebf1fd] rounded p-2">
                   <Image src={Ban} width={14} height={14} alt="icon" />
                 </button>
-                <button className="bg-[#ebf1fd] rounded p-2">
+                <button className="bg-[#ebf1fd] rounded p-2" onClick={() => {
+                  console.log(row);
+                  setCookie('currentProfile', row);
+                  router.push('/setting/editProfile');
+                }}>
                   <Image src={Edit} width={14} height={14} alt="icon" />
                 </button>
                 <button className="bg-[#ebf1fd] rounded p-2">

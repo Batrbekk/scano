@@ -69,7 +69,11 @@ const Profile: NextPage = () => {
         setCookie('profile', data);
         setName(data.first_name);
         setSurname(data.last_name);
-        setCompany(data.company_name);
+        if (data.company_name) {
+          setCompany(data.company_name);
+        } else {
+          setCompany('Не указано');
+        }
         setProfileAuth(data);
         if (data.timezone === null) {
           setSelectedOption({
@@ -103,7 +107,7 @@ const Profile: NextPage = () => {
             first_name: name,
             last_name: surname,
             company_name: company,
-            timezone: selectedOption
+            timezone: selectedOption.label
           }),
         }
       );

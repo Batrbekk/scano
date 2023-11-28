@@ -8,7 +8,8 @@ export interface Profile {
   middle_name: string | null,
   photo_url: string | null,
   role: string,
-  timezone: string
+  timezone: string,
+  _id: string
 }
 
 export interface Theme {
