@@ -26,6 +26,14 @@ export interface Theme {
   search_domains: Array<string>
 }
 
+export interface Tags {
+  created_at: string,
+  updated_at: string,
+  deleted_at: string | null,
+  _id: string,
+  name: string
+}
+
 export interface Material {
   title: string,
   description: string,
