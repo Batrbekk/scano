@@ -16,6 +16,7 @@ import {Select} from "@nextui-org/select";
 import {Checkbox, CheckboxGroup} from "@nextui-org/checkbox";
 import {Tags} from "@/types";
 import {Chip} from "@nextui-org/chip";
+import {ScrollShadow} from "@nextui-org/scroll-shadow";
 
 interface Props {
   id: string;
@@ -121,7 +122,7 @@ export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, sr
   return (
     <div className="p-4 rounded-lg bg-white">
       <div className="flex items-start gap-x-3">
-        <div className="">
+        <div className="w-full">
           <div className="flex items-center gap-x-4">
             <div className="flex items-center gap-x-1">
               <Image src={Source} alt="icon" />
@@ -133,10 +134,10 @@ export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, sr
             </a>
             <p className="text-[#757575] text-xs font-medium">{created}</p>
           </div>
-          <div className="mt-3 flex items-start justify-between">
-            <div className="w-[75%]">
+          <div className="mt-3 flex items-start justify-between w-full">
+            <div className="w-full">
               <h1 className="text-[#444] font-semibold truncate">{title}</h1>
-              <p className="text-[#444] text-xs mt-2">{text}</p>
+              <p className="text-[#444] text-xs mt-2 truncate w-[450px]">{text}</p>
               <Button
                 className="p-0 text-[#5B85CE] text-xs mt-1 h-unit-4 data-[hover=true]:bg-transparent"
                 disableAnimation={true}
@@ -211,7 +212,9 @@ export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, sr
                   isDelete ? (
                     <p>Вы уверены что хотите удалить данную тему?</p>
                   ) : (
-                    <p>{text}</p>
+                    <ScrollShadow className="h-[400px]">
+                      <p>{text}</p>
+                    </ScrollShadow>
                   )
                 )}
                 {isCreateTag && (

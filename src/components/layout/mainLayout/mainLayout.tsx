@@ -184,6 +184,11 @@ const mainLayout: FC<MainLayoutProps> = ({children, withPadding = defaultProps.w
                   }}>
                     <p className={`prose prose-sm font-['Montserrat',sans-serif] font-semibold ${(path === 'setting/rules' || path === 'setting/addRule') ? `text-white pl-2` : `text-[#6481AD]`}`}>— Правила</p>
                   </div>
+                  <div className="border-l-2 border-[#6481AD] ml-2 pt-4 cursor-pointer" onClick={() => {
+                    router.push('/setting/createTag');
+                  }}>
+                    <p className={`prose prose-sm font-['Montserrat',sans-serif] font-semibold ${(path === 'setting/createTag') ? `text-white pl-2` : `text-[#6481AD]`}`}>— Создание тега</p>
+                  </div>
                 </AccordionItem>
               </Accordion>
             </div>
