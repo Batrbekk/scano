@@ -15,6 +15,7 @@ import MaterialCard from "@/components/molecule/MaterialCard";
 import ProtectLayout from "@/components/layout/protectLayout";
 import {Material} from "@/types";
 import {getCookie, setCookie} from "cookies-next";
+import {Button, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure} from "@nextui-org/react";
 
 const chooseFilter = [
   {
@@ -29,7 +30,106 @@ const chooseFilter = [
   }
 ];
 
+const filterTabs = [
+  {
+    id: 0,
+    label: 'Основные',
+    key: 'main'
+  },
+  {
+    id: 1,
+    label: 'Источники',
+    key: 'src'
+  },
+  {
+    id: 2,
+    label: 'Авторы',
+    key: 'author'
+  },
+  {
+    id: 3,
+    label: 'География',
+    key: 'geography'
+  },
+  {
+    id: 4,
+    label: 'Теги',
+    key: 'tags'
+  }
+];
+const toneOption = [
+  {
+    key: 'positive',
+    label: 'Позитив'
+  },
+  {
+    key: 'negative',
+    label: 'Негатив'
+  },
+  {
+    key: 'neutral',
+    label: 'Нейтрально'
+  }
+];
+const materialType = [
+  {
+    label: 'Пост',
+    key: 'post'
+  },
+  {
+    label: 'Репост',
+    key: 'repost'
+  },
+  {
+    label: 'Репост с дополнением',
+    key: 'repostAddition'
+  },
+  {
+    label: 'Комментарий',
+    key: 'comment'
+  },
+  {
+    label: 'Сториз',
+    key: 'stories'
+  }
+];
+const treatmentMaterial = [
+  {
+    label: 'Обработанные',
+    key: 'processed'
+  },
+  {
+    label: 'Необработанные',
+    key: 'unprocessed'
+  },
+  {
+    label: 'Избранные',
+    key: 'saved'
+  }
+];
+const lang = [
+  {
+    label: 'Казахский',
+    key: 'kz'
+  },
+  {
+    label: 'Русский',
+    key: 'ru'
+  }
+];
+const collection = [
+  {
+    label: 'Автоматически',
+    key: 'automat'
+  },
+  {
+    label: 'Вручную',
+    key: 'manual'
+  }
+]
+
 const dashboardIndex: NextPage = () => {
+  const {isOpen, onOpen, onClose} = useDisclosure();
   const [search, setSearch] = useState('');
   const [dateRange, setDateRange] = useState<any>([null, null]);
   const [startDate, endDate] = dateRange;
@@ -38,6 +138,13 @@ const dashboardIndex: NextPage = () => {
   const [pending, setPending] = useState<boolean>(false);
   const id = getCookie('currentTheme');
   const token = getCookie('scano_acess_token');
+
+  const [currentTab, setCurrentTab] = useState('main');
+  const [tone, setTone] = useState<Array<string>>([]);
+  const [materialsType, setMaterialsType] = useState<Array<string>>([]);
+  const [materialTreatment, setMaterialTreatment] = useState<Array<string>>([]);
+  const [materialLang, setMaterialLang] = useState<Array<string>>([]);
+  const [materialCollection, setMaterialCollection] = useState<Array<string>>([]);
 
   const getMaterial = async () => {
     try {
@@ -148,6 +255,9 @@ const dashboardIndex: NextPage = () => {
             </div>
             <button
               className={`bg-[#60CA23] prose prose-base text-white font-['Work Sans',sans-serif] py-1 px-4 rounded flex gap-x-2 items-center`}
+              onClick={() => {
+                onOpen();
+              }}
             >
               <Image src={Filter} alt="icon" />
               Фильтр
@@ -312,6 +422,150 @@ const dashboardIndex: NextPage = () => {
               </Accordion>
             </div>
           </div>
+          <Modal
+            size="5xl"
+            isOpen={isOpen}
+            onClose={onClose}
+            hideCloseButton={true}
+          >
+            <ModalContent>
+              {(onClose) => (
+                <>
+                  <ModalHeader className="flex items-center justify-between">
+                    Фильтры
+                    <div className="flex items-center gap-x-2">
+                      <Button className="bg-[#d9d9d9] rounded text-[#757575]" onPress={onClose}>
+                        Отмена
+                      </Button>
+                      <Button className="bg-[#6581ad] rounded text-white" onPress={onClose}>
+                        Отфильтровать
+                      </Button>
+                    </div>
+                  </ModalHeader>
+                  <ModalBody className="p-0 pb-4">
+                    <div className="flex items-stretch border-t">
+                      <div className="flex flex-col gap-y-2 w-[20%] border-r p-2">
+                        {filterTabs.map((item) => (
+                          <div
+                            key={item.id}
+                            className={`cursor-pointer rounded py-2 px-4 ${currentTab === item.key && 'bg-[#bfcbde]'}`}
+                            onClick={() => {
+                              setCurrentTab(item.key)
+                            }}>
+                            <p className="prose text-lg">
+                              {item.label}
+                            </p>
+                          </div>
+                        ))
+                        }
+                      </div>
+                      <div className="w-full p-2">
+                        {currentTab === 'main' && (
+                          <>
+                            <div className="flex flex-col gap-y-1 w-full">
+                              <p className="prose prose-sm text-[#979ca9]">Область поиска</p>
+                              <CheckboxGroup
+                                orientation="horizontal"
+                                value={tone}
+                                classNames={{
+                                  wrapper: 'gap-x-4'
+                                }}
+                                onValueChange={setTone}
+                              >
+                                {toneOption.map((item) => (
+                                  <Checkbox value={item.key} classNames={{
+                                    wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                                  }}>
+                                    <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
+                                  </Checkbox>
+                                ))}
+                              </CheckboxGroup>
+                            </div>
+                            <div className="flex flex-col gap-y-1 w-full mt-4">
+                              <p className="prose prose-sm text-[#979ca9]">Тип материала</p>
+                              <CheckboxGroup
+                                orientation="horizontal"
+                                value={materialsType}
+                                classNames={{
+                                  wrapper: 'gap-x-4'
+                                }}
+                                onValueChange={setMaterialsType}
+                              >
+                                {materialType.map((item) => (
+                                  <Checkbox value={item.key} classNames={{
+                                    wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                                  }}>
+                                    <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
+                                  </Checkbox>
+                                ))}
+                              </CheckboxGroup>
+                            </div>
+                            <div className="flex flex-col gap-y-1 w-full mt-4">
+                              <p className="prose prose-sm text-[#979ca9]">Тип материала</p>
+                              <CheckboxGroup
+                                orientation="horizontal"
+                                value={materialTreatment}
+                                classNames={{
+                                  wrapper: 'gap-x-4'
+                                }}
+                                onValueChange={setMaterialTreatment}
+                              >
+                                {treatmentMaterial.map((item) => (
+                                  <Checkbox value={item.key} classNames={{
+                                    wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                                  }}>
+                                    <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
+                                  </Checkbox>
+                                ))}
+                              </CheckboxGroup>
+                            </div>
+                            <div className="flex flex-col gap-y-1 w-full mt-4">
+                              <p className="prose prose-sm text-[#979ca9]">Язык материалов</p>
+                              <CheckboxGroup
+                                orientation="horizontal"
+                                value={materialLang}
+                                classNames={{
+                                  wrapper: 'gap-x-4'
+                                }}
+                                onValueChange={setMaterialLang}
+                              >
+                                {lang.map((item) => (
+                                  <Checkbox value={item.key} classNames={{
+                                    wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                                  }}>
+                                    <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
+                                  </Checkbox>
+                                ))}
+                              </CheckboxGroup>
+                            </div>
+                            <div className="flex flex-col gap-y-1 w-full mt-4">
+                              <p className="prose prose-sm text-[#979ca9]">Тип сбора</p>
+                              <CheckboxGroup
+                                orientation="horizontal"
+                                value={materialCollection}
+                                classNames={{
+                                  wrapper: 'gap-x-4'
+                                }}
+                                onValueChange={setMaterialCollection}
+                              >
+                                {collection.map((item) => (
+                                  <Checkbox value={item.key} classNames={{
+                                    wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                                  }}>
+                                    <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
+                                  </Checkbox>
+                                ))}
+                              </CheckboxGroup>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </ModalBody>
+                </>
+              )}
+            </ModalContent>
+          </Modal>
         </div>
       </MainLayout>
     </ProtectLayout>
