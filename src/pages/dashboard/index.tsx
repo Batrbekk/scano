@@ -149,7 +149,7 @@ const dashboardIndex: NextPage = () => {
     try {
       setPending(true);
       const res = await fetch(
-        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/${id}/materials${tone.length > 0 ? `${tone.map((item) => `?sentiment=${item}`)}` : ''}${materialsType.length > 0 ? `${materialsType.map((item) => `?material_type=${item}`)}` : ''}${materialLang.length > 0 ? `${materialLang.map((item) => `?language=${item}`)}` : ''}${materialCollection.length > 0 ? `${materialCollection.map((item) => `?source_type=${item}`)}` : ''}`,
+        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/${id}/materials${tone.length > 0 ? `${tone.map((item) => `?sentiment=${item}`).join('')}` : ''}${materialsType.length > 0 ? `${materialsType.map((item) => `?material_type=${item}`).join('')}` : ''}${materialLang.length > 0 ? `${materialLang.map((item) => `?language=${item}`).join('')}` : ''}${materialCollection.length > 0 ? `${materialCollection.map((item) => `?source_type=${item}`).join('')}` : ''}`,
         {
           method: 'GET', // Assuming you are sending a POST request
           headers: {
