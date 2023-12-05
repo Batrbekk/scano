@@ -13,22 +13,9 @@ import { Checkbox, CheckboxGroup } from "@nextui-org/checkbox";
 import {Accordion, AccordionItem} from "@nextui-org/accordion";
 import MaterialCard from "@/components/molecule/MaterialCard";
 import ProtectLayout from "@/components/layout/protectLayout";
-import {Material} from "@/types";
+import {Material, FilterItem} from "@/types";
 import {getCookie, setCookie} from "cookies-next";
 import {Button, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure} from "@nextui-org/react";
-
-const chooseFilter = [
-  {
-    id: 0,
-    title: 'sources',
-    value: 'instagram.com'
-  },
-  {
-    id: 1,
-    title: 'тоналдық',
-    value: 'Негатив'
-  }
-];
 
 const filterTabs = [
   {
@@ -59,72 +46,85 @@ const filterTabs = [
 ];
 const toneOption = [
   {
+    title: 'Область поиска',
     key: 'positive',
     label: 'Позитив'
   },
   {
+    title: 'Область поиска',
     key: 'negative',
     label: 'Негатив'
   },
   {
+    title: 'Область поиска',
     key: 'neutral',
     label: 'Нейтрально'
   }
 ];
 const materialType = [
   {
+    title: 'Тип материала',
     label: 'Пост',
     key: 'post'
   },
   {
+    title: 'Тип материала',
     label: 'Репост',
     key: 'repost'
   },
   {
-    label: 'Репост с дополнением',
-    key: 'repostAddition'
-  },
-  {
+    title: 'Тип материала',
     label: 'Комментарий',
     key: 'comment'
   },
   {
+    title: 'Тип материала',
     label: 'Сториз',
     key: 'stories'
   }
 ];
-const treatmentMaterial = [
-  {
-    label: 'Обработанные',
-    key: 'processed'
-  },
-  {
-    label: 'Необработанные',
-    key: 'unprocessed'
-  },
-  {
-    label: 'Избранные',
-    key: 'saved'
-  }
-];
 const lang = [
   {
+    title: 'Язык материала',
     label: 'Казахский',
-    key: 'kz'
+    key: 'kk'
   },
   {
+    title: 'Язык материала',
     label: 'Русский',
     key: 'ru'
+  },
+  {
+    title: 'Язык материала',
+    label: 'Английский',
+    key: 'en'
   }
 ];
 const collection = [
   {
-    label: 'Автоматически',
-    key: 'automat'
+    title: 'Тип источника',
+    label: 'Социальные сети',
+    key: 'social_network'
   },
   {
-    label: 'Вручную',
-    key: 'manual'
+    title: 'Тип источника',
+    label: 'Видео',
+    key: 'video'
+  },
+  {
+    title: 'Тип источника',
+    label: 'канал в мессенджерах',
+    key: 'messenger_chanel'
+  },
+  {
+    title: 'Тип источника',
+    label: 'группы в мессенджерах',
+    key: 'messenger_group'
+  },
+  {
+    title: 'Тип источника',
+    label: 'Новости',
+    key: 'news'
   }
 ]
 
@@ -133,7 +133,7 @@ const dashboardIndex: NextPage = () => {
   const [search, setSearch] = useState('');
   const [dateRange, setDateRange] = useState<any>([null, null]);
   const [startDate, endDate] = dateRange;
-  const [filterItems, setFilterItems] = useState(chooseFilter);
+  const [filterItems, setFilterItems] = useState<ReadonlyArray<FilterItem>>([]);
   const [material, setMaterial] = useState<ReadonlyArray<Material>>([]);
   const [pending, setPending] = useState<boolean>(false);
   const id = getCookie('currentTheme');
@@ -142,7 +142,6 @@ const dashboardIndex: NextPage = () => {
   const [currentTab, setCurrentTab] = useState('main');
   const [tone, setTone] = useState<Array<string>>([]);
   const [materialsType, setMaterialsType] = useState<Array<string>>([]);
-  const [materialTreatment, setMaterialTreatment] = useState<Array<string>>([]);
   const [materialLang, setMaterialLang] = useState<Array<string>>([]);
   const [materialCollection, setMaterialCollection] = useState<Array<string>>([]);
 
@@ -150,7 +149,7 @@ const dashboardIndex: NextPage = () => {
     try {
       setPending(true);
       const res = await fetch(
-        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/${id}/materials`,
+        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/${id}/materials${tone.length > 0 ? `?sentiment=${tone}` : ''}${materialsType.length > 0 ? `?material_type=${tone}` : ''}${materialLang.length > 0 ? `?language=${tone}` : ''}${materialCollection.length > 0 ? `?source_type=${tone}` : ''}`,
         {
           method: 'GET', // Assuming you are sending a POST request
           headers: {
@@ -175,8 +174,19 @@ const dashboardIndex: NextPage = () => {
     setSearch(event.target.value);
   };
 
-  const removeFilter = (idToRemove: number) => {
-    setFilterItems(filterItems.filter(item => item.id !== idToRemove));
+  const removeFilter = (key: string, src: string) => {
+    if (src === 'tone') {
+      setTone(tone.filter(item => item !== key));
+    }
+    if (src === 'materialType') {
+      setMaterialsType(materialsType.filter(item => item !== key));
+    }
+    if (src === 'materialLang') {
+      setMaterialLang(materialLang.filter(item => item !== key));
+    }
+    if (src === 'materialCollection') {
+      setMaterialCollection(materialCollection.filter(item => item !== key));
+    }
   };
 
   useEffect(() => {
@@ -233,24 +243,79 @@ const dashboardIndex: NextPage = () => {
             </div>
           </div>
           <div className="flex items-center justify-between w-full py-6">
-            <div className="flex items-center gap-x-6">
-              <p className="text-[#35415A] font-['Montserrat',sans-serif] text-base font-semibold w-full">Фильтр:</p>
-              <div className="flex items-center gap-x-3">
-                {filterItems.map((item) => (
-                    <div className="flex items-center gap-x-1" key={item.id}>
-                      <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">{item.title}:</p>
-                      <Chip
-                        variant="light"
-                        classNames={{
-                          base: "[&_path]:fill-[#ff0000]",
-                          content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold`
-                        }}
-                        onClose={() => removeFilter(item.id)}
-                      >
-                        {item.value}
-                      </Chip>
+            <div className="flex items-start">
+              <p className="text-[#35415A] font-['Montserrat',sans-serif] text-base font-semibold">Фильтр:</p>
+              <div className="flex items-center gap-y-2">
+                <div className="ml-4 flex flex-wrap items-start gap-x-4">
+                  {tone.length > 0 && (
+                    <div className="flex items-center gap-x-1">
+                      <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Область поиска:</p>
+                      {tone.map((item) => (
+                        <Chip
+                          variant="light"
+                          classNames={{
+                            base: "[&_path]:fill-[#ff0000] px-0",
+                            content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
+                          }}
+                          onClose={() => removeFilter(item, 'tone')}
+                        >
+                          {item}
+                        </Chip>
+                      ))}
                     </div>
-                ))}
+                  )}
+                  {materialsType.length > 0 && (
+                    <div className="flex items-center gap-x-1">
+                      <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Тип материала:</p>
+                      {materialsType.map((item) => (
+                        <Chip
+                          variant="light"
+                          classNames={{
+                            base: "[&_path]:fill-[#ff0000] px-0",
+                            content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
+                          }}
+                          onClose={() => removeFilter(item, 'materialType')}
+                        >
+                          {item}
+                        </Chip>
+                      ))}
+                    </div>
+                  )}
+                  {materialLang.length > 0 && (
+                    <div className="flex items-center gap-x-1">
+                      <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Язык материала:</p>
+                      {materialLang.map((item) => (
+                        <Chip
+                          variant="light"
+                          classNames={{
+                            base: "[&_path]:fill-[#ff0000] px-0",
+                            content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
+                          }}
+                          onClose={() => removeFilter(item, 'materialLang')}
+                        >
+                          {item}
+                        </Chip>
+                      ))}
+                    </div>
+                  )}
+                  {materialCollection.length > 0 && (
+                    <div className="flex items-center gap-x-1">
+                      <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Тип источника:</p>
+                      {materialCollection.map((item) => (
+                        <Chip
+                          variant="light"
+                          classNames={{
+                            base: "[&_path]:fill-[#ff0000] px-0",
+                            content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
+                          }}
+                          onClose={() => removeFilter(item, 'materialCollection')}
+                        >
+                          {item}
+                        </Chip>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
             <button
@@ -434,15 +499,101 @@ const dashboardIndex: NextPage = () => {
                   <ModalHeader className="flex items-center justify-between">
                     Фильтры
                     <div className="flex items-center gap-x-2">
-                      <Button className="bg-[#d9d9d9] rounded text-[#757575]" onPress={onClose}>
+                      <Button className="bg-[#d9d9d9] rounded text-[#757575]" onPress={() => {
+                        setTone([]);
+                        setMaterialLang([]);
+                        setMaterialsType([]);
+                        setMaterialCollection([]);
+                        onClose();
+                      }}>
                         Отмена
                       </Button>
-                      <Button className="bg-[#6581ad] rounded text-white" onPress={onClose}>
+                      <Button className="bg-[#6581ad] rounded text-white" onPress={() => {
+                        getMaterial();
+                        onClose();
+                      }}>
                         Отфильтровать
                       </Button>
                     </div>
                   </ModalHeader>
                   <ModalBody className="p-0 pb-4">
+                    <div className="border-t pt-2 px-4">
+                      <div className="flex items-start">
+                        <p className="text-[#35415A] font-['Montserrat',sans-serif] text-base font-semibold mr-2">Фильтр:</p>
+                        <div className="flex items-center gap-y-2">
+                          <div className="ml-4 flex flex-wrap items-start gap-x-4">
+                            {tone.length > 0 && (
+                              <div className="flex items-center gap-x-1">
+                                <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Область поиска:</p>
+                                {tone.map((item) => (
+                                  <Chip
+                                    variant="light"
+                                    classNames={{
+                                      base: "[&_path]:fill-[#ff0000] px-0",
+                                      content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
+                                    }}
+                                    onClose={() => removeFilter(item, 'tone')}
+                                  >
+                                    {item}
+                                  </Chip>
+                                ))}
+                              </div>
+                            )}
+                            {materialsType.length > 0 && (
+                              <div className="flex items-center gap-x-1">
+                                <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Тип материала:</p>
+                                {materialsType.map((item) => (
+                                  <Chip
+                                    variant="light"
+                                    classNames={{
+                                      base: "[&_path]:fill-[#ff0000] px-0",
+                                      content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
+                                    }}
+                                    onClose={() => removeFilter(item, 'materialType')}
+                                  >
+                                    {item}
+                                  </Chip>
+                                ))}
+                              </div>
+                            )}
+                            {materialLang.length > 0 && (
+                              <div className="flex items-center gap-x-1">
+                                <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Язык материала:</p>
+                                {materialLang.map((item) => (
+                                  <Chip
+                                    variant="light"
+                                    classNames={{
+                                      base: "[&_path]:fill-[#ff0000] px-0",
+                                      content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
+                                    }}
+                                    onClose={() => removeFilter(item, 'materialLang')}
+                                  >
+                                    {item}
+                                  </Chip>
+                                ))}
+                              </div>
+                            )}
+                            {materialCollection.length > 0 && (
+                              <div className="flex items-center gap-x-1">
+                                <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Тип источника:</p>
+                                {materialCollection.map((item) => (
+                                  <Chip
+                                    variant="light"
+                                    classNames={{
+                                      base: "[&_path]:fill-[#ff0000] px-0",
+                                      content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
+                                    }}
+                                    onClose={() => removeFilter(item, 'materialCollection')}
+                                  >
+                                    {item}
+                                  </Chip>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                     <div className="flex items-stretch border-t">
                       <div className="flex flex-col gap-y-2 w-[20%] border-r p-2">
                         {filterTabs.map((item) => (
@@ -501,25 +652,6 @@ const dashboardIndex: NextPage = () => {
                               </CheckboxGroup>
                             </div>
                             <div className="flex flex-col gap-y-1 w-full mt-4">
-                              <p className="prose prose-sm text-[#979ca9]">Тип материала</p>
-                              <CheckboxGroup
-                                orientation="horizontal"
-                                value={materialTreatment}
-                                classNames={{
-                                  wrapper: 'gap-x-4'
-                                }}
-                                onValueChange={setMaterialTreatment}
-                              >
-                                {treatmentMaterial.map((item) => (
-                                  <Checkbox value={item.key} classNames={{
-                                    wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
-                                  }}>
-                                    <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
-                                  </Checkbox>
-                                ))}
-                              </CheckboxGroup>
-                            </div>
-                            <div className="flex flex-col gap-y-1 w-full mt-4">
                               <p className="prose prose-sm text-[#979ca9]">Язык материалов</p>
                               <CheckboxGroup
                                 orientation="horizontal"
@@ -539,7 +671,7 @@ const dashboardIndex: NextPage = () => {
                               </CheckboxGroup>
                             </div>
                             <div className="flex flex-col gap-y-1 w-full mt-4">
-                              <p className="prose prose-sm text-[#979ca9]">Тип сбора</p>
+                              <p className="prose prose-sm text-[#979ca9]">Тип источника</p>
                               <CheckboxGroup
                                 orientation="horizontal"
                                 value={materialCollection}

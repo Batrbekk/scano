@@ -64,3 +64,9 @@ export interface Mode {
   key: string,
   label: string
 }
+
+export interface FilterItem {
+  key: string,
+  label: string,
+  title: string
+}
