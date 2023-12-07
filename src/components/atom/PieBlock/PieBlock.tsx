@@ -1,10 +1,13 @@
 import Image from "next/image";
 import Download from "@public/assets/icons/download.svg";
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import PieChart from "highcharts-react-official";
 import Highcharts from "highcharts/highstock";
 import exporting from 'highcharts/modules/exporting';
 import HighchartsReact from "highcharts-react-official";
+import {getCookie} from "cookies-next";
+import {socialChart} from "@/types/charts";
+import {Spinner} from "@nextui-org/spinner";
 
 if (typeof Highcharts === 'object') {
   exporting(Highcharts);
@@ -12,6 +15,10 @@ if (typeof Highcharts === 'object') {
 
 const PieBlock = () => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
+  const id = getCookie('currentTheme');
+  const token = getCookie('scano_acess_token');
+  const [pending, setPending] = useState<boolean>(false);
+  const [countries, setCountries] = useState<ReadonlyArray<socialChart>>([]);
 
   useEffect(() => {
     // Update the chart after the component mounts to ensure the exporting module is available
@@ -22,6 +29,35 @@ const PieBlock = () => {
         },
       });
     }
+  }, []);
+
+  const getChart = async () => {
+    try {
+      setPending(true);
+      const res = await fetch(
+        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/${id}/analytics/countries`,
+        {
+          method: 'GET', // Assuming you are sending a POST request
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+        }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setCountries(data);
+        setPending(false);
+      } else {
+        setPending(false);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  useEffect(() => {
+    getChart();
   }, []);
 
   const downloadChart = () => {
@@ -52,16 +88,37 @@ const PieBlock = () => {
         enabled: false,
       },
     },
+    plotOptions: {
+      pie: {
+        innerSize: 150
+      },
+      series: {
+        cursor: 'pointer',
+        showInLegend: true,
+        dataLabels: [{
+          enabled: true,
+          distance: 20
+        }, {
+          enabled: true,
+          distance: -40,
+          format: '{point.percentage:.1f}%',
+          style: {
+            color: '#fff',
+            fontSize: '16px',
+            textOutline: 'none',
+            opacity: 1
+          },
+          filter: {
+            operator: '>',
+            property: 'percentage',
+            value: 10
+          }
+        }]
+      }
+    },
     series: [
       {
-        data: [
-          {
-            y: 100
-          },
-          {
-            y: 50
-          }
-        ]
+        data: countries
       }
     ]
   };
@@ -74,7 +131,21 @@ const PieBlock = () => {
           <Image src={Download} alt="icon" width={24} height={24} />
         </button>
       </div>
-      <PieChart highcharts={Highcharts} ref={chartComponentRef} options={options} />
+      {countries.length > 0 ? (
+        <PieChart highcharts={Highcharts} ref={chartComponentRef} options={options} />
+      ) : (
+        <div className="w-full h-[300px] flex items-center justify-center">
+          {pending ? (
+            <Spinner color="success" size="sm" />
+          ) : (
+            <div>
+              <p>
+                Данных нету
+              </p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }

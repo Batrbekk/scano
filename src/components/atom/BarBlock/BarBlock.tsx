@@ -2,16 +2,25 @@ import BarChart from "highcharts-react-official";
 import Image from "next/image";
 import Download from "@public/assets/icons/download.svg";
 import Highcharts from "highcharts/highstock";
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import HighchartsReact from "highcharts-react-official";
 import exporting from "highcharts/modules/exporting";
+import {getCookie} from "cookies-next";
+import {socialChart} from "@/types/charts";
+import {Spinner} from "@nextui-org/spinner";
 
 if (typeof Highcharts === 'object') {
   exporting(Highcharts);
 }
 
 const BarBlock = () => {
+  const id = getCookie('currentTheme');
+  const token = getCookie('scano_acess_token');
+  const [pending, setPending] = useState<boolean>(false);
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
+  const [ages, setAges] = useState<ReadonlyArray<socialChart>>([]);
+  const [agesName, setAgesName] = useState<ReadonlyArray<string>>([]);
+  const [agesData, setAgesData] = useState<ReadonlyArray<number>>([]);
 
   useEffect(() => {
     // Update the chart after the component mounts to ensure the exporting module is available
@@ -23,6 +32,43 @@ const BarBlock = () => {
       });
     }
   }, []);
+
+  const getChart = async () => {
+    try {
+      setPending(true);
+      const res = await fetch(
+        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/${id}/analytics/authors_age`,
+        {
+          method: 'GET', // Assuming you are sending a POST request
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+        }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        console.log(data);
+        setAges(data);
+        setPending(false);
+      } else {
+        setPending(false);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  useEffect(() => {
+    getChart();
+  }, []);
+
+  useEffect(() => {
+    if (ages.length > 0) {
+      setAgesName(ages.map((item) => item.name));
+      setAgesData(ages.map((item) => item.y));
+    }
+  }, [ages]);
 
   const downloadChart = () => {
     const chart = chartComponentRef.current?.chart;
@@ -53,7 +99,7 @@ const BarBlock = () => {
       text: '',
     },
     xAxis: {
-      categories: ['До 18 лет', '18-24 лет', '25-34 лет', '35-44 лет', '45-54 лет', '55 и старше'],
+      categories: agesName,
       title: {
         text: null,
       },
@@ -65,7 +111,7 @@ const BarBlock = () => {
     },
     series: [
       {
-        data: [21, 25, 13, 52, 34, 97],
+        data: agesData,
         colorByPoint: true, // Each bar will have a different color
       },
     ],
@@ -83,7 +129,21 @@ const BarBlock = () => {
           <Image src={Download} alt="icon" width={24} height={24} />
         </button>
       </div>
-      <BarChart highcharts={Highcharts} ref={chartComponentRef} options={options} />
+      {ages.length > 0 ? (
+        <BarChart highcharts={Highcharts} ref={chartComponentRef} options={options} />
+      ) : (
+        <div className="w-full h-[300px] flex items-center justify-center">
+          {pending ? (
+            <Spinner color="success" size="sm" />
+          ) : (
+            <div>
+              <p>
+                Данных нету
+              </p>
+            </div>
+          )}
+        </div>
+      )}
       <p className="text-sm text-gray-500">Данные по возрасту имеются для 7.9% авторов темы</p>
     </div>
   )

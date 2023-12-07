@@ -64,7 +64,7 @@ export const MapChart = () => {
 
   useEffect(() => {
     if (countries.length > 0) {
-      setMassiveCountries(countries.map((item) => [item.name, item.y]));
+      setMassiveCountries(countries.map((item) => [item.name.toLowerCase(), item.y]));
     }
   }, [countries]);
 
@@ -90,13 +90,7 @@ export const MapChart = () => {
     },
     chart: {
       map: worldMap,
-      height: 600,
-      events: {
-        load: function() {
-          // @ts-ignore
-          this.series[0].data[74].zoomTo();
-        }
-      }
+      height: 500
     },
     navigation: {
       buttonOptions: {
@@ -105,10 +99,11 @@ export const MapChart = () => {
     },
     colorAxis: {
       min: 0,
+      max: 600,
       stops: [
-        [0, '#EFEFFF'],
-        [0.67, '#4444FF'],
-        [1, '#000022']
+        [0, '#d5e1f7'],
+        [0.67, '#7a97cd'],
+        [6, '#4b72b8']
       ]
     },
     tooltip: {},
@@ -129,7 +124,7 @@ export const MapChart = () => {
         enabled: true,
         format: "{point.name}"
       },
-      data: [massiveCountries]
+      data: massiveCountries
     }]
   }
 
@@ -137,6 +132,7 @@ export const MapChart = () => {
     <div className="flex flex-col gap-y-2">
       <div className="flex items-center justify-between">
         <p className="font-['Work Sans',sans-serif] text-[#35415A] prose prose-2xl font-semibold">География</p>
+        { massiveCountries }
       </div>
       <div className="flex flex-col gap-y-8 bg-white rounded-lg p-4">
         <div className="flex items-center justify-between">

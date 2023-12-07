@@ -21,6 +21,8 @@ import BarBlock from "src/components/atom/BarBlock";
 import ProtectLayout from "@/components/layout/protectLayout";
 import {Mode} from "@/types";
 import SocialBlock from "@/components/atom/SocialBlock";
+import CityBlock from "@/components/atom/CityBlock";
+import AuthorTypeBlock from "@/components/atom/AuthorTypeBlock";
 
 if (typeof Highcharts === 'object') {
   exporting(Highcharts);
@@ -144,8 +146,10 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
       id: 'src',
       label: 'Источники',
       content: (
-        <div className="w-1/3">
-          <SocialBlock />
+        <div className="px-6 flex gap-x-4">
+          <div className="w-1/3">
+            <SocialBlock />
+          </div>
         </div>
       )
     },
@@ -153,9 +157,12 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
       id: 'author',
       label: 'Авторы',
       content: (
-        <div className="px-6 flex flex-col gap-y-4">
+        <div className="px-6 flex gap-x-4">
           <div className="w-1/3">
             <BarBlock />
+          </div>
+          <div className="w-1/3">
+            <AuthorTypeBlock />
           </div>
         </div>
       )
@@ -166,8 +173,13 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
       content: (
         <div className="px-6 flex flex-col gap-y-4">
           <MapChart/>
-          <div className="w-1/3">
-            <PieBlock />
+          <div className="flex items-start gap-x-4">
+            <div className="w-1/3">
+              <PieBlock />
+            </div>
+            <div className="w-1/3">
+              <CityBlock />
+            </div>
           </div>
         </div>
       )
