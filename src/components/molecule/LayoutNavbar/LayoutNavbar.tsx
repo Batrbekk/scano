@@ -46,8 +46,15 @@ export const LayoutNavbar: React.FC<Props> = ({email, first_name, last_name, rol
     <div className="bg-[#F8F9FB] w-full flex items-center justify-between p-6">
       <p className="text-[#35415A] prose prose-xl font-['Work Sans',sans-serif] capitalize">{name}</p>
       <div className="flex items-center gap-x-8">
-        <Dropdown>
-          <DropdownTrigger>
+        <Dropdown
+          classNames={{
+            base: 'data-[placement=bottom]:rounded !min-w-[32px]'
+          }}
+          showArrow={true}
+        >
+          <DropdownTrigger
+            className="rounded px-0 min-w-unit-10"
+          >
             <Button
               variant="bordered"
             >
@@ -58,9 +65,9 @@ export const LayoutNavbar: React.FC<Props> = ({email, first_name, last_name, rol
             aria-label="Static Actions"
             onAction={(key) => handleSelectLang(key)}
           >
-            <DropdownItem key="kk">Казахский</DropdownItem>
-            <DropdownItem key="en">Английский</DropdownItem>
-            <DropdownItem key="ru">Русский</DropdownItem>
+            <DropdownItem className="data-[hover=true]:rounded" key="kk">KZ</DropdownItem>
+            <DropdownItem className="data-[hover=true]:rounded" key="en">EN</DropdownItem>
+            <DropdownItem className="data-[hover=true]:rounded" key="ru">RU</DropdownItem>
           </DropdownMenu>
         </Dropdown>
         <a href="/main/">

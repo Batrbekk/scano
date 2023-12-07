@@ -14,7 +14,7 @@ import {Accordion, AccordionItem} from "@nextui-org/accordion";
 import MaterialCard from "@/components/molecule/MaterialCard";
 import ProtectLayout from "@/components/layout/protectLayout";
 import {Material, FilterItem} from "@/types";
-import {getCookie, setCookie} from "cookies-next";
+import {getCookie} from "cookies-next";
 import {Button, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure} from "@nextui-org/react";
 
 const filterTabs = [
@@ -234,6 +234,8 @@ const dashboardIndex: NextPage = () => {
                   endDate={endDate}
                   selectsRange={true}
                   startDate={startDate}
+                  dateFormat="dd/MM/yyyy h:mm aa"
+                  showTimeInput
                   placeholderText="Выберите период"
                   onChange={(update) => {
                     setDateRange(update);
