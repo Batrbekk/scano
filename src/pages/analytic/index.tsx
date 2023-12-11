@@ -23,6 +23,7 @@ import {Mode} from "@/types";
 import SocialBlock from "@/components/atom/SocialBlock";
 import CityBlock from "@/components/atom/CityBlock";
 import AuthorTypeBlock from "@/components/atom/AuthorTypeBlock";
+import AuthorGenderBlock from "@/components/atom/AuthorGenderBlock";
 
 if (typeof Highcharts === 'object') {
   exporting(Highcharts);
@@ -159,10 +160,13 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
       content: (
         <div className="px-6 flex gap-x-4">
           <div className="w-1/3">
-            <BarBlock />
+            <BarBlock/>
           </div>
           <div className="w-1/3">
-            <AuthorTypeBlock />
+            <AuthorTypeBlock/>
+          </div>
+          <div className="w-1/3">
+            <AuthorGenderBlock/>
           </div>
         </div>
       )
