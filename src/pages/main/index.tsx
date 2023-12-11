@@ -118,6 +118,7 @@ const mainIndex: NextPage = () => {
   const [deleteThemeId, setDeleteThemeId] = useState('');
   const [pending, setPending] = useState<boolean>(false);
   const {isOpen, onOpen, onClose} = useDisclosure();
+  const [pause, setPause] = useState<boolean>(false);
 
   const renderCell = useCallback((row: any, columnKey: Key): any  => {
     const cellValue = row[columnKey as keyof Theme];
@@ -155,15 +156,17 @@ const mainIndex: NextPage = () => {
                   <p className="prose text-xs text-[#4870b7]">Редактировать</p>
                 </button>
               </Tooltip>
-              <Tooltip content="Остановить тему">
-                <button className="flex items-center gap-x-1">
-                  <Image src={Pause} alt="icon" width={14} height={14} />
-                  <p className="prose text-xs text-[#4870b7]">Остановить</p>
-                </button>
-              </Tooltip>
+              <button className="flex items-center gap-x-1" onClick={handlePause}>
+                {pause ? (<Image src={Pause} alt="icon" width={14} height={14}/>) : (
+                  <Image src={Pause} alt="icon" width={14} height={14}/>
+                )}
+                <p className="prose text-xs text-[#4870b7]">{pause ? 'Возобновить' : 'Остановить'} {pause}</p>
+              </button>
               <Tooltip content="Удаление темы">
-                <button className="flex items-center gap-x-1" onClick={() => {openDeleteTheme(row._id)}}>
-                  <Image src={Delete} alt="icon" width={14} height={14} />
+                <button className="flex items-center gap-x-1" onClick={() => {
+                  openDeleteTheme(row._id)
+                }}>
+                  <Image src={Delete} alt="icon" width={14} height={14}/>
                   <p className="prose text-xs text-[#4870b7]">Удалить</p>
                 </button>
               </Tooltip>
@@ -256,6 +259,10 @@ const mainIndex: NextPage = () => {
     setCookie('currentTheme', id);
     router.push('main/editTheme');
   };
+
+  const handlePause = useCallback(() => {
+    setPause(!pause);
+  }, [pause]);
 
   const deleteTheme = async () => {
     try {
