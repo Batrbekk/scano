@@ -193,7 +193,7 @@ const dashboardIndex: NextPage = () => {
   return (
     <ProtectLayout>
       <MainLayout>
-        <div className="flex flex-col">
+        <div className="flex flex-col pb-4">
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-x-6">
               <p className="text-[#35415A] font-['Montserrat',sans-serif] text-base font-semibold w-full">Все материалы</p>
@@ -341,7 +341,7 @@ const dashboardIndex: NextPage = () => {
                 />
               ))}
             </div>
-            <div className="flex flex-col px-2 pt-5 bg-[#F2F4F6] w-[20%] h-full">
+            <div className="flex flex-col px-3 pt-5 bg-white rounded w-[20%] h-full">
               <div className="pb-3 border-b">
                 <p className="text-[#716767] text-lg mb-2">Тип источников</p>
                 <CheckboxGroup
@@ -482,6 +482,9 @@ const dashboardIndex: NextPage = () => {
                   </CheckboxGroup>
                 </AccordionItem>
               </Accordion>
+              <Button size="sm" className="mb-4 bg-[#60CA23] text-white rounded">
+                Отфильтровать
+              </Button>
             </div>
           </div>
           <Modal
