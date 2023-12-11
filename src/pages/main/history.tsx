@@ -32,7 +32,7 @@ const history: NextPage = () => {
       id: 2,
       theme: 'Алматы',
       period: '15.09.2022 - 25.09.2022',
-      message: '245',
+      message: '245 (25%)',
       author: 'Иван Петров',
       date: '5.09.2022',
       status: 'В процессе'
@@ -59,7 +59,7 @@ const history: NextPage = () => {
       id: 5,
       theme: 'Шымкент',
       period: '05.05.2023 - 15.05.2023',
-      message: '567',
+      message: '567 (93%)',
       author: 'Александра Ким',
       date: '1.05.2023',
       status: 'В процессе'
@@ -68,7 +68,7 @@ const history: NextPage = () => {
       id: 6,
       theme: 'Актобе',
       period: '20.07.2023 - 30.07.2023',
-      message: '123',
+      message: '123 (32%)',
       author: 'Алексей Попов',
       date: '10.07.2023',
       status: 'В процессе'
@@ -86,7 +86,7 @@ const history: NextPage = () => {
       id: 8,
       theme: 'Костанай',
       period: '01.09.2023 - 10.09.2023',
-      message: '376',
+      message: '376 (42%)',
       author: 'Андрей Козлов',
       date: '20.08.2023',
       status: 'В процессе'
