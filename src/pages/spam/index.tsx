@@ -105,7 +105,7 @@ const spamIndex: NextPage = () => {
   ];
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPagination, setTotalPagination] = useState(10);
+  const [totalPagination] = useState(10);
 
   const router = useRouter();
 
@@ -116,7 +116,7 @@ const spamIndex: NextPage = () => {
           <div className="flex w-[80%]">
             <div className="flex flex-col gap-y-4 w-full">
               <div className="flex items-center gap-x-2">
-                <p className="font-['Work Sans',sans-serif] text-[#35415A] prose prose-xl font-medium">Корзина</p>
+                <p className="font-['Work Sans',sans-serif] text-[#35415A] prose prose-xl font-medium">Спам</p>
                 <Tooltip content="Это спам">
                   <Image src={InfoGray} alt="icon" width={32} height={32} />
                 </Tooltip>

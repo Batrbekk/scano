@@ -200,7 +200,7 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
           <div className="flex flex-col px-6">
             <div className="flex items-center justify-between w-full">
               <div className="flex items-center gap-x-6">
-                <p className="text-[#35415A] font-['Montserrat',sans-serif] text-base font-semibold w-full">Меню атауы</p>
+                <p className="text-[#35415A] font-['Montserrat',sans-serif] text-base font-semibold w-full">Аналитика</p>
                 <Input
                   value={search}
                   onChange={handleSearchChange}

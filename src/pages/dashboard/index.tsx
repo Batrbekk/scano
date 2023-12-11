@@ -13,7 +13,7 @@ import { Checkbox, CheckboxGroup } from "@nextui-org/checkbox";
 import {Accordion, AccordionItem} from "@nextui-org/accordion";
 import MaterialCard from "@/components/molecule/MaterialCard";
 import ProtectLayout from "@/components/layout/protectLayout";
-import {Material, FilterItem} from "@/types";
+import {Material} from "@/types";
 import {getCookie} from "cookies-next";
 import {Button, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure} from "@nextui-org/react";
 
@@ -133,9 +133,7 @@ const dashboardIndex: NextPage = () => {
   const [search, setSearch] = useState('');
   const [dateRange, setDateRange] = useState<any>([null, null]);
   const [startDate, endDate] = dateRange;
-  const [filterItems, setFilterItems] = useState<ReadonlyArray<FilterItem>>([]);
   const [material, setMaterial] = useState<ReadonlyArray<Material>>([]);
-  const [pending, setPending] = useState<boolean>(false);
   const id = getCookie('currentTheme');
   const token = getCookie('scano_acess_token');
 
@@ -147,7 +145,6 @@ const dashboardIndex: NextPage = () => {
 
   const getMaterial = async () => {
     try {
-      setPending(true);
       const res = await fetch(
         `https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/${id}/materials${tone.length > 0 ? `${tone.map((item) => `?sentiment=${item}`).join('')}` : ''}${materialsType.length > 0 ? `${materialsType.map((item) => `?material_type=${item}`).join('')}` : ''}${materialLang.length > 0 ? `${materialLang.map((item) => `?language=${item}`).join('')}` : ''}${materialCollection.length > 0 ? `${materialCollection.map((item) => `?source_type=${item}`).join('')}` : ''}`,
         {
@@ -159,13 +156,11 @@ const dashboardIndex: NextPage = () => {
         }
       );
       if (res.ok) {
-        setPending(false);
         const data = await res.json();
         setMaterial(data);
         console.log(data);
       }
     } catch (err) {
-      setPending(false);
       console.error(err);
     }
   };
@@ -201,7 +196,7 @@ const dashboardIndex: NextPage = () => {
         <div className="flex flex-col">
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-x-6">
-              <p className="text-[#35415A] font-['Montserrat',sans-serif] text-base font-semibold w-full">Меню атауы</p>
+              <p className="text-[#35415A] font-['Montserrat',sans-serif] text-base font-semibold w-full">Все материалы</p>
               <Input
                 value={search}
                 onChange={handleSearchChange}

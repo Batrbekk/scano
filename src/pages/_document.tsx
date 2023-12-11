@@ -2,12 +2,13 @@ import Document, {DocumentContext, Head, Html, Main, NextScript,} from "next/doc
 
 class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
-    return await Document.getInitialProps(ctx);
+    const initialProps = await Document.getInitialProps(ctx);
+    return { ...initialProps };
   }
 
   render() {
     // @ts-ignore
-    return <Html><Head /><body><Main /><NextScript /></body></Html>;
+    return <Html><Head><meta charSet="UTF-8"/><meta name="viewport" content="width=1920, initial-scale=1"/></Head><body><Main/><NextScript/></body></Html>
   }
 }
 

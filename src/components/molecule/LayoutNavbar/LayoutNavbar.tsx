@@ -1,15 +1,13 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback} from "react";
 import Image from "next/image";
 import Home from '@public/assets/icons/home.svg';
 import { useRouter } from "next/router";
 import {Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from "@nextui-org/dropdown";
 import Profile from "@public/assets/icons/profile.svg";
 import Exit from "@public/assets/icons/exit.svg";
-import {deleteCookie} from "cookies-next";
+import {deleteCookie, getCookie} from "cookies-next";
 import {Button} from "@nextui-org/react";
-import {useTranslation} from "next-i18next";
-import {COMMON_TNS} from "@/lib/i18n/consts";
-import {getDictionary} from "@public/dictionaries";
+import {Tooltip} from "@nextui-org/tooltip";
 
 interface Props {
   email?: string,
@@ -21,15 +19,10 @@ interface Props {
 
 export const LayoutNavbar: React.FC<Props> = ({email, first_name, last_name, role, photo_url}) => {
   const router = useRouter();
-  const [name, setMenu] = useState('');
-  const dict = getDictionary(router.locale)
+  const themeName = getCookie('currentThemeName');
 
   const handleSelectLang = useCallback((lang: any) => {
     router.push(router.pathname, router.asPath, { locale: lang });
-  }, []);
-
-  useEffect(() => {
-    setMenu(router.asPath.substring(1));
   }, []);
 
   const dropFunction = (key: React.Key) => {
@@ -44,7 +37,7 @@ export const LayoutNavbar: React.FC<Props> = ({email, first_name, last_name, rol
 
   return (
     <div className="bg-[#F8F9FB] w-full flex items-center justify-between p-6">
-      <p className="text-[#35415A] prose prose-xl font-['Work Sans',sans-serif] capitalize">{name}</p>
+      <p className="text-[#35415A] prose prose-xl font-['Work Sans',sans-serif] capitalize">Тема: {themeName}</p>
       <div className="flex items-center gap-x-8">
         <Dropdown
           classNames={{
@@ -57,6 +50,7 @@ export const LayoutNavbar: React.FC<Props> = ({email, first_name, last_name, rol
           >
             <Button
               variant="bordered"
+              className="uppercase"
             >
               {router.locale}
             </Button>
@@ -65,18 +59,20 @@ export const LayoutNavbar: React.FC<Props> = ({email, first_name, last_name, rol
             aria-label="Static Actions"
             onAction={(key) => handleSelectLang(key)}
           >
-            <DropdownItem className="data-[hover=true]:rounded" key="kk">KZ</DropdownItem>
+            <DropdownItem className="data-[hover=true]:rounded" key="kk">KK</DropdownItem>
             <DropdownItem className="data-[hover=true]:rounded" key="en">EN</DropdownItem>
             <DropdownItem className="data-[hover=true]:rounded" key="ru">RU</DropdownItem>
           </DropdownMenu>
         </Dropdown>
-        <a href="/main/">
-          <Image
-            className="h-8 w-8 cursor-pointer"
-            src={Home}
-            alt="icon"
-          />
-        </a>
+        <Tooltip content="На главную">
+          <a href="/main/">
+            <Image
+              className="h-8 w-8 cursor-pointer"
+              src={Home}
+              alt="icon"
+            />
+          </a>
+        </Tooltip>
         <Dropdown>
           <DropdownTrigger>
             <div className="flex items-center gap-4 cursor-pointer">

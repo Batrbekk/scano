@@ -6,7 +6,6 @@ import MainLayout from "@/components/layout/mainLayout";
 import Delete from '@public/assets/icons/deleteBlue.svg';
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/table";
 import Button from "@/components/atom/Button";
-import {router} from "next/client";
 import {useRouter} from "next/router";
 import ProtectLayout from "@/components/layout/protectLayout";
 
@@ -102,7 +101,7 @@ const messageIndex: NextPage = () => {
     <ProtectLayout>
       <MainLayout>
         <div className="flex flex-col">
-          <p className="font-['Work Sans',sans-serif] text-[#35415A] prose prose-lg">Настройка оповещений</p>
+          <p className="font-['Work Sans',sans-serif] text-[#35415A] prose prose-lg">Сообщения</p>
           <Table
             aria-label="Example table with custom cells"
             className="bg-white rounded-lg mt-8"

@@ -4,7 +4,6 @@ import Sad from "@public/assets/icons/sad.svg";
 import Link from "@public/assets/icons/link.svg";
 import Share from "@public/assets/icons/share.svg";
 import Source from "@public/assets/icons/source.svg";
-import Bookmark from "@public/assets/icons/bookmark.svg";
 import Checkmark from "@public/assets/icons/checkmark.svg";
 import Thumbtack from "@public/assets/icons/thumbtack.svg";
 import DeleteBlue from "@public/assets/icons/blueDelete.svg";
@@ -12,11 +11,11 @@ import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDis
 import {format} from "date-fns";
 import {getCookie} from "cookies-next";
 import {useRouter} from "next/router";
-import {Select} from "@nextui-org/select";
 import {Checkbox, CheckboxGroup} from "@nextui-org/checkbox";
 import {Tags} from "@/types";
 import {Chip} from "@nextui-org/chip";
 import {ScrollShadow} from "@nextui-org/scroll-shadow";
+import {Tooltip} from "@nextui-org/tooltip";
 
 interface Props {
   id: string;
@@ -163,39 +162,48 @@ export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, sr
                     {item.name}
                   </Chip>
                 ))}
-                <Button variant="light" className="text-[10px] text-[#808793] rounded" onClick={() => {
-                  setIsCreateTag(true);
-                  onOpen();
-                }}>+ Добавить теги</Button>
+                <Tooltip content="Добавление тeга к материалу">
+                  <Button variant="light" className="text-[10px] text-[#808793] rounded" onClick={() => {
+                    setIsCreateTag(true);
+                    onOpen();
+                  }}>+ Добавить теги</Button>
+                </Tooltip>
               </div>
             </div>
             <div className="w-[20%] flex flex-col items-end gap-y-6">
               <div className="flex items-center gap-x-3">
-                <button>
-                  <Image src={Checkmark} alt="icon" />
-                </button>
-                <button>
-                  <Image src={Bookmark} alt="icon" />
-                </button>
-                <Image src={Sad} alt="icon" />
-                <Button isIconOnly size="sm" className="bg-[#ebf1fd]">
-                  <Image src={Thumbtack} alt="icon" />
-                </Button>
-                <Button isIconOnly size="sm" className="bg-[#ebf1fd]">
-                  <Image src={Share} alt="icon" />
-                </Button>
-                <Button
-                  isIconOnly
-                  size="sm"
-                  className="bg-[#ebf1fd]"
-                  onClick={() => {
-                    setIsDelete(true);
-                    setIsCreateTag(false);
-                    onOpen();
-                  }}
-                >
-                  <Image src={DeleteBlue} alt="icon" />
-                </Button>
+                <Tooltip content="Обработанные">
+                  <button>
+                    <Image src={Checkmark} alt="icon"/>
+                  </button>
+                </Tooltip>
+                <Tooltip content="Тональность">
+                  <Image src={Sad} alt="icon" />
+                </Tooltip>
+                <Tooltip content="Закрепить">
+                  <Button isIconOnly size="sm" className="bg-[#ebf1fd]">
+                    <Image src={Thumbtack} alt="icon" />
+                  </Button>
+                </Tooltip>
+                <Tooltip content="Поделиться">
+                  <Button isIconOnly size="sm" className="bg-[#ebf1fd]">
+                    <Image src={Share} alt="icon" />
+                  </Button>
+                </Tooltip>
+                <Tooltip content="Удалить">
+                  <Button
+                    isIconOnly
+                    size="sm"
+                    className="bg-[#ebf1fd]"
+                    onClick={() => {
+                      setIsDelete(true);
+                      setIsCreateTag(false);
+                      onOpen();
+                    }}
+                  >
+                    <Image src={DeleteBlue} alt="icon" />
+                  </Button>
+                </Tooltip>
               </div>
               <Image src={img} alt="car-img" width={150} height={120} />
             </div>

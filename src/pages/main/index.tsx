@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import Image from "next/image";
 import Button from "@/components/atom/Button";
-import Select from "@/components/atom/Select";
+import { Tooltip } from "@nextui-org/tooltip";
 import Edit from "@public/assets/icons/edit.svg";
 import Navbar from "@/components/molecule/Navbar";
 import Footer from "@/components/molecule/Footer";
@@ -13,7 +13,7 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from 
 import InlineChart from "@/components/atom/InlineChart";
 import {useRouter} from "next/router";
 import {getCookie, setCookie} from "cookies-next";
-import {Mode, Profile, Theme} from "@/types";
+import {Profile, Theme} from "@/types";
 import {
   Modal,
   ModalBody,
@@ -25,7 +25,6 @@ import {
 import { format } from "date-fns";
 import ProtectLayout from "@/components/layout/protectLayout";
 import {Spinner} from "@nextui-org/spinner";
-import {CircularProgress} from "@nextui-org/progress";
 
 const mainIndex: NextPage = () => {
   const router = useRouter();
@@ -88,20 +87,6 @@ const mainIndex: NextPage = () => {
       label: 'Негатив'
     }
   ];
-  const options = [
-    {
-      label: 'Все группы',
-      key: 'kcell'
-    },
-    {
-      label: 'option2',
-      key: 'option2'
-    },
-    {
-      label: 'option3',
-      key: 'option3'
-    }
-  ];
   const tableColumn = [
     {name: '#', uid: '_id'},
     {name: 'Название', uid: 'name'},
@@ -153,6 +138,7 @@ const mainIndex: NextPage = () => {
             <p className="text-lg text-[#4870b7] cursor-pointer" onClick={() => {
               router.push('/dashboard');
               setCookie('currentTheme', row._id);
+              setCookie('currentThemeName', row.name);
             }}>{row.name}</p>
             <div className="flex items-center gap-x-4">
               <p className="prose prose-sm">Данные собираются с {format(new Date(row.created_at), 'dd/MM/yyyy')}</p>
@@ -163,18 +149,24 @@ const mainIndex: NextPage = () => {
               </div>
             </div>
             <div className="mt-2 flex items-center gap-x-4">
-              <button className="flex items-center gap-x-1" onClick={() => {updateTheme(row._id)}}>
-                <Image src={Edit} alt="icon" width={14} height={14} />
-                <p className="prose text-xs text-[#4870b7]">Редактировать</p>
-              </button>
-              <button className="flex items-center gap-x-1">
-                <Image src={Pause} alt="icon" width={14} height={14} />
-                <p className="prose text-xs text-[#4870b7]">Остановить</p>
-              </button>
-              <button className="flex items-center gap-x-1" onClick={() => {openDeleteTheme(row._id)}}>
-                <Image src={Delete} alt="icon" width={14} height={14} />
-                <p className="prose text-xs text-[#4870b7]">Удалить</p>
-              </button>
+              <Tooltip content="Редактирование темы">
+                <button className="flex items-center gap-x-1" onClick={() => {updateTheme(row._id)}}>
+                  <Image src={Edit} alt="icon" width={14} height={14} />
+                  <p className="prose text-xs text-[#4870b7]">Редактировать</p>
+                </button>
+              </Tooltip>
+              <Tooltip content="Остановить тему">
+                <button className="flex items-center gap-x-1">
+                  <Image src={Pause} alt="icon" width={14} height={14} />
+                  <p className="prose text-xs text-[#4870b7]">Остановить</p>
+                </button>
+              </Tooltip>
+              <Tooltip content="Удаление темы">
+                <button className="flex items-center gap-x-1" onClick={() => {openDeleteTheme(row._id)}}>
+                  <Image src={Delete} alt="icon" width={14} height={14} />
+                  <p className="prose text-xs text-[#4870b7]">Удалить</p>
+                </button>
+              </Tooltip>
             </div>
           </div>
         )
@@ -309,15 +301,19 @@ const mainIndex: NextPage = () => {
                   <div className={`rounded-sm w-3 h-3 ${item.status === 'FULL' ? 'bg-[#60CA23]' : 'bg-[#cbcfd8]'}`} key={item.id} />
                 ))}
               </div>
-              <Button label="Добавить новую тему" size="sm" onClick={() => {
-                router.push('setting/placeSettings');
-              }} />
+              <Tooltip content="Добавление новой темы">
+                <Button label="Добавить новую тему" size="sm" onClick={() => {
+                  router.push('setting/placeSettings');
+                }} />
+              </Tooltip>
             </div>
             <div className="flex items-center gap-x-8">
-              <button className="flex items-center gap-x-2">
-                <Image src={Structure} alt="icon" width={14} height={14} />
-                <p className="text-[#4c515c] prose prose-base font-['Work Sans',sans-serif]">Группировка тем</p>
-              </button>
+              <Tooltip content="Группировать темы">
+                <button className="flex items-center gap-x-2">
+                  <Image src={Structure} alt="icon" width={14} height={14}/>
+                  <p className="text-[#4c515c] prose prose-base font-['Work Sans',sans-serif]">Группировка тем</p>
+                </button>
+              </Tooltip>
               <div className="flex items-center gap-x-4">
                 {historyStatus.map(item => (
                   <div className="flex items-center gap-x-2" key={item.id}>
