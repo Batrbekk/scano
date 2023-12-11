@@ -205,7 +205,7 @@ const mainLayout: FC<MainLayoutProps> = ({children, withPadding = defaultProps.w
                   <div className="border-l-2 border-[#6481AD] ml-2 pt-4 cursor-pointer" onClick={() => {
                     router.push('/main/editTheme/');
                   }}>
-                    <p className={`prose prose-sm font-['Montserrat',sans-serif] font-semibold ${(path === 'main/editTheme/') ? `text-white pl-2` : `text-[#6481AD]`}`}>— Редактировать тему</p>
+                    <p className={`prose prose-sm font-['Montserrat',sans-serif] font-semibold ${(path === 'setting/editTheme/') ? `text-white pl-2` : `text-[#6481AD]`}`}>— Редактировать тему</p>
                   </div>
                 </AccordionItem>
               </Accordion>

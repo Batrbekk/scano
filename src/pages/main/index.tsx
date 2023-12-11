@@ -257,7 +257,7 @@ const mainIndex: NextPage = () => {
   const updateTheme = (id: string) => {
     console.log(id);
     setCookie('currentTheme', id);
-    router.push('main/editTheme');
+    router.push('setting/editTheme');
   };
 
   const handlePause = useCallback(() => {
