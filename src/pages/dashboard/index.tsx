@@ -2,7 +2,7 @@ import Image from "next/image";
 import {NextPage} from "next";
 import {ru} from "date-fns/locale";
 import {Chip} from "@nextui-org/chip";
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {Input} from "@nextui-org/input";
 import DatePicker from "react-datepicker";
 import Search from "@public/assets/icons/search.svg";
@@ -16,6 +16,7 @@ import ProtectLayout from "@/components/layout/protectLayout";
 import {Material} from "@/types";
 import {getCookie} from "cookies-next";
 import {Button, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure} from "@nextui-org/react";
+import {Pagination} from "@nextui-org/pagination";
 
 const filterTabs = [
   {
@@ -142,6 +143,15 @@ const dashboardIndex: NextPage = () => {
   const [materialsType, setMaterialsType] = useState<Array<string>>([]);
   const [materialLang, setMaterialLang] = useState<Array<string>>([]);
   const [materialCollection, setMaterialCollection] = useState<Array<string>>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPage = useCallback(() => {
+    if (material.length > 5) {
+      return Math.ceil(material.length / 5);
+    } else {
+      return 0;
+    }
+  }, [material]);
 
   const getMaterial = async () => {
     try {
@@ -327,19 +337,28 @@ const dashboardIndex: NextPage = () => {
           </div>
           <div className="flex items-start gap-x-4 w-full">
             <div className="w-[80%] flex flex-col gap-y-2">
-              {material.map((card) => (
-                <MaterialCard
-                  key={card._id}
-                  id={card._id}
-                  title={card.title}
-                  date={card.created_at}
-                  text={card.description}
-                  tags={card.tags}
-                  links={card.url}
-                  src_name={card.source.name}
-                  img="https://static.vecteezy.com/system/resources/thumbnails/006/299/370/original/world-breaking-news-digital-earth-hud-rotating-globe-rotating-free-video.jpg"
-                />
-              ))}
+              {material
+                .slice((currentPage - 1) * 5, currentPage * 5)
+                .map((card) => (
+                  <MaterialCard
+                    key={card._id}
+                    id={card._id}
+                    title={card.title}
+                    date={card.created_at}
+                    text={card.description}
+                    tags={card.tags}
+                    links={card.url}
+                    src_name={card.source.name}
+                    img="https://static.vecteezy.com/system/resources/thumbnails/006/299/370/original/world-breaking-news-digital-earth-hud-rotating-globe-rotating-free-video.jpg"
+                  />
+                ))}
+              <div className="flex items-center justify-center">
+                {material.length > 5 && (
+                  <div className="my-4">
+                    <Pagination showControls total={totalPage()} initialPage={currentPage} onChange={setCurrentPage} />
+                  </div>
+                )}
+              </div>
             </div>
             <div className="flex flex-col px-3 pt-5 bg-white rounded w-[20%] h-full">
               <div className="pb-3 border-b">
