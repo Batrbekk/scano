@@ -345,53 +345,31 @@ const dashboardIndex: NextPage = () => {
               <div className="pb-3 border-b">
                 <p className="text-[#716767] text-lg mb-2">Тип источников</p>
                 <CheckboxGroup
-                  radius="sm"
-                  classNames={{
-                    base: '',
-                    wrapper: 'font-light text-sm w-full [&_label]:!max-w-full [&_.select-none]:w-full'
-                  }}
+                  value={materialCollection}
+                  onValueChange={setMaterialCollection}
                 >
-                  <Checkbox value="social">
-                    <div className="flex items-center justify-between w-full text-[#7191c6]">
-                      Social networks
-                      <span className="text-[#716767]">1076</span>
-                    </div>
-                  </Checkbox>
-                  <Checkbox value="news">
-                    <div className="flex items-center justify-between w-full text-[#7191c6]">
-                      News
-                      <span className="text-[#716767]">1021</span>
-                    </div>
-                  </Checkbox>
+                  {collection.map((item) => (
+                    <Checkbox value={item.key} classNames={{
+                      wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                    }}>
+                      <p className="prose prose-sm text-[#7191c6]">{item.label}</p>
+                    </Checkbox>
+                  ))}
                 </CheckboxGroup>
               </div>
               <div className="py-3 border-b">
-                <p className="text-[#716767] text-lg mb-2">Тональность</p>
+                <p className="text-[#716767] text-lg mb-2">Тип материала</p>
                 <CheckboxGroup
-                  radius="sm"
-                  classNames={{
-                    base: '',
-                    wrapper: 'font-light text-sm w-full [&_label]:!max-w-full [&_.select-none]:w-full'
-                  }}
+                  value={materialsType}
+                  onValueChange={setMaterialsType}
                 >
-                  <Checkbox value="social">
-                    <div className="flex items-center justify-between w-full text-[#7191c6]">
-                      Neutral
-                      <span className="text-[#716767]">3437</span>
-                    </div>
-                  </Checkbox>
-                  <Checkbox value="asd">
-                    <div className="flex items-center justify-between w-full text-[#7191c6]">
-                      Positive
-                      <span className="text-[#716767]">570</span>
-                    </div>
-                  </Checkbox>
-                  <Checkbox value="news">
-                    <div className="flex items-center justify-between w-full text-[#7191c6]">
-                      Negative
-                      <span className="text-[#716767]">113</span>
-                    </div>
-                  </Checkbox>
+                  {materialType.map((item) => (
+                    <Checkbox value={item.key} classNames={{
+                      wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                    }}>
+                      <p className="prose prose-sm text-[#7191c6]">{item.label}</p>
+                    </Checkbox>
+                  ))}
                 </CheckboxGroup>
               </div>
               <Accordion
@@ -408,30 +386,16 @@ const dashboardIndex: NextPage = () => {
                   }}
                 >
                   <CheckboxGroup
-                    radius="sm"
-                    classNames={{
-                      base: '',
-                      wrapper: 'font-light text-sm w-full [&_label]:!max-w-full [&_.select-none]:w-full'
-                    }}
+                    value={materialLang}
+                    onValueChange={setMaterialLang}
                   >
-                    <Checkbox value="russian">
-                      <div className="flex items-center justify-between w-full text-[#7191c6]">
-                        Russian
-                        <span className="text-[#716767]">2861</span>
-                      </div>
-                    </Checkbox>
-                    <Checkbox value="english">
-                      <div className="flex items-center justify-between w-full text-[#7191c6]">
-                        English
-                        <span className="text-[#716767]">118</span>
-                      </div>
-                    </Checkbox>
-                    <Checkbox value="kazakh">
-                      <div className="flex items-center justify-between w-full text-[#7191c6]">
-                        Kazakh
-                        <span className="text-[#716767]">1976</span>
-                      </div>
-                    </Checkbox>
+                    {lang.map((item) => (
+                      <Checkbox value={item.key} classNames={{
+                        wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                      }}>
+                        <p className="prose prose-sm text-[#7191c6]">{item.label}</p>
+                      </Checkbox>
+                    ))}
                   </CheckboxGroup>
                 </AccordionItem>
               </Accordion>
@@ -442,47 +406,27 @@ const dashboardIndex: NextPage = () => {
                 <AccordionItem
                   key="1"
                   aria-label="Теги"
-                  title="Теги"
+                  title="Тональность"
                   classNames={{
                     base:'[&_button]:py-0 [&_span]:mb-0 [&_button]:flex-row-reverse',
                     title: 'text-[#716767] text-lg mb-2'
                   }}
                 >
                   <CheckboxGroup
-                    radius="sm"
-                    classNames={{
-                      base: '',
-                      wrapper: 'font-light text-sm w-full [&_label]:!max-w-full [&_.select-none]:w-full'
-                    }}
+                    value={tone}
+                    onValueChange={setTone}
                   >
-                    <Checkbox value="social">
-                      <div className="flex items-center justify-between w-full text-[#7191c6]">
-                        Басшылык
-                        <span className="text-[#716767]">2861</span>
-                      </div>
-                    </Checkbox>
-                    <Checkbox value="news">
-                      <div className="flex items-center justify-between w-full text-[#7191c6]">
-                        Сайрам ауданы
-                        <span className="text-[#716767]">118</span>
-                      </div>
-                    </Checkbox>
-                    <Checkbox value="news">
-                      <div className="flex items-center justify-between w-full text-[#7191c6]">
-                        Кентау
-                        <span className="text-[#716767]">1976</span>
-                      </div>
-                    </Checkbox>
-                    <Checkbox value="news">
-                      <div className="flex items-center justify-between w-full text-[#7191c6]">
-                        Арыс ауданы
-                        <span className="text-[#716767]">1976</span>
-                      </div>
-                    </Checkbox>
+                    {toneOption.map((item) => (
+                      <Checkbox value={item.key} classNames={{
+                        wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                      }}>
+                        <p className="prose prose-sm text-[#7191c6]">{item.label}</p>
+                      </Checkbox>
+                    ))}
                   </CheckboxGroup>
                 </AccordionItem>
               </Accordion>
-              <Button size="sm" className="mb-4 bg-[#60CA23] text-white rounded">
+              <Button size="sm" onClick={getMaterial} className="mb-4 bg-[#6581ad] text-white rounded">
                 Отфильтровать
               </Button>
             </div>
@@ -500,13 +444,17 @@ const dashboardIndex: NextPage = () => {
                     Фильтры
                     <div className="flex items-center gap-x-2">
                       <Button className="bg-[#d9d9d9] rounded text-[#757575]" onPress={() => {
+                        onClose();
+                      }}>
+                        Отмена
+                      </Button>
+                      <Button className="bg-[#d9d9d9] rounded text-[#757575]" onPress={() => {
                         setTone([]);
                         setMaterialLang([]);
                         setMaterialsType([]);
                         setMaterialCollection([]);
-                        onClose();
                       }}>
-                        Отмена
+                        Очистить
                       </Button>
                       <Button className="bg-[#6581ad] rounded text-white" onPress={() => {
                         getMaterial();
@@ -614,7 +562,7 @@ const dashboardIndex: NextPage = () => {
                         {currentTab === 'main' && (
                           <>
                             <div className="flex flex-col gap-y-1 w-full">
-                              <p className="prose prose-sm text-[#979ca9]">Область поиска</p>
+                              <p className="prose prose-sm text-[#979ca9]">Тональность</p>
                               <CheckboxGroup
                                 orientation="horizontal"
                                 value={tone}

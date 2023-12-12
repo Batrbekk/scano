@@ -129,14 +129,14 @@ export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, sr
             </div>
             <a href={links.value} className="flex items-center gap-x-1">
               <Image src={Link} alt="icon" />
-              <a href={links} className="text-xs font-light text-[#5B85CE]">{links}</a>
+              <a href={links} className="text-xs font-light text-[#5B85CE] truncate w-52">{links}</a>
             </a>
-            <p className="text-[#757575] text-xs font-medium">{created}</p>
+            <p className="text-[#757575] text-xs font-medium ml-auto">{created}</p>
           </div>
           <div className="mt-3 flex items-start justify-between w-full">
             <div className="w-full">
-              <h1 className="text-[#444] font-semibold truncate">{title}</h1>
-              <p className="text-[#444] text-xs mt-2 truncate w-[450px]">{text}</p>
+              <h1 className="text-[#444] font-semibold truncate w-[800px]">{title}</h1>
+              <p className="text-[#444] text-xs mt-2 truncate max-w-[700px]">{text}</p>
               <Button
                 className="p-0 text-[#5B85CE] text-xs mt-1 h-unit-4 data-[hover=true]:bg-transparent"
                 disableAnimation={true}
@@ -163,7 +163,7 @@ export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, sr
                   </Chip>
                 ))}
                 <Tooltip content="Добавление тeга к материалу">
-                  <Button variant="light" className="text-[10px] text-[#808793] rounded" onClick={() => {
+                  <Button variant="light" className="text-[10px] text-[#808793] rounded p-0 h-unit-4" onClick={() => {
                     setIsCreateTag(true);
                     onOpen();
                   }}>+ Добавить теги</Button>

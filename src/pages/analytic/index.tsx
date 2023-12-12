@@ -8,7 +8,7 @@ import DatePicker from "react-datepicker";
 import {ru} from "date-fns/locale";
 import {Chip} from "@nextui-org/chip";
 import Filter from "@public/assets/icons/filter.svg";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import * as Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import Select from "@/components/atom/Select";
@@ -45,12 +45,16 @@ const chooseFilter = [
 const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
   const optionsSelect = [
     {
-      label: 'По дням',
-      key: 'day'
+      label: 'По месяцам',
+      key: 30
     },
     {
       label: 'По неделям',
-      key: 'week'
+      key: 30
+    },
+    {
+      label: 'В течений дня',
+      key: 1
     }
   ];
   const [filterItems, setFilterItems] = useState(chooseFilter);
@@ -58,7 +62,7 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
   const [dateRange, setDateRange] = useState<any>([null, null]);
   const [startDate, endDate] = dateRange;
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
-  const [selectedOption, setSelectedOption] = useState(optionsSelect[0]);
+  const [selectedOption, setSelectedOption] = useState<any>(optionsSelect[0]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
@@ -99,6 +103,14 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
     setFilterItems(filterItems.filter(item => item.id !== idToRemove));
   };
 
+  const chartInterval = useCallback(() => {
+    if (selectedOption.key === 1) {
+      return 3600 * 1000;
+    } else {
+      return 24 * 3600 * 1000;
+    }
+  }, [selectedOption]);
+
   const options: Highcharts.Options = {
     title: {
       text: '',
@@ -108,16 +120,69 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
         enabled: false,
       },
     },
+    xAxis: {
+      type: 'datetime',
+      max: selectedOption.key * 24 * 3600 * 1000,
+      tickInterval: chartInterval(),
+      dateTimeLabelFormats: {
+        day: "%e %b",
+        hour: '%H:%M',
+      }
+    },
     series: [
-      {
-        name: 'Количество упоминаний',
-        type: 'line',
-        data: [1, 2, 3],
-      },
       {
         name: 'Позитив',
         type: 'line',
-        data: [0, 1, 5, 2, 4],
+        data: [
+          [1450023000, 10],
+          [1470123000, 4],
+          [1490223000, 6],
+          [1510323000, 2],
+          [1530423000, 1],
+          [1550523000, 3],
+          [1570623000, 9]
+        ],
+        color: '#60CA23'
+      },
+      {
+        name: 'Негатив',
+        type: 'line',
+        data: [
+          [1450023000, 11],
+          [1470123000, 5],
+          [1490223000, 7],
+          [1510323000, 3],
+          [1530423000, 2],
+        ],
+        color: '#B00000'
+      },
+      {
+        name: 'Нейтральный',
+        type: 'line',
+        data: [
+          [1450023000, 9],
+          [1470123000, 6],
+          [1490223000, 8],
+          [1510323000, 2],
+          [1530423000, 1],
+          [1550523000, 5],
+          [1570623000, 10]
+        ],
+        color: '#FFCF48'
+      },
+      {
+        name: 'Количество упоминаний',
+        type: 'line',
+        data: [
+          [1450023000, 8],
+          [1470123000, 5],
+          [1490223000, 7],
+          [1510323000, 3],
+          [1530423000, 2],
+          [1550523000, 6],
+          [1570623000, 9]
+        ],
+        color: '#7851A9'
       },
     ],
   };

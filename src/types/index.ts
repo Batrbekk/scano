@@ -61,7 +61,7 @@ export interface Material {
 }
 
 export interface Mode {
-  key: string,
+  key: string | number,
   label: string
 }
 

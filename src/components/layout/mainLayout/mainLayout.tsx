@@ -52,7 +52,7 @@ const mainLayout: FC<MainLayoutProps> = ({children, withPadding = defaultProps.w
   return (
     <div className="flex w-screen">
       {routerRoot && (
-        <div className="fixed h-screen bg-[#37475F] w-64 px-6 py-3 overflow-y-scroll">
+        <div className="fixed h-screen bg-[#37475F] w-64 px-6 py-3 overflow-y-scroll z-30">
           <a href="/main/">
             <Image src={Logo} alt="logo" />
           </a>
@@ -188,11 +188,6 @@ const mainLayout: FC<MainLayoutProps> = ({children, withPadding = defaultProps.w
                     <p className={`prose prose-sm font-['Montserrat',sans-serif] font-semibold ${path === 'setting/integrations/' ? `text-white pl-2` : `text-[#6481AD]`}`}>— Интеграциялар</p>
                   </div>
                   <div className="border-l-2 border-[#6481AD] ml-2 pt-4 cursor-pointer" onClick={() => {
-                    router.push('/setting/placeSettings/');
-                  }}>
-                    <p className={`prose prose-sm font-['Montserrat',sans-serif] font-semibold ${path === 'setting/placeSettings/' ? `text-white pl-2` : `text-[#6481AD]`}`}>— Создать тему</p>
-                  </div>
-                  <div className="border-l-2 border-[#6481AD] ml-2 pt-4 cursor-pointer" onClick={() => {
                     router.push('/setting/rules/');
                   }}>
                     <p className={`prose prose-sm font-['Montserrat',sans-serif] font-semibold ${(path === 'setting/rules/' || path === 'setting/addRule') ? `text-white pl-2` : `text-[#6481AD]`}`}>— Правила</p>
@@ -203,7 +198,7 @@ const mainLayout: FC<MainLayoutProps> = ({children, withPadding = defaultProps.w
                     <p className={`prose prose-sm font-['Montserrat',sans-serif] font-semibold ${(path === 'setting/createTag/') ? `text-white pl-2` : `text-[#6481AD]`}`}>— Создание тега</p>
                   </div>
                   <div className="border-l-2 border-[#6481AD] ml-2 pt-4 cursor-pointer" onClick={() => {
-                    router.push('/main/editTheme/');
+                    router.push('/setting/editTheme/');
                   }}>
                     <p className={`prose prose-sm font-['Montserrat',sans-serif] font-semibold ${(path === 'setting/editTheme/') ? `text-white pl-2` : `text-[#6481AD]`}`}>— Редактировать тему</p>
                   </div>
