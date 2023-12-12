@@ -52,7 +52,7 @@ const mainLayout: FC<MainLayoutProps> = ({children, withPadding = defaultProps.w
   return (
     <div className="flex w-screen">
       {routerRoot && (
-        <div className="fixed h-screen bg-[#37475F] w-64 px-6 py-3 overflow-y-scroll z-30">
+        <div className="fixed h-screen bg-[#37475F] w-64 px-6 py-3 overflow-y-scroll z-50">
           <a href="/main/">
             <Image src={Logo} alt="logo" />
           </a>

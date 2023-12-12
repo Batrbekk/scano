@@ -336,7 +336,7 @@ const dashboardIndex: NextPage = () => {
             </button>
           </div>
           <div className="flex items-start gap-x-4 w-full">
-            <div className="w-[80%] flex flex-col gap-y-2">
+            <div className="w-[80%] max-w-[80%] overflow-x-scroll flex flex-col gap-y-2">
               {material
                 .slice((currentPage - 1) * 5, currentPage * 5)
                 .map((card) => (
@@ -360,7 +360,7 @@ const dashboardIndex: NextPage = () => {
                 )}
               </div>
             </div>
-            <div className="flex flex-col px-3 pt-5 bg-white rounded w-[20%] h-full">
+            <div className="flex flex-col px-3 pt-5 bg-white rounded w-[20%] h-full z-30">
               <div className="pb-3 border-b">
                 <p className="text-[#716767] text-lg mb-2">Тип источников</p>
                 <CheckboxGroup
