@@ -69,7 +69,7 @@ export const addMessage: NextPage = () => {
     }
   ];
 
-  const [selectedOption, setSelectedOption] = useState(options[0]);
+  const [selectedOption, setSelectedOption] = useState<Mode>(options[0]);
   const [link, setLink] = useState('');
 
   const handleSelectChange = (value: Mode) => {
