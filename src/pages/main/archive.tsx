@@ -30,7 +30,7 @@ const archive: NextPage = () => {
     }
   ];
 
-  const [selectedOption, setSelectedOption] = useState(options[0]);
+  const [selectedOption, setSelectedOption] = useState<any>(options[0]);
   const [dateRange, setDateRange] = useState<any>([null, null]);
   const [startDate, endDate] = dateRange;
 
