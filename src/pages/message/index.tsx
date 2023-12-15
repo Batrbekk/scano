@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from 
 import Button from "@/components/atom/Button";
 import {useRouter} from "next/router";
 import ProtectLayout from "@/components/layout/protectLayout";
+import {Tooltip} from "@nextui-org/tooltip";
 
 const messageIndex: NextPage = () => {
   const tableColumn = [
@@ -84,12 +85,16 @@ const messageIndex: NextPage = () => {
       case 'action':
         return (
           <div className="py-4 px-8 flex items-center gap-x-2">
-            <button className="bg-[#ebf1fd] rounded p-2">
-              <Image src={Edit} width={14} height={14} alt="icon" />
-            </button>
-            <button className="bg-[#ebf1fd] rounded p-2">
-              <Image src={Delete} width={14} height={14} alt="icon" />
-            </button>
+            <Tooltip content="Редактировать">
+              <button className="bg-[#ebf1fd] rounded p-2">
+                <Image src={Edit} width={14} height={14} alt="icon"/>
+              </button>
+            </Tooltip>
+            <Tooltip content="Удалить">
+              <button className="bg-[#ebf1fd] rounded p-2">
+                <Image src={Delete} width={14} height={14} alt="icon"/>
+              </button>
+            </Tooltip>
           </div>
         )
       default:
@@ -100,8 +105,8 @@ const messageIndex: NextPage = () => {
   return (
     <ProtectLayout>
       <MainLayout>
-        <div className="flex flex-col">
-          <p className="font-['Work Sans',sans-serif] text-[#35415A] prose prose-lg">Сообщения</p>
+      <div className="flex flex-col">
+          <p className="font-['Work Sans',sans-serif] text-[#35415A] prose prose-lg">Оповещения</p>
           <Table
             aria-label="Example table with custom cells"
             className="bg-white rounded-lg mt-8"

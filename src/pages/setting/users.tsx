@@ -5,7 +5,7 @@ import React, {Key, useCallback, useEffect, useState} from "react";
 import {Avatar} from "@nextui-org/avatar";
 import Image from "next/image";
 import Edit from "@public/assets/icons/editBlue.svg";
-import Ban from "@public/assets/icons/ban.svg";
+import Unlock from "@public/assets/icons/unlock.svg";
 import Delete from "@public/assets/icons/deleteBlue.svg";
 import {Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from "@nextui-org/table";
 import Button from "@/components/atom/Button";
@@ -13,6 +13,7 @@ import ProtectLayout from "@/components/layout/protectLayout";
 import {getCookie, setCookie} from "cookies-next";
 import {Spinner} from "@nextui-org/spinner";
 import {Profile} from "@/types";
+import {Tooltip} from "@nextui-org/tooltip";
 
 const Users: NextPage = () => {
   const tableColumn = [
@@ -104,19 +105,25 @@ const Users: NextPage = () => {
             )}
             {row.role !== 'Супер администратор' && (
               <>
-                <button className="bg-[#ebf1fd] rounded p-2">
-                  <Image src={Ban} width={14} height={14} alt="icon" />
-                </button>
-                <button className="bg-[#ebf1fd] rounded p-2" onClick={() => {
-                  console.log(row);
-                  setCookie('currentProfile', row);
-                  router.push('/setting/editProfile');
-                }}>
-                  <Image src={Edit} width={14} height={14} alt="icon" />
-                </button>
-                <button className="bg-[#ebf1fd] rounded p-2">
-                  <Image src={Delete} width={14} height={14} alt="icon" />
-                </button>
+                <Tooltip content="Заблокировать">
+                  <button className="bg-[#ebf1fd] rounded p-2">
+                    <Image src={Unlock} width={14} height={14} alt="icon"/>
+                  </button>
+                </Tooltip>
+                <Tooltip content="Редактировать">
+                  <button className="bg-[#ebf1fd] rounded p-2" onClick={() => {
+                    console.log(row);
+                    setCookie('currentProfile', row);
+                    router.push('/setting/editProfile');
+                  }}>
+                    <Image src={Edit} width={14} height={14} alt="icon"/>
+                  </button>
+                </Tooltip>
+                <Tooltip content="Удалить">
+                  <button className="bg-[#ebf1fd] rounded p-2">
+                    <Image src={Delete} width={14} height={14} alt="icon"/>
+                  </button>
+                </Tooltip>
               </>
             )}
           </div>

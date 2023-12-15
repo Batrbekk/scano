@@ -359,7 +359,15 @@ const dashboardIndex: NextPage = () => {
               {pending && (
                 <Spinner color="success" size="lg" />
               )}
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-center relative">
+                <div className="flex items-center absolute left-0">
+                  <Button variant="light" className="text-[#35415A]">
+                    Выбрать все
+                  </Button>
+                  <Button variant="light" className="text-[#35415A]">
+                    Удалить
+                  </Button>
+                </div>
                 {material.length > 5 && (
                   <div className="my-4">
                     <Pagination showControls total={totalPage()} initialPage={currentPage} onChange={setCurrentPage} />

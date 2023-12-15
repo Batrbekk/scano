@@ -117,7 +117,7 @@ const AddRule: NextPage = () => {
           </div>
           <div className="flex items-center gap-x-4 mt-6">
             <Button label="Создать правило" size="sm" classBtn="!w-fit" />
-            <Button label="Отмена" size="sm" classBtn="!w-fit" color="bg-[#ebf1fd] font-['Work Sans',sans-serif] text-[#8192ca]" />
+            <Button label="Отмена" size="sm" classBtn="!w-fit" color="bg-[#6581ad] font-['Work Sans',sans-serif] text-[#8192ca]" />
           </div>
         </div>
       </MainLayout>
