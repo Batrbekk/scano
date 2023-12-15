@@ -134,9 +134,9 @@ export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, sr
             <p className="text-[#757575] text-xs font-medium ml-auto">{created}</p>
           </div>
           <div className="mt-3 flex items-start justify-between w-full">
-            <div className="w-full">
-              <h1 className="text-[#444] font-semibold truncate w-[800px]">{title}</h1>
-              <p className="text-[#444] text-xs mt-2 truncate max-w-[700px]">{text}</p>
+            <div className="w-full max-w-[80%]">
+              <h1 className="text-[#444] font-semibold truncate w-[80%]">{title}</h1>
+              <p className="text-[#444] text-xs mt-2 truncate max-w-[90%]">{text}</p>
               <Button
                 className="p-0 text-[#5B85CE] text-xs mt-1 h-unit-4 data-[hover=true]:bg-transparent"
                 disableAnimation={true}

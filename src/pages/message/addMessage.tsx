@@ -9,7 +9,7 @@ import Notification from "@public/assets/icons/notification.svg";
 import ProtectLayout from "@/components/layout/protectLayout";
 import {Mode, Profile} from "@/types";
 import {getCookie} from "cookies-next";
-import {Radio, RadioGroup} from "@nextui-org/radio";
+import {Checkbox, CheckboxGroup} from "@nextui-org/checkbox";
 
 const addMessage: NextPage = () => {
   const options = [
@@ -71,7 +71,7 @@ const addMessage: NextPage = () => {
   const [listUsers, setListUsers] = useState<ReadonlyArray<Profile>>([]);
   const [optionTheme, setOptionTheme] = useState<{ key: string; label: string }[]>([]);
   const [optionUsers, setOptionUsers] = useState<{ key: string; label: string }[]>([]);
-  const [sendType, setSendType] = useState('');
+  const [sendType, setSendType] = useState<Array<string>>([]);
   const [login, setLogin] = useState('');
 
   const handleCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -192,26 +192,34 @@ const addMessage: NextPage = () => {
               <div className="mt-6">
                 <p className="prose prose-lg font-['Work_Sans',sans-serif] text-[#35415A] font-medium">Получать уведомления</p>
                 <div className="flex items-end justify-between">
-                  <RadioGroup
+                  <CheckboxGroup
                     className="mt-2"
                     size="md"
                     value={sendType}
                     onValueChange={setSendType}
                   >
-                    <Radio value="mail">
+                    <Checkbox value="mail" classNames={{
+                      wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                    }}>
                       <p className="prose prose-base font-['Work_Sans',sans-serif]">Электронная почта</p>
-                    </Radio>
-                    <Radio value="telegram">
+                    </Checkbox>
+                    <Checkbox value="telegram" classNames={{
+                      wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                    }}>
                       <p className="prose prose-base font-['Work_Sans',sans-serif]">Telegram</p>
-                    </Radio>
-                  </RadioGroup>
+                    </Checkbox>
+                  </CheckboxGroup>
                   <a href="#" className="prose prose-base font-['Work_Sans',sans-serif] text-[#6694d5] font-medium">Описание интеграции с Telegram</a>
                 </div>
-                <div className="mt-6">
-                  {sendType === 'telegram' && (
-                    <Select options={optionUsers} value={selectedUsersTelegram} onChange={handleSelectUserTelegram} classSelect="w-full" />
+                <div className="mt-6 flex flex-col gap-y-4">
+                  {sendType.includes('telegram') && (
+                    <div className="flex flex-col gap-y-1 w-full">
+                      <p className="font-['Work Sans',sans-serif] prose prose-sm text-[#979ca9]">Telegram</p>
+                      <Select options={optionUsers} value={selectedUsersTelegram} onChange={handleSelectUserTelegram}
+                              classSelect="w-full"/>
+                    </div>
                   )}
-                  {sendType === 'mail' && (
+                  {sendType.includes('mail') && (
                     <div className="flex flex-col gap-y-1 w-full">
                       <p className="font-['Work Sans',sans-serif] prose prose-sm text-[#979ca9]">Почта</p>
                       <Input

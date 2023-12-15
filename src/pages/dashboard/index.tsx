@@ -17,6 +17,7 @@ import {Material} from "@/types";
 import {getCookie} from "cookies-next";
 import {Button, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure} from "@nextui-org/react";
 import {Pagination} from "@nextui-org/pagination";
+import {Spinner} from "@nextui-org/spinner";
 
 const filterTabs = [
   {
@@ -144,6 +145,7 @@ const dashboardIndex: NextPage = () => {
   const [materialLang, setMaterialLang] = useState<Array<string>>([]);
   const [materialCollection, setMaterialCollection] = useState<Array<string>>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [pending, setPending] = useState<boolean>(true);
 
   const totalPage = useCallback(() => {
     if (material.length > 5) {
@@ -168,10 +170,12 @@ const dashboardIndex: NextPage = () => {
       if (res.ok) {
         const data = await res.json();
         setMaterial(data);
+        setPending(false);
         console.log(data);
       }
     } catch (err) {
       console.error(err);
+      setPending(false);
     }
   };
 
@@ -232,7 +236,7 @@ const dashboardIndex: NextPage = () => {
                 <Image src={Export} alt="icon" />
                 <p className="font-['Montserrat',sans-serif] text-base font-semibold text-[#35415A]">Экспорт</p>
               </button>
-              <div>
+              <div className="z-50">
                 <DatePicker
                   showIcon
                   locale={ru}
@@ -250,7 +254,7 @@ const dashboardIndex: NextPage = () => {
             </div>
           </div>
           <div className="flex items-center justify-between w-full py-6">
-            <div className="flex items-start">
+            <div className="flex items-start max-w-[80%]">
               <p className="text-[#35415A] font-['Montserrat',sans-serif] text-base font-semibold">Фильтр:</p>
               <div className="flex items-center gap-y-2">
                 <div className="ml-4 flex flex-wrap items-start gap-x-4">
@@ -335,8 +339,8 @@ const dashboardIndex: NextPage = () => {
               Фильтр
             </button>
           </div>
-          <div className="flex items-start gap-x-4 w-full">
-            <div className="w-[80%] max-w-[80%] overflow-x-scroll flex flex-col gap-y-2">
+          <div className="flex items-start justify-between w-full">
+            <div className="w-full max-w-[75%] flex flex-col gap-y-2">
               {material
                 .slice((currentPage - 1) * 5, currentPage * 5)
                 .map((card) => (
@@ -352,6 +356,9 @@ const dashboardIndex: NextPage = () => {
                     img="https://static.vecteezy.com/system/resources/thumbnails/006/299/370/original/world-breaking-news-digital-earth-hud-rotating-globe-rotating-free-video.jpg"
                   />
                 ))}
+              {pending && (
+                <Spinner color="success" size="lg" />
+              )}
               <div className="flex items-center justify-center">
                 {material.length > 5 && (
                   <div className="my-4">
@@ -360,7 +367,7 @@ const dashboardIndex: NextPage = () => {
                 )}
               </div>
             </div>
-            <div className="flex flex-col px-3 pt-5 bg-white rounded w-[20%] h-full z-30">
+            <div className="flex flex-col px-6 pt-5 bg-white rounded w-[20%] h-full z-30">
               <div className="pb-3 border-b">
                 <p className="text-[#716767] text-lg mb-2">Тип источников</p>
                 <CheckboxGroup

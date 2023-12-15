@@ -50,9 +50,9 @@ const mainLayout: FC<MainLayoutProps> = ({children, withPadding = defaultProps.w
   }, [router, profileCookie]);
 
   return (
-    <div className="flex w-screen">
+    <div className="flex w-screen items-start">
       {routerRoot && (
-        <div className="fixed h-screen bg-[#37475F] w-64 px-6 py-3 overflow-y-scroll z-50">
+        <div className="fixed h-screen bg-[#37475F] w-[15%] px-6 py-3 overflow-y-scroll z-50">
           <a href="/main/">
             <Image src={Logo} alt="logo" />
           </a>
@@ -208,7 +208,7 @@ const mainLayout: FC<MainLayoutProps> = ({children, withPadding = defaultProps.w
           </div>
         </div>
       )}
-      <div className="ml-64 flex flex-col w-full h-screen justify-between bg-[#F8F9FB]">
+      <div className="flex ml-[15%] max-w-[85%] flex-col w-full h-screen justify-between bg-[#F8F9FB]">
         <div>
           {profile && (
             <LayoutNavbar email={profile.email} role={profile.role} first_name={profile.first_name} last_name={profile.last_name} photo_url={profile.photo_url} />

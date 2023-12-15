@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import Navbar from "@/components/molecule/Navbar";
@@ -7,7 +7,8 @@ import Select from "@/components/atom/Select";
 import Input from "@/components/atom/Input";
 import Button from "@/components/atom/Button";
 import ProtectLayout from "@/components/layout/protectLayout";
-import {Mode} from "@/types";
+import {Mode, Profile} from "@/types";
+import {getCookie, setCookie} from "cookies-next";
 
 export const addMessage: NextPage = () => {
   const router = useRouter();
@@ -72,6 +73,9 @@ export const addMessage: NextPage = () => {
   const [selectedOption, setSelectedOption] = useState<Mode>(options[0]);
   const [link, setLink] = useState('');
 
+  const token = getCookie('scano_acess_token');
+  const [profile, setProfile] = useState<Profile>();
+
   const handleSelectChange = (value: Mode) => {
     setSelectedOption(value);
   };
@@ -80,11 +84,41 @@ export const addMessage: NextPage = () => {
     setLink(e.target.value);
   };
 
+  const handleData = async () => {
+    try {
+      const res = await fetch(
+        'https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/me',
+        {
+          method: 'GET', // Assuming you are sending a POST request
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+        }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setCookie('profile', data);
+        setProfile(data);
+        console.log(data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    handleData();
+  }, []);
+
   return (
     <ProtectLayout>
       <div className="bg-[#F8F9FB] h-full">
         <div className="mb-6">
-          <Navbar />
+          {profile && (
+            <Navbar email={profile.email} role={profile.role} first_name={profile.first_name}
+                    last_name={profile.last_name} photo_url={profile.photo_url}/>
+          )}
         </div>
         <div className="flex items-start bg-[#F8F9FB] h-[80vh]">
           <div className="w-1/6 h-full bg-white py-4">

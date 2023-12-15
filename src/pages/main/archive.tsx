@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { NextPage } from "next";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import DatePicker from "react-datepicker";
 import Select from "@/components/atom/Select";
 import Button from "@/components/atom/Button";
@@ -11,7 +11,8 @@ import Footer from "@/components/molecule/Footer";
 import { ru } from "date-fns/locale";
 import { useRouter } from "next/router";
 import ProtectLayout from "@/components/layout/protectLayout";
-import {Mode} from "@/types";
+import {Mode, Profile} from "@/types";
+import {getCookie, setCookie} from "cookies-next";
 
 const archive: NextPage = () => {
   const router = useRouter();
@@ -34,15 +35,48 @@ const archive: NextPage = () => {
   const [dateRange, setDateRange] = useState<any>([null, null]);
   const [startDate, endDate] = dateRange;
 
+  const token = getCookie('scano_acess_token');
+  const [profile, setProfile] = useState<Profile>();
+
   const handleSelectChange = (value: Mode) => {
     setSelectedOption(value);
   };
+
+  const handleData = async () => {
+    try {
+      const res = await fetch(
+        'https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/me',
+        {
+          method: 'GET', // Assuming you are sending a POST request
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+        }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setCookie('profile', data);
+        setProfile(data);
+        console.log(data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    handleData();
+  }, []);
 
   return (
     <ProtectLayout>
       <div className="bg-[#F8F9FB] h-full">
         <div className="mb-6">
-          <Navbar />
+          {profile && (
+            <Navbar email={profile.email} role={profile.role} first_name={profile.first_name}
+                    last_name={profile.last_name} photo_url={profile.photo_url}/>
+          )}
         </div>
         <div className="flex items-start bg-[#F8F9FB] h-[80vh]">
           <div className="w-1/6 h-full bg-white py-4">

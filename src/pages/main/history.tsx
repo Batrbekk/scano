@@ -1,13 +1,17 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { Key, useCallback } from "react";
+import React, {Key, useCallback, useEffect, useState} from "react";
 import Navbar from "@/components/molecule/Navbar";
 import Footer from "@/components/molecule/Footer";
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/table";
 import ProtectLayout from "@/components/layout/protectLayout";
+import {getCookie, setCookie} from "cookies-next";
+import {Profile} from "@/types";
 
 const history: NextPage = () => {
   const router = useRouter();
+  const token = getCookie('scano_acess_token');
+  const [profile, setProfile] = useState<Profile>();
 
   const tableColumn = [
     {name: '#', uid: 'id'},
@@ -146,11 +150,41 @@ const history: NextPage = () => {
     }
   }, []);
 
+  const handleData = async () => {
+    try {
+      const res = await fetch(
+        'https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/me',
+        {
+          method: 'GET', // Assuming you are sending a POST request
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+        }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setCookie('profile', data);
+        setProfile(data);
+        console.log(data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    handleData();
+  }, []);
+
   return (
     <ProtectLayout>
       <div className="bg-[#F8F9FB] h-full">
         <div className="mb-6">
-          <Navbar />
+          {profile && (
+            <Navbar email={profile.email} role={profile.role} first_name={profile.first_name}
+                    last_name={profile.last_name} photo_url={profile.photo_url}/>
+          )}
         </div>
         <div className="flex items-start bg-[#F8F9FB] h-[80vh]">
           <div className="w-1/6 h-full bg-white py-4">

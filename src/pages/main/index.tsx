@@ -293,100 +293,108 @@ const mainIndex: NextPage = () => {
 
   return (
     <ProtectLayout>
-      <div className="bg-[#F8F9FB] h-full">
-        <div className="mb-6">
-          {profile && (
-            <Navbar email={profile.email} role={profile.role} first_name={profile.first_name} last_name={profile.last_name} photo_url={profile.photo_url} />
-          )}
-        </div>
-        <div className="mb-8 px-6">
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-x-8">
-              <p className="font-semibold prose prose-xl">Темы</p>
-              <div className="flex items-center gap-0.5">
-                {squares.map(item => (
-                  <div className={`rounded-sm w-3 h-3 ${item.status === 'FULL' ? 'bg-[#60CA23]' : 'bg-[#cbcfd8]'}`} key={item.id} />
-                ))}
+      <div className="bg-[#F8F9FB] h-screen flex flex-col justify-between">
+        <>
+          <div className="mb-6">
+            {profile && (
+              <Navbar email={profile.email} role={profile.role} first_name={profile.first_name}
+                      last_name={profile.last_name} photo_url={profile.photo_url}/>
+            )}
+          </div>
+          <div className="mb-8 px-6">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-x-8">
+                <p className="font-semibold prose prose-xl">Темы</p>
+                <div className="flex items-center gap-0.5">
+                  {squares.map(item => (
+                    <div className={`rounded-sm w-3 h-3 ${item.status === 'FULL' ? 'bg-[#60CA23]' : 'bg-[#cbcfd8]'}`}
+                         key={item.id}/>
+                  ))}
+                </div>
+                <Tooltip content="Добавление новой темы">
+                  <Button label="Добавить новую тему" size="sm" onClick={() => {
+                    router.push('setting/placeSettings');
+                  }}/>
+                </Tooltip>
               </div>
-              <Tooltip content="Добавление новой темы">
-                <Button label="Добавить новую тему" size="sm" onClick={() => {
-                  router.push('setting/placeSettings');
-                }} />
-              </Tooltip>
-            </div>
-            <div className="flex items-center gap-x-8">
-              <Tooltip content="Группировать темы">
-                <button className="flex items-center gap-x-2">
-                  <Image src={Structure} alt="icon" width={14} height={14}/>
-                  <p className="text-[#4c515c] prose prose-base font-['Work Sans',sans-serif]">Группировка тем</p>
-                </button>
-              </Tooltip>
-              <div className="flex items-center gap-x-4">
-                {historyStatus.map(item => (
-                  <div className="flex items-center gap-x-2" key={item.id}>
-                    <div
-                      className={`rounded-full w-3 h-3 
+              <div className="flex items-center gap-x-8">
+                <Tooltip content="Группировать темы">
+                  <button className="flex items-center gap-x-2">
+                    <Image src={Structure} alt="icon" width={14} height={14}/>
+                    <p className="text-[#4c515c] prose prose-base font-['Work Sans',sans-serif]">Группировка тем</p>
+                  </button>
+                </Tooltip>
+                <div className="flex items-center gap-x-4">
+                  {historyStatus.map(item => (
+                    <div className="flex items-center gap-x-2" key={item.id}>
+                      <div
+                        className={`rounded-full w-3 h-3 
                       ${item.status === 'POSITIVE' && 'bg-[#60CA23]'}
                       ${item.status === 'NEUTRAL' && 'bg-[#4779d0]'}
                       ${item.status === 'NEGATIVE' && 'bg-[#cf6662]'}
                     `}
-                    />
-                    <p className="text-[#4c515c] prose prose-sm font-['Work Sans',sans-serif] font-light">{item.label}</p>
-                  </div>
-                ))}
+                      />
+                      <p
+                        className="text-[#4c515c] prose prose-sm font-['Work Sans',sans-serif] font-light">{item.label}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
-          <Table aria-label="Example table with custom cells" className="bg-white rounded-lg">
-            <TableHeader columns={tableColumn}>
-              {(column) => (
-                <TableColumn key={column.uid} className="text-left py-4 px-8">
-                  {column.uid !== 'name' ? (
-                    <p className="prose prose-sm">{column.name}</p>
-                  ) : (
-                    <div className="rounded-2xl bg-[#ebecef] py-1 px-2 w-fit">
+            <Table aria-label="Example table with custom cells" className="bg-white rounded-lg">
+              <TableHeader columns={tableColumn}>
+                {(column) => (
+                  <TableColumn key={column.uid} className="text-left py-4 px-8">
+                    {column.uid !== 'name' ? (
                       <p className="prose prose-sm">{column.name}</p>
-                    </div>
-                  )}
-                </TableColumn>
-              )}
-            </TableHeader>
-            <TableBody
-              items={themes}
-              isLoading={pending}
-              loadingContent={
-                <div className="flex items-center justify-center h-10">
-                  <Spinner label="Загрузка..." />
-                </div>
-              }
-              emptyContent={
-                <p className={`${pending && ('opacity-0')}`}>
-                  Нету данных...
-                </p>
-              }
-            >
-              {(item: Theme) => (
-                <TableRow key={item._id} className="border-b hover:bg-[#fcfcfd]">
-                  {(columnKey) => <TableCell className="p-0">{renderCell(item, columnKey)}</TableCell>}
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-        <div className="mb-4 px-14 flex items-center justify-between">
-          <div className="flex items-center gap-x-4">
-            <Button label="Добавить новую тему" size="sm" onClick={() => {
-              router.push('setting/placeSettings');
-            }} />
-            <Button label="Поиск по архиву за год" size="sm" color="bg-[#5b85ce]" />
+                    ) : (
+                      <div className="rounded-2xl bg-[#ebecef] py-1 px-2 w-fit">
+                        <p className="prose prose-sm">{column.name}</p>
+                      </div>
+                    )}
+                  </TableColumn>
+                )}
+              </TableHeader>
+              <TableBody
+                items={themes}
+                isLoading={pending}
+                loadingContent={
+                  <div className="flex items-center justify-center h-10">
+                    <Spinner label="Загрузка..." color="success" />
+                  </div>
+                }
+                emptyContent={
+                  <p className={`${pending && ('opacity-0')}`}>
+                    Нету данных...
+                  </p>
+                }
+              >
+                {(item: Theme) => (
+                  <TableRow key={item._id} className="border-b hover:bg-[#fcfcfd]">
+                    {(columnKey) => <TableCell className="p-0">{renderCell(item, columnKey)}</TableCell>}
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
           </div>
-          <div className="flex items-center gap-x-2">
-            {links.map((link) => (
-              <a href={link.href} key={link.href} className="text-[#5b85ce] prose prose-base border-r-2 pr-2 last:border-0">{link.label}</a>
-            ))}
+          <div className="mb-4 px-14 flex items-center justify-between">
+            <div className="flex items-center gap-x-4">
+              <Button label="Добавить новую тему" size="sm" onClick={() => {
+                router.push('setting/placeSettings');
+              }}/>
+              <Button label="Поиск по архиву за год" size="sm" color="bg-[#5b85ce]"/>
+            </div>
+            <div className="flex items-center gap-x-2">
+              {links.map((link) => (
+                <a href={link.href} key={link.href}
+                   className="text-[#5b85ce] prose prose-base border-r-2 pr-2 last:border-0">{link.label}</a>
+              ))}
+            </div>
           </div>
+        </>
+        <div className="mt-auto">
+          <Footer/>
         </div>
-        <Footer />
         <Modal backdrop="blur" isOpen={isOpen} onClose={onClose}>
           <ModalContent>
             {(onClose) => (
@@ -396,8 +404,8 @@ const mainIndex: NextPage = () => {
                   <p>Вы уверены что хотите удалить данную тему?</p>
                 </ModalBody>
                 <ModalFooter>
-                  <Button label="Отмена" size="sm" color="bg-[#5b85ce]" onClick={onClose} />
-                  <Button label="Удалить" size="sm" color="bg-[#cf6662]" onClick={() => deleteTheme()} />
+                  <Button label="Отмена" size="sm" color="bg-[#5b85ce]" onClick={onClose}/>
+                  <Button label="Удалить" size="sm" color="bg-[#cf6662]" onClick={() => deleteTheme()}/>
                 </ModalFooter>
               </>
             )}
