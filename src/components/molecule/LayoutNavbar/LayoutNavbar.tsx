@@ -1,4 +1,4 @@
-import React, {useCallback} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import Image from "next/image";
 import Home from '@public/assets/icons/home.svg';
 import { useRouter } from "next/router";
@@ -19,11 +19,32 @@ interface Props {
 
 export const LayoutNavbar: React.FC<Props> = ({email, first_name, last_name, role, photo_url}) => {
   const router = useRouter();
+  const token = getCookie('scano_acess_token');
   const themeName = getCookie('currentThemeName');
+  const [currentImg, setCurrentImg] = useState<string | null>(null);
 
   const handleSelectLang = useCallback((lang: any) => {
     router.push(router.pathname, router.asPath, { locale: lang });
   }, []);
+
+  const getImg = async (img: string) => {
+    try {
+      const res = await fetch(`https://scano-0df0b7c835bf.herokuapp.com/files/${img}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+        }
+      );
+      if (res.ok) {
+        setCurrentImg(res.url);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const dropFunction = (key: React.Key) => {
     if (key === 'profile') {
@@ -34,6 +55,12 @@ export const LayoutNavbar: React.FC<Props> = ({email, first_name, last_name, rol
       router.push('/');
     }
   };
+
+  useEffect(() => {
+    if (photo_url) {
+      getImg(photo_url)
+    }
+  }, [photo_url]);
 
   return (
     <div className="bg-[#F8F9FB] w-full flex items-center justify-between p-6">
@@ -76,11 +103,13 @@ export const LayoutNavbar: React.FC<Props> = ({email, first_name, last_name, rol
         <Dropdown>
           <DropdownTrigger>
             <div className="flex items-center gap-4 cursor-pointer">
-              <img
-                className="h-9 w-9 rounded-full"
-                src={photo_url ? photo_url : 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80'}
-                alt="avatar"
-              />
+              <div className="w-9 h-9 rounded-full overflow-hidden">
+                {currentImg ? (
+                  <Image src={currentImg} alt="ava" width={36} height={36} />
+                ) : (
+                  <div className="w- h-9 bg-gray-500" />
+                )}
+              </div>
               <p className="text-[#35415A] prose-base font-['Work Sans',sans-serif] font-semibold">{first_name ? first_name : 'Не указано'} {last_name}</p>
             </div>
           </DropdownTrigger>

@@ -6,6 +6,7 @@ import {Avatar} from "@nextui-org/avatar";
 import Image from "next/image";
 import Edit from "@public/assets/icons/editBlue.svg";
 import Unlock from "@public/assets/icons/unlock.svg";
+import Lock from "@public/assets/icons/lock.svg";
 import Delete from "@public/assets/icons/deleteBlue.svg";
 import {Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from "@nextui-org/table";
 import Button from "@/components/atom/Button";
@@ -99,17 +100,30 @@ const Users: NextPage = () => {
         return (
           <div className="py-4 px-8 flex items-center justify-end gap-x-2">
             {row.role === 'Супер администратор' && (
-              <button className="bg-[#ebf1fd] rounded p-2">
-                <Image src={Edit} width={14} height={14} alt="icon" />
-              </button>
+              <Tooltip content="Редактировать">
+                <button className="bg-[#ebf1fd] rounded p-2" onClick={() => {
+                  setCookie('currentProfile', row);
+                  router.push('/setting/editProfile');
+                }}>
+                  <Image src={Edit} width={14} height={14} alt="icon"/>
+                </button>
+              </Tooltip>
             )}
             {row.role !== 'Супер администратор' && (
               <>
-                <Tooltip content="Заблокировать">
-                  <button className="bg-[#ebf1fd] rounded p-2">
-                    <Image src={Unlock} width={14} height={14} alt="icon"/>
-                  </button>
-                </Tooltip>
+                {row.is_active ? (
+                  <Tooltip content="Заблокировать">
+                    <button className="bg-[#ebf1fd] rounded p-2">
+                      <Image src={Unlock} width={14} height={14} alt="icon"/>
+                    </button>
+                  </Tooltip>
+                ) : (
+                  <Tooltip content="Разблокировать">
+                    <button className="bg-[#ebf1fd] rounded p-2">
+                      <Image src={Lock} width={14} height={14} alt="icon"/>
+                    </button>
+                  </Tooltip>
+                )}
                 <Tooltip content="Редактировать">
                   <button className="bg-[#ebf1fd] rounded p-2" onClick={() => {
                     setCookie('currentProfile', row);

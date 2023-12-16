@@ -1,10 +1,10 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Logo from "public/logo.svg";
 import Image from "next/image";
 import Exit from "@public/assets/icons/exit.svg";
 import Profile from "@public/assets/icons/profile.svg";
 import {Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from "@nextui-org/dropdown";
-import {deleteCookie} from "cookies-next";
+import {deleteCookie, getCookie} from "cookies-next";
 import {useRouter} from "next/router";
 
 interface Props {
@@ -17,6 +17,8 @@ interface Props {
 
 export const Navbar: React.FC<Props> = ({email, first_name, last_name, role, photo_url}) => {
   const router = useRouter();
+  const token = getCookie('scano_acess_token');
+  const [currentImg, setCurrentImg] = useState<string | null>(null);
 
   const dropFunction = (key: React.Key) => {
     if (key === 'profile') {
@@ -28,6 +30,31 @@ export const Navbar: React.FC<Props> = ({email, first_name, last_name, role, pho
     }
   };
 
+  const getImg = async (img: string) => {
+    try {
+      const res = await fetch(`https://scano-0df0b7c835bf.herokuapp.com/files/${img}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+        }
+      );
+      if (res.ok) {
+        setCurrentImg(res.url);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    if (photo_url) {
+      getImg(photo_url)
+    }
+  }, [photo_url]);
+
   return (
     <div className="bg-[#F8F9FB] w-screen flex items-center justify-between px-6 py-3">
       <a href="/main/">
@@ -36,12 +63,15 @@ export const Navbar: React.FC<Props> = ({email, first_name, last_name, role, pho
       <Dropdown>
         <DropdownTrigger>
           <div className="flex items-center gap-4 cursor-pointer">
-            <img
-              className="h-9 w-9 rounded-full"
-              src={photo_url ? photo_url : 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80'}
-              alt="avatar"
-            />
-            <p className="text-[#35415A] prose-base font-['Work Sans',sans-serif] font-semibold">{first_name ? first_name : 'Не указано'} {last_name}</p>
+            <div className="w-9 h-9 rounded-full overflow-hidden">
+              {currentImg ? (
+                <Image src={currentImg} alt="ava" width={36} height={36}/>
+              ) : (
+                <div className="w- h-9 bg-gray-500"/>
+              )}
+            </div>
+            <p
+              className="text-[#35415A] prose-base font-['Work Sans',sans-serif] font-semibold">{first_name ? first_name : 'Не указано'} {last_name}</p>
           </div>
         </DropdownTrigger>
         <DropdownMenu

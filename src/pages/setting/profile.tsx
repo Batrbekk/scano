@@ -43,12 +43,20 @@ const Profile: NextPage = () => {
   const [surname, setSurname] = useState("");
   const [company, setCompany] = useState("");
   const [pending, setPending] = useState(false);
+  const [file, setFile] = useState<any>();
+  const [currentImg, setCurrentImg] = useState<string | null>(null);
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
   const handleSelectChange = (value: Mode) => {
     setSelectedOption(value);
   };
+  function handleChange(e: any) {
+    console.log(e.target.files[0]);
+    console.log(e.target.files[0].name);
+    uploadImg(e.target.files[0]);
+    setFile(URL.createObjectURL(e.target.files[0]));
+  }
 
   const handleData = async () => {
     try {
@@ -83,6 +91,9 @@ const Profile: NextPage = () => {
         } else {
           setSelectedOption(data.timezone);
         }
+        if (data.photo_url !== null) {
+          getImg(data.photo_url);
+        }
         console.log(data);
       } else {
         setPending(false);
@@ -90,6 +101,25 @@ const Profile: NextPage = () => {
     } catch (err) {
       setPending(false);
       console.error(err);
+    }
+  };
+
+  const getImg = async (img: string) => {
+    try {
+      const res = await fetch(`https://scano-0df0b7c835bf.herokuapp.com/files/${img}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+        }
+      );
+      if (res.ok) {
+        setCurrentImg(res.url);
+      }
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -119,6 +149,31 @@ const Profile: NextPage = () => {
     }
   };
 
+  const uploadImg = async (img: File) => {
+    try {
+      const formData = new FormData();
+      formData.append(
+        "user_pic",
+        img
+      );
+      const res = await fetch(
+        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/user-pic`,
+        {
+          method: 'POST', // Assuming you are sending a POST request
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: formData,
+        }
+      );
+      if (res.ok) {
+        handleData();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     handleData();
   }, []);
@@ -131,21 +186,49 @@ const Profile: NextPage = () => {
             <div className="flex items-start gap-x-6 w-full">
               <div className="p-4 rounded-lg bg-white flex flex-col gap-y-4 w-2/3">
                 <div className="flex items-start gap-x-6">
-                  <div className="w-32 h-32 rounded-lg bg-gray-200 flex items-center justify-center cursor-pointer">
-                    <p className="font-['Work Sans',sans-serif] prose prose-sm leading-5 text-center">Добавить <br/> фото</p>
-                  </div>
+                  {currentImg ? (
+                    file ? (
+                      <div className="w-32 h-32 rounded-lg overflow-hidden">
+                        <input type="file" onChange={handleChange} accept="image/*"
+                               className="appearance-none cursor-pointer w-32 h-32 opacity-0 absolute"/>
+                        <Image src={file} width={128} height={128} alt="profile-img"/>
+                      </div>
+                      ) : (
+                      <div className="w-32 h-32 rounded-lg overflow-hidden">
+                        <input type="file" onChange={handleChange} accept="image/*"
+                               className="appearance-none cursor-pointer w-32 h-32 opacity-0 absolute"/>
+                        <Image src={currentImg} width={128} height={128} alt="profile-img"/>
+                      </div>
+                    )
+                  ) : (
+                    <div className="w-32 h-32 rounded-lg bg-gray-200 flex items-center justify-center relative">
+                      <input type="file" onChange={handleChange} accept="image/*"
+                             className="appearance-none cursor-pointer w-32 h-32 opacity-0 absolute"/>
+                      {file ? (
+                        <div className="w-32 h-32 overflow-hidden rounded-lg">
+                          <Image src={file} width={128} height={128} alt="profile-img" />
+                        </div>
+                      ) : (
+                        <p
+                          className="font-['Work Sans',sans-serif] prose prose-sm leading-5 text-center">Добавить <br/> фото
+                        </p>
+                      )}
+                    </div>
+                  )}
                   <div className="flex flex-col gap-y-2 w-1/2">
                     <div className="flex items-center gap-x-2">
-                      <p className="font-['Work Sans',sans-serif] prose prose-xl font-semibold">{profileAuth.first_name ? profileAuth.first_name : 'Не указано'} {profileAuth.last_name}</p>
+                      <p
+                        className="font-['Work Sans',sans-serif] prose prose-xl font-semibold">{profileAuth.first_name ? profileAuth.first_name : 'Не указано'} {profileAuth.last_name}</p>
                       <Tooltip content="ИНФОРМАЦИЯ">
                         <ButtonUI variant="light" isIconOnly className="p-0" disableAnimation={true}>
-                          <Image src={Ask} alt="icon" />
+                          <Image src={Ask} alt="icon"/>
                         </ButtonUI>
                       </Tooltip>
                     </div>
                     <div className="flex items-center gap-x-2">
-                      <Image src={User} alt="icon" />
-                      <p className="font-['Work Sans',sans-serif] prose prose-sm border-b border-dashed text-[#5b85ce] border-[#5b85ce]">{ profileAuth.role }</p>
+                      <Image src={User} alt="icon"/>
+                      <p
+                        className="font-['Work Sans',sans-serif] prose prose-sm border-b border-dashed text-[#5b85ce] border-[#5b85ce]">{profileAuth.role}</p>
                     </div>
                   </div>
                 </div>
