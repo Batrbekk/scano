@@ -171,7 +171,6 @@ const dashboardIndex: NextPage = () => {
         const data = await res.json();
         setMaterial(data);
         setPending(false);
-        console.log(data);
       }
     } catch (err) {
       console.error(err);
@@ -263,6 +262,7 @@ const dashboardIndex: NextPage = () => {
                       <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Область поиска:</p>
                       {tone.map((item) => (
                         <Chip
+                          key={item}
                           variant="light"
                           classNames={{
                             base: "[&_path]:fill-[#ff0000] px-0",
@@ -280,6 +280,7 @@ const dashboardIndex: NextPage = () => {
                       <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Тип материала:</p>
                       {materialsType.map((item) => (
                         <Chip
+                          key={item}
                           variant="light"
                           classNames={{
                             base: "[&_path]:fill-[#ff0000] px-0",
@@ -297,6 +298,7 @@ const dashboardIndex: NextPage = () => {
                       <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Язык материала:</p>
                       {materialLang.map((item) => (
                         <Chip
+                          key={item}
                           variant="light"
                           classNames={{
                             base: "[&_path]:fill-[#ff0000] px-0",
@@ -314,6 +316,7 @@ const dashboardIndex: NextPage = () => {
                       <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Тип источника:</p>
                       {materialCollection.map((item) => (
                         <Chip
+                          key={item}
                           variant="light"
                           classNames={{
                             base: "[&_path]:fill-[#ff0000] px-0",
@@ -353,7 +356,7 @@ const dashboardIndex: NextPage = () => {
                     tags={card.tags}
                     links={card.url}
                     src_name={card.source.name}
-                    img="https://static.vecteezy.com/system/resources/thumbnails/006/299/370/original/world-breaking-news-digital-earth-hud-rotating-globe-rotating-free-video.jpg"
+                    img={card.img_url}
                   />
                 ))}
               {pending && (
@@ -368,7 +371,7 @@ const dashboardIndex: NextPage = () => {
                     Удалить
                   </Button>
                 </div>
-                {material.length > 5 && (
+                {material.length > 5 && !pending && (
                   <div className="my-4">
                     <Pagination showControls total={totalPage()} initialPage={currentPage} onChange={setCurrentPage} />
                   </div>
@@ -383,7 +386,7 @@ const dashboardIndex: NextPage = () => {
                   onValueChange={setMaterialCollection}
                 >
                   {collection.map((item) => (
-                    <Checkbox value={item.key} classNames={{
+                    <Checkbox value={item.key} key={item.key} classNames={{
                       wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
                     }}>
                       <p className="prose prose-sm text-[#7191c6]">{item.label}</p>
@@ -398,7 +401,7 @@ const dashboardIndex: NextPage = () => {
                   onValueChange={setMaterialsType}
                 >
                   {materialType.map((item) => (
-                    <Checkbox value={item.key} classNames={{
+                    <Checkbox value={item.key} key={item.key} classNames={{
                       wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
                     }}>
                       <p className="prose prose-sm text-[#7191c6]">{item.label}</p>
@@ -424,7 +427,7 @@ const dashboardIndex: NextPage = () => {
                     onValueChange={setMaterialLang}
                   >
                     {lang.map((item) => (
-                      <Checkbox value={item.key} classNames={{
+                      <Checkbox value={item.key} key={item.key} classNames={{
                         wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
                       }}>
                         <p className="prose prose-sm text-[#7191c6]">{item.label}</p>
@@ -451,7 +454,7 @@ const dashboardIndex: NextPage = () => {
                     onValueChange={setTone}
                   >
                     {toneOption.map((item) => (
-                      <Checkbox value={item.key} classNames={{
+                      <Checkbox value={item.key} key={item.key} classNames={{
                         wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
                       }}>
                         <p className="prose prose-sm text-[#7191c6]">{item.label}</p>
@@ -510,6 +513,7 @@ const dashboardIndex: NextPage = () => {
                                 {tone.map((item) => (
                                   <Chip
                                     variant="light"
+                                    key={item}
                                     classNames={{
                                       base: "[&_path]:fill-[#ff0000] px-0",
                                       content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
@@ -526,6 +530,7 @@ const dashboardIndex: NextPage = () => {
                                 <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Тип материала:</p>
                                 {materialsType.map((item) => (
                                   <Chip
+                                    key={item}
                                     variant="light"
                                     classNames={{
                                       base: "[&_path]:fill-[#ff0000] px-0",
@@ -543,6 +548,7 @@ const dashboardIndex: NextPage = () => {
                                 <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Язык материала:</p>
                                 {materialLang.map((item) => (
                                   <Chip
+                                    key={item}
                                     variant="light"
                                     classNames={{
                                       base: "[&_path]:fill-[#ff0000] px-0",
@@ -560,6 +566,7 @@ const dashboardIndex: NextPage = () => {
                                 <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Тип источника:</p>
                                 {materialCollection.map((item) => (
                                   <Chip
+                                    key={item}
                                     variant="light"
                                     classNames={{
                                       base: "[&_path]:fill-[#ff0000] px-0",
@@ -606,7 +613,7 @@ const dashboardIndex: NextPage = () => {
                                 onValueChange={setTone}
                               >
                                 {toneOption.map((item) => (
-                                  <Checkbox value={item.key} classNames={{
+                                  <Checkbox key={item.key} value={item.key} classNames={{
                                     wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
                                   }}>
                                     <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
@@ -625,7 +632,7 @@ const dashboardIndex: NextPage = () => {
                                 onValueChange={setMaterialsType}
                               >
                                 {materialType.map((item) => (
-                                  <Checkbox value={item.key} classNames={{
+                                  <Checkbox key={item.key} value={item.key} classNames={{
                                     wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
                                   }}>
                                     <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
@@ -644,7 +651,7 @@ const dashboardIndex: NextPage = () => {
                                 onValueChange={setMaterialLang}
                               >
                                 {lang.map((item) => (
-                                  <Checkbox value={item.key} classNames={{
+                                  <Checkbox key={item.key} value={item.key} classNames={{
                                     wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
                                   }}>
                                     <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
@@ -663,7 +670,7 @@ const dashboardIndex: NextPage = () => {
                                 onValueChange={setMaterialCollection}
                               >
                                 {collection.map((item) => (
-                                  <Checkbox value={item.key} classNames={{
+                                  <Checkbox key={item.key} value={item.key} classNames={{
                                     wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
                                   }}>
                                     <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>

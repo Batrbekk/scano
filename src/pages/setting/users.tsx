@@ -112,7 +112,6 @@ const Users: NextPage = () => {
                 </Tooltip>
                 <Tooltip content="Редактировать">
                   <button className="bg-[#ebf1fd] rounded p-2" onClick={() => {
-                    console.log(row);
                     setCookie('currentProfile', row);
                     router.push('/setting/editProfile');
                   }}>

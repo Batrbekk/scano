@@ -7,7 +7,7 @@ module.exports = {
   },
   trailingSlash: true,
   images: {
-    domains: ['static.vecteezy.com'],
+    domains: ['static.vecteezy.com', 'scano-0df0b7c835bf.herokuapp.com'],
   },
   //pageExtensions: ['mdx', 'md', 'jsx', 'js', 'tsx', 'ts'], //for custom page extensions
 };

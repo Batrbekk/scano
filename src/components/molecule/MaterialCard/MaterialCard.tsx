@@ -16,6 +16,7 @@ import {Tags} from "@/types";
 import {Chip} from "@nextui-org/chip";
 import {ScrollShadow} from "@nextui-org/scroll-shadow";
 import {Tooltip} from "@nextui-org/tooltip";
+import {Buffer} from "buffer";
 
 interface Props {
   id: string;
@@ -23,7 +24,7 @@ interface Props {
   date: string;
   text: string;
   tags: any;
-  img: string;
+  img: string | null | undefined;
   links: any;
   src_name: string
 }
@@ -37,6 +38,8 @@ export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, sr
   const [isCreateTag, setIsCreateTag] = useState<boolean>(false);
   const [listTag, setListTag] = useState<ReadonlyArray<Tags>>([]);
   const [chooseTag, setChooseTag] = useState<Array<string>>([]);
+  const [currentImg, setCurrentImg] = useState<string | null>(null);
+  const [pending, setPending] = useState(false);
 
   useEffect(() => {
     if (date) {
@@ -67,6 +70,28 @@ export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, sr
         setListTag(data);
       }
     } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const getImg = async () => {
+    try {
+      setPending(true);
+      const res = await fetch(`https://scano-0df0b7c835bf.herokuapp.com/files/${img}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+        }
+      );
+      if (res.ok) {
+        setPending(false);
+        setCurrentImg(res.url);
+      }
+    } catch (e) {
+      setPending(false);
       console.error(e);
     }
   };
@@ -116,7 +141,10 @@ export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, sr
 
   useEffect(() => {
     getTags();
-  }, []);
+    if (img) {
+      getImg()
+    }
+  }, [img]);
 
   return (
     <div className="p-4 rounded-lg bg-white">
@@ -205,7 +233,11 @@ export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, sr
                   </Button>
                 </Tooltip>
               </div>
-              <Image src={img} alt="car-img" width={150} height={120} />
+              {currentImg ? (
+                <Image src={currentImg} alt="car-img" width={150} height={120}/>
+              ) : (
+                <div className={`w-[150px] h-[80px] animate-pulse bg-slate-400 ${!pending && 'hidden'}`}/>
+              )}
             </div>
           </div>
         </div>

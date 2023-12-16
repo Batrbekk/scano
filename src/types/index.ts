@@ -57,7 +57,8 @@ export interface Material {
   theme_id: string,
   sentiment: string | null,
   tags: ReadonlyArray<any>,
-  real_created_at: String
+  real_created_at: String,
+  img_url: string | null | undefined
 }
 
 export interface Mode {
