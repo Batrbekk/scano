@@ -12,6 +12,19 @@ export interface Profile {
   _id: string
 }
 
+export interface Notification {
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
+  _id: string;
+  telegram_channel_ids: string[];
+  email_list: string[];
+  theme_id: string;
+  admin_id: string;
+  is_email: boolean;
+  is_telegram: boolean;
+}
+
 export interface Theme {
   created_at: string,
   _id: string,

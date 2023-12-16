@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { NextPage } from "next";
-import React, { Key, useCallback } from "react";
+import React, {Key, useCallback, useEffect, useState} from "react";
 import Edit from '@public/assets/icons/editBlue.svg';
 import MainLayout from "@/components/layout/mainLayout";
 import Delete from '@public/assets/icons/deleteBlue.svg';
@@ -9,77 +9,99 @@ import Button from "@/components/atom/Button";
 import {useRouter} from "next/router";
 import ProtectLayout from "@/components/layout/protectLayout";
 import {Tooltip} from "@nextui-org/tooltip";
+import {Notification} from "@/types";
+import {getCookie} from "cookies-next";
+import {Spinner} from "@nextui-org/spinner";
 
 const messageIndex: NextPage = () => {
   const tableColumn = [
     {name: '#', uid: 'id'},
     {name: 'Тема', uid: 'theme'},
-    {name: 'Условие', uid: 'conditions'},
-    {name: 'Пользователи', uid: 'users'},
+    {name: 'Создано', uid: 'conditions'},
+    {name: 'Пользователь', uid: 'users'},
     {name: 'E-mail', uid: 'email'},
     {name: 'Telegram', uid: 'telegram'},
     {name: 'Действия', uid: 'action'}
   ];
-  const tableRow = [
-    {
-      id: 1,
-      theme: 'АО НАК Казатомпром',
-      conditions: 'Пришло сообщение с аудиторией более или равно 0 человек',
-      users: 'Aslan',
-      email: 'без уведомлений по e-mail',
-      telegram: 'Мониторинг - Казатомпром',
-    },
-    {
-      id: 2,
-      theme: 'АО НК QAZAQGAZ',
-      conditions: 'Пришло сообщение с аудиторией более или равно 0 человек',
-      users: 'Aslan,Aruzhan',
-      email: 'без уведомлений по e-mail',
-      telegram: 'Мониторинг - QAZAQGAZ',
-    },
-  ];
   const router = useRouter();
 
-  type Row = typeof tableRow[0];
+  const token = getCookie('scano_acess_token');
+  const [notif, setNotif] = useState<ReadonlyArray<Notification>>([]);
+  const [pending, setPending] = useState<boolean>(false);
 
-  const renderCell = useCallback((row: Row, columnKey: Key) => {
-    const cellValue = row[columnKey as keyof Row];
+  const handleNotif = async () => {
+    setNotif([]);
+    try {
+      setPending(true);
+      const res = await fetch('https://scano-0df0b7c835bf.herokuapp.com/api/v1/notification_plans/' ,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+      if (res.ok) {
+        setPending(false);
+        const data = await res.json();
+        setNotif(data);
+        console.log(data);
+      } else {
+        setPending(false);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  useEffect(() => {
+    handleNotif();
+  }, []);
+
+
+  const renderCell = useCallback((row: Notification, columnKey: Key) => {
+    const cellValue = row[columnKey as keyof Notification];
 
     switch (columnKey) {
       case 'id':
         return (
           <div className="py-2 px-8">
-            <p className="prose prose-sm">{row.id}</p>
+            <p className="prose prose-sm">{row._id}</p>
           </div>
         )
       case 'theme':
         return (
           <div className="py-2 px-8">
-            <p className="prose prose-sm">{row.theme}</p>
+            <p className="prose prose-sm">{row.theme_id}</p>
           </div>
         )
       case 'conditions':
         return (
           <div className="py-2 px-8">
-            <p className="prose prose-sm">{row.conditions}</p>
+            <p className="prose prose-sm">{row.created_at}</p>
           </div>
         )
       case 'users':
         return (
           <div className="py-2 px-8">
-            <p className="prose prose-sm">{row.users}</p>
+            <p className="prose prose-sm">{row.admin_id}</p>
           </div>
         )
       case 'email':
         return (
-          <div className="py-2 px-8">
-            <p className="prose prose-sm">{row.email}</p>
+          <div className="py-2 px-8 flex flex-col gap-y-1">
+            {row.email_list.map((item) => (
+              <p key={item} className="prose prose-sm">{item}</p>
+            ))}
           </div>
         )
       case 'telegram':
         return (
           <div className="py-2 px-8">
-            <p className="prose prose-sm">{row.telegram}</p>
+            {row.telegram_channel_ids.map((item) => (
+              <p key={item} className="prose prose-sm">{item}</p>
+            ))}
           </div>
         )
       case 'action':
@@ -123,9 +145,22 @@ const messageIndex: NextPage = () => {
                 </TableColumn>
               )}
             </TableHeader>
-            <TableBody items={tableRow}>
+            <TableBody
+              isLoading={pending}
+              loadingContent={
+                <div className="flex items-center justify-center h-10">
+                  <Spinner label="Загрузка..." />
+                </div>
+              }
+              emptyContent={
+                <p className={`${pending && ('opacity-0')}`}>
+                  Нету данных...
+                </p>
+              }
+              items={notif}
+            >
               {(item) => (
-                <TableRow key={item.id} className="border-b last:border-0 hover:bg-[#fcfcfd]">
+                <TableRow key={item._id} className="border-b last:border-0 hover:bg-[#fcfcfd]">
                   {(columnKey) => <TableCell className="p-0">{renderCell(item, columnKey)}</TableCell>}
                 </TableRow>
               )}
