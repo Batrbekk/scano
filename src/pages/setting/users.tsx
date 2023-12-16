@@ -32,6 +32,7 @@ const Users: NextPage = () => {
   const [pending, setPending] = useState<boolean>(false);
 
   const handleUsers = async () => {
+    setUsers([]);
     try {
       setPending(true);
       const res = await fetch('https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/' ,
@@ -53,6 +54,29 @@ const Users: NextPage = () => {
       }
     } catch (err) {
       console.error(err);
+    }
+  }
+
+  const banUser = async (id: string, status: boolean) => {
+    try {
+      const res = await fetch(
+        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/${id}`,
+        {
+          method: 'PATCH', // Assuming you are sending a POST request
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            is_active: status
+          }),
+        }
+      );
+      if (res.ok) {
+        handleUsers();
+      }
+    } catch (e) {
+      console.error(e);
     }
   }
 
@@ -113,13 +137,17 @@ const Users: NextPage = () => {
               <>
                 {row.is_active ? (
                   <Tooltip content="Заблокировать">
-                    <button className="bg-[#ebf1fd] rounded p-2">
+                    <button className="bg-[#ebf1fd] rounded p-2" onClick={() => {
+                      banUser(row._id, !row.is_active);
+                    }}>
                       <Image src={Unlock} width={14} height={14} alt="icon"/>
                     </button>
                   </Tooltip>
                 ) : (
                   <Tooltip content="Разблокировать">
-                    <button className="bg-[#ebf1fd] rounded p-2">
+                    <button className="bg-[#ebf1fd] rounded p-2" onClick={() => {
+                      banUser(row._id, !row.is_active);
+                    }}>
                       <Image src={Lock} width={14} height={14} alt="icon"/>
                     </button>
                   </Tooltip>
