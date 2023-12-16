@@ -80,6 +80,26 @@ const Users: NextPage = () => {
     }
   }
 
+  const deleteUser = async (id: string) => {
+    try {
+      const res = await fetch(
+        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/${id}`,
+        {
+          method: 'DELETE', // Assuming you are sending a POST request
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+        }
+      );
+      if (res.ok) {
+        handleUsers();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   useEffect(() => {
     handleUsers();
   }, []);
@@ -161,7 +181,9 @@ const Users: NextPage = () => {
                   </button>
                 </Tooltip>
                 <Tooltip content="Удалить">
-                  <button className="bg-[#ebf1fd] rounded p-2">
+                  <button className="bg-[#ebf1fd] rounded p-2" onClick={() => {
+                    deleteUser(row._id);
+                  }}>
                     <Image src={Delete} width={14} height={14} alt="icon"/>
                   </button>
                 </Tooltip>
