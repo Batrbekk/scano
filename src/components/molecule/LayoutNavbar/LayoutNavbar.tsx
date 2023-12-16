@@ -107,7 +107,7 @@ export const LayoutNavbar: React.FC<Props> = ({email, first_name, last_name, rol
                 {currentImg ? (
                   <Image src={currentImg} alt="ava" width={36} height={36} />
                 ) : (
-                  <div className="w- h-9 bg-gray-500" />
+                  <div className="w-9 h-9 bg-gray-500" />
                 )}
               </div>
               <p className="text-[#35415A] prose-base font-['Work Sans',sans-serif] font-semibold">{first_name ? first_name : 'Не указано'} {last_name}</p>

@@ -67,7 +67,7 @@ export const Navbar: React.FC<Props> = ({email, first_name, last_name, role, pho
               {currentImg ? (
                 <Image src={currentImg} alt="ava" width={36} height={36}/>
               ) : (
-                <div className="w- h-9 bg-gray-500"/>
+                <div className="w-9 h-9 bg-gray-500"/>
               )}
             </div>
             <p

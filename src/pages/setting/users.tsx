@@ -15,6 +15,7 @@ import {getCookie, setCookie} from "cookies-next";
 import {Spinner} from "@nextui-org/spinner";
 import {Profile} from "@/types";
 import {Tooltip} from "@nextui-org/tooltip";
+import AvatarInTable from "@/components/atom/AvatarInTable";
 
 const Users: NextPage = () => {
   const tableColumn = [
@@ -111,7 +112,7 @@ const Users: NextPage = () => {
       case 'avatar':
         return (
           <div className="py-2 px-8">
-            <Avatar src={row.admin_id} />
+            <AvatarInTable img={row.photo_url} />
           </div>
         )
       case 'name':
