@@ -157,6 +157,7 @@ const dashboardIndex: NextPage = () => {
 
   const getMaterial = async () => {
     try {
+      setPending(true);
       const res = await fetch(
         `https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/${id}/materials${tone.length > 0 ? `${tone.map((item) => `?sentiment=${item}`).join('')}` : ''}${materialsType.length > 0 ? `${materialsType.map((item) => `?material_type=${item}`).join('')}` : ''}${materialLang.length > 0 ? `${materialLang.map((item) => `?language=${item}`).join('')}` : ''}${materialCollection.length > 0 ? `${materialCollection.map((item) => `?source_type=${item}`).join('')}` : ''}`,
         {
@@ -194,6 +195,12 @@ const dashboardIndex: NextPage = () => {
     }
     if (src === 'materialCollection') {
       setMaterialCollection(materialCollection.filter(item => item !== key));
+    }
+  };
+
+  const handleUpdate = () => {
+    if (token && id) {
+      getMaterial();
     }
   };
 
@@ -348,6 +355,7 @@ const dashboardIndex: NextPage = () => {
                 .slice((currentPage - 1) * 5, currentPage * 5)
                 .map((card) => (
                   <MaterialCard
+                    updateTags={handleUpdate}
                     key={card._id}
                     id={card._id}
                     title={card.title}

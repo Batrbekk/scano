@@ -26,10 +26,11 @@ interface Props {
   tags: any;
   img: string | null | undefined;
   links: any;
-  src_name: string
+  src_name: string;
+  updateTags: () => void;
 }
 
-export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, src_name}) => {
+export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, src_name, updateTags}) => {
   const router = useRouter();
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const token = getCookie('scano_acess_token');
@@ -49,8 +50,32 @@ export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, sr
   }, [date]);
 
 
-  const removeTag = (idToRemove: number) => {
+  const removeTag = (idToRemove: string) => {
     console.log(idToRemove);
+    const choosenTag = listTag.find(item => item.name === idToRemove);
+    if (choosenTag) {
+      deleteTags(choosenTag?._id);
+    }
+  };
+
+  const deleteTags = async (id: string) => {
+    try {
+      const res = await fetch(
+        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/tags/${id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+        }
+      );
+      if (res.ok) {
+        updateTags();
+      }
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const getTags = async () => {

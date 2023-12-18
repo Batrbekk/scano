@@ -25,6 +25,7 @@ import {
 import { format } from "date-fns";
 import ProtectLayout from "@/components/layout/protectLayout";
 import {Spinner} from "@nextui-org/spinner";
+import {Progress} from "@nextui-org/progress";
 
 const mainIndex: NextPage = () => {
   const router = useRouter();
@@ -120,7 +121,7 @@ const mainIndex: NextPage = () => {
   const {isOpen, onOpen, onClose} = useDisclosure();
   const [pause, setPause] = useState<boolean>(false);
 
-  const renderCell = useCallback((row: any, columnKey: Key): any  => {
+  const renderCell = useCallback((row: Theme, columnKey: Key) => {
     const cellValue = row[columnKey as keyof Theme];
 
     switch (columnKey) {
@@ -143,10 +144,18 @@ const mainIndex: NextPage = () => {
             }}>{row.name}</p>
             <div className="flex items-center gap-x-4">
               <p className="prose prose-sm">Данные собираются с {format(new Date(row.created_at), 'dd/MM/yyyy')}</p>
-              <div className="flex items-center gap-0.5">
-                {squares.map(item => (
-                  <div className={`rounded-sm w-1.5 h-2 ${item.status === 'FULL' ? 'bg-[#60CA23]' : 'bg-[#cbcfd8]'}`} key={item.id} />
-                ))}
+              <div className="max-w-[72px] w-full">
+                <Tooltip content={`${row.materials_count_percent} из 100`}>
+                  <Progress
+                    classNames={{
+                      track: '!rounded !bg-[#cbcfd8]',
+                      indicator: '!bg-[#60CA23] !rounded'
+                    }}
+                    aria-label="Loading..."
+                    value={row.materials_count_percent}
+                    size="md"
+                  />
+                </Tooltip>
               </div>
             </div>
             <div className="mt-2 flex items-center gap-x-4">
@@ -369,7 +378,7 @@ const mainIndex: NextPage = () => {
                   </p>
                 }
               >
-                {(item: Theme) => (
+                {(item) => (
                   <TableRow key={item._id} className="border-b hover:bg-[#fcfcfd]">
                     {(columnKey) => <TableCell className="p-0">{renderCell(item, columnKey)}</TableCell>}
                   </TableRow>

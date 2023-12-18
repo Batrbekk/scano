@@ -36,7 +36,11 @@ export interface Theme {
   minus_keywords: Array<string>,
   source_types: Array<string>,
   material_types: Array<string>,
-  search_domains: Array<string>
+  search_domains: Array<string>,
+  materials_count_percent: number,
+  today: any,
+  total: any,
+  week: any
 }
 
 export interface Tags {
@@ -83,4 +87,11 @@ export interface FilterItem {
   key: string,
   label: string,
   title: string
+}
+
+export interface Tone {
+  negative: number
+  neutral: number
+  positive: number
+  total: number
 }
