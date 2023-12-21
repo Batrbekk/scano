@@ -35,6 +35,7 @@ const editMessage: NextPage = () => {
   };
 
   const router = useRouter();
+  const profile = getCookie('profile');
   const [count, setCount] = useState<string | undefined>('0');
   const [selectedOption, setSelectedOption] = useState<Mode>({key: '', label: ' '});
   const [selectedNotif, setSelectedNotif] = useState<Mode>(notif[0]);
@@ -53,6 +54,7 @@ const editMessage: NextPage = () => {
 
   const currentId = getCookie('currentNotifId');
   const [currentNotif, setCurrentNotif] = useState<NotifProps | null>(null);
+  const [currentProfile, setCurrentProfile] = useState<Profile>();
 
   const handleCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCount(event.target.value);
@@ -225,6 +227,12 @@ const editMessage: NextPage = () => {
     }
   }, [currentNotif, themes]);
 
+  useEffect(() => {
+    if (profile) {
+      setCurrentProfile(JSON.parse(profile));
+    }
+  }, [profile]);
+
   return (
     <ProtectLayout>
       <MainLayout>
@@ -292,6 +300,8 @@ const editMessage: NextPage = () => {
                       <p className="font-['Work Sans',sans-serif] prose prose-sm text-[#979ca9]">Telegram</p>
                       <Select options={optionTelegram} value={selectedUsersTelegram} onChange={handleSelectUserTelegram}
                               classSelect="w-full"/>
+                      <a href={`https://t.me/scanokz_bot?startgroup=${currentProfile?.admin_id}`}
+                         className="mt-2 text-[#5f87cf]">+ Добавить telegram - чат</a>
                     </div>
                   )}
                   {sendType.includes('mail') && (

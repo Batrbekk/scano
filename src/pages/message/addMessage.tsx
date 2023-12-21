@@ -68,6 +68,7 @@ const addMessage: NextPage = () => {
   };
 
   const router = useRouter();
+  const profile = getCookie('profile');
   const [count, setCount] = useState<string | undefined>('0');
 
   const token = getCookie('scano_acess_token');
@@ -84,6 +85,8 @@ const addMessage: NextPage = () => {
   const [selectedNotif, setSelectedNotif] = useState(notif[0]);
   const [selectedUsers, setSelectedUsers] = useState(users[0]);
   const [selectedUsersTelegram, setSelectedUsersTelegram] = useState(teleg[0]);
+
+  const [currentProfile, setCurrentProfile] = useState<Profile>();
 
   const handleCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCount(event.target.value);
@@ -213,6 +216,12 @@ const addMessage: NextPage = () => {
     }
   }, [themes, listUsers, telegramUsers]);
 
+  useEffect(() => {
+    if (profile) {
+      setCurrentProfile(JSON.parse(profile));
+    }
+  }, [profile]);
+
   return (
     <ProtectLayout>
       <MainLayout>
@@ -280,6 +289,7 @@ const addMessage: NextPage = () => {
                       <p className="font-['Work Sans',sans-serif] prose prose-sm text-[#979ca9]">Telegram</p>
                       <Select options={optionTelegram} value={selectedUsersTelegram} onChange={handleSelectUserTelegram}
                               classSelect="w-full"/>
+                      <a href={`https://t.me/scanokz_bot?startgroup=${currentProfile?.admin_id}`} className="mt-2 text-[#5f87cf]">+ Добавить telegram - чат</a>
                     </div>
                   )}
                   {sendType.includes('mail') && (
