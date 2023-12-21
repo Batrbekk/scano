@@ -10,12 +10,11 @@ import {useRouter} from "next/router";
 import ProtectLayout from "@/components/layout/protectLayout";
 import {Tooltip} from "@nextui-org/tooltip";
 import {Notification} from "@/types";
-import {getCookie} from "cookies-next";
+import {getCookie, setCookie} from "cookies-next";
 import {Spinner} from "@nextui-org/spinner";
 
 const messageIndex: NextPage = () => {
   const tableColumn = [
-    {name: '#', uid: 'id'},
     {name: 'Тема', uid: 'theme'},
     {name: 'Создано', uid: 'conditions'},
     {name: 'Пользователь', uid: 'users'},
@@ -46,14 +45,37 @@ const messageIndex: NextPage = () => {
         setPending(false);
         const data = await res.json();
         setNotif(data);
-        console.log(data);
       } else {
         setPending(false);
       }
     } catch (err) {
       console.error(err);
     }
-  }
+  };
+
+  const deleteNotif = async (id: string) => {
+    try {
+      setNotif([]);
+      setPending(true);
+      const res = await fetch(`https://scano-0df0b7c835bf.herokuapp.com/api/v1/notification_plans/${id}` ,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+      if (res.ok) {
+        handleNotif();
+        setPending(false);
+      } else {
+        setPending(false);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   useEffect(() => {
     handleNotif();
@@ -64,12 +86,6 @@ const messageIndex: NextPage = () => {
     const cellValue = row[columnKey as keyof Notification];
 
     switch (columnKey) {
-      case 'id':
-        return (
-          <div className="py-2 px-8">
-            <p className="prose prose-sm">{row._id}</p>
-          </div>
-        )
       case 'theme':
         return (
           <div className="py-2 px-8">
@@ -91,29 +107,42 @@ const messageIndex: NextPage = () => {
       case 'email':
         return (
           <div className="py-2 px-8 flex flex-col gap-y-1">
-            {row.email_list.map((item) => (
-              <p key={item} className="prose prose-sm">{item}</p>
-            ))}
+            {row.email_list.length > 0 ? (
+              row.email_list.map((item) => (
+                <p key={item} className="prose prose-sm">{item}</p>
+              ))
+            ) : (
+              <p className="prose prose-sm">Пусто</p>
+            )}
           </div>
         )
       case 'telegram':
         return (
           <div className="py-2 px-8">
-            {row.telegram_channel_ids.map((item) => (
-              <p key={item} className="prose prose-sm">{item}</p>
-            ))}
+            {row.telegram_channel_ids.length > 0 ? (
+              row.telegram_channel_ids.map((item) => (
+                <p key={item} className="prose prose-sm">{item}</p>
+              ))
+            ) : (
+              <p className="prose prose-sm">Пусто</p>
+            )}
           </div>
         )
       case 'action':
         return (
           <div className="py-4 px-8 flex items-center gap-x-2">
             <Tooltip content="Редактировать">
-              <button className="bg-[#ebf1fd] rounded p-2">
+              <button className="bg-[#ebf1fd] rounded p-2" onClick={() => {
+                setCookie('currentNotifId', row._id);
+                router.push('/message/editMessage');
+              }}>
                 <Image src={Edit} width={14} height={14} alt="icon"/>
               </button>
             </Tooltip>
             <Tooltip content="Удалить">
-              <button className="bg-[#ebf1fd] rounded p-2">
+              <button className="bg-[#ebf1fd] rounded p-2" onClick={() => {
+                deleteNotif(row._id);
+              }}>
                 <Image src={Delete} width={14} height={14} alt="icon"/>
               </button>
             </Tooltip>
@@ -149,7 +178,7 @@ const messageIndex: NextPage = () => {
               isLoading={pending}
               loadingContent={
                 <div className="flex items-center justify-center h-10">
-                  <Spinner label="Загрузка..." />
+                  <Spinner label="Загрузка..." color="success" />
                 </div>
               }
               emptyContent={

@@ -95,3 +95,13 @@ export interface Tone {
   positive: number
   total: number
 }
+
+export interface Subs {
+  created_at: string,
+  updated_at: string,
+  _id: string,
+  chat_id: string,
+  admin_id: string,
+  name: string,
+  description: null | string
+}

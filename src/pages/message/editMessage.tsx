@@ -7,26 +7,13 @@ import Button from "@/components/atom/Button";
 import MainLayout from "@/components/layout/mainLayout";
 import Notification from "@public/assets/icons/notification.svg";
 import ProtectLayout from "@/components/layout/protectLayout";
-import {Mode, Profile, Subs} from "@/types";
+import {Mode, Profile, Subs, Notification as NotifProps} from "@/types";
 import {getCookie} from "cookies-next";
 import {Checkbox, CheckboxGroup} from "@nextui-org/checkbox";
 import {useRouter} from "next/router";
 
-const addMessage: NextPage = () => {
-  const options = [
-    {
-      label: 'Выберите тему',
-      key: ''
-    },
-    {
-      label: 'option2',
-      key: 'option2'
-    },
-    {
-      label: 'option3',
-      key: 'option3'
-    }
-  ];
+
+const editMessage: NextPage = () => {
   const notif = [
     {
       label: 'Пришло сообщение',
@@ -41,26 +28,6 @@ const addMessage: NextPage = () => {
       key: 'option3'
     }
   ];
-  const users = [
-    {
-      label: 'Имя фамилия',
-      key: 'name'
-    },
-    {
-      label: 'option2',
-      key: 'option2'
-    },
-    {
-      label: 'option3',
-      key: 'option3'
-    }
-  ];
-  const teleg = [
-    {
-      label: 'Выберите телеграм',
-      key: ''
-    }
-  ];
 
   type Theme = {
     _id: string;
@@ -69,6 +36,10 @@ const addMessage: NextPage = () => {
 
   const router = useRouter();
   const [count, setCount] = useState<string | undefined>('0');
+  const [selectedOption, setSelectedOption] = useState<Mode>({key: '', label: ' '});
+  const [selectedNotif, setSelectedNotif] = useState<Mode>(notif[0]);
+  const [selectedUsers, setSelectedUsers] = useState<Mode>({key: '', label: ' '});
+  const [selectedUsersTelegram, setSelectedUsersTelegram] = useState({key: '', label: ' '});
 
   const token = getCookie('scano_acess_token');
   const [themes, setThemes] = useState<ReadonlyArray<Theme>>([]);
@@ -80,27 +51,21 @@ const addMessage: NextPage = () => {
   const [sendType, setSendType] = useState<Array<string>>([]);
   const [login, setLogin] = useState('');
 
-  const [selectedOption, setSelectedOption] = useState(options[0]);
-  const [selectedNotif, setSelectedNotif] = useState(notif[0]);
-  const [selectedUsers, setSelectedUsers] = useState(users[0]);
-  const [selectedUsersTelegram, setSelectedUsersTelegram] = useState(teleg[0]);
+  const currentId = getCookie('currentNotifId');
+  const [currentNotif, setCurrentNotif] = useState<NotifProps | null>(null);
 
   const handleCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCount(event.target.value);
   };
-
   const handleSelectUserTelegram = (value: Mode) => {
     setSelectedUsersTelegram(value);
   };
-
   const handleSelectUser = (value: Mode) => {
     setSelectedUsers(value);
   };
-
   const handleSelectChange = (value: Mode) => {
     setSelectedOption(value);
   };
-
   const handleSelectNotif = (value: Mode) => {
     setSelectedNotif(value);
   };
@@ -125,7 +90,6 @@ const addMessage: NextPage = () => {
       console.error(e);
     }
   };
-
   const getUsers = async () => {
     try {
       const res = await fetch(
@@ -146,7 +110,6 @@ const addMessage: NextPage = () => {
       console.error(e);
     }
   };
-
   const getTelegrams = async () => {
     try {
       const res = await fetch(
@@ -167,19 +130,18 @@ const addMessage: NextPage = () => {
       console.error(e);
     }
   };
-
-  const createNotif = async () => {
+  const updateNotif = async () => {
     try {
       const res = await fetch(
-        'https://scano-0df0b7c835bf.herokuapp.com/api/v1/notification_plans/',
+        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/notification_plans/${currentId}`,
         {
-          method: 'POST',
+          method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({
-            theme_id: selectedOption.key,
+            theme_id: selectedOption?.key,
             is_email: sendType.includes('mail'),
             is_telegram: sendType.includes('telegram'),
             email_list: [`${login}`],
@@ -194,8 +156,29 @@ const addMessage: NextPage = () => {
       console.error(e);
     }
   };
+  const getCurrentNotif = async () => {
+    try {
+      const res = await fetch(
+        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/notification_plans/${currentId}`,
+        {
+          method: 'GET', // Assuming you are sending a POST request
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+        }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setCurrentNotif(data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   useEffect(() => {
+    getCurrentNotif();
     getTheme();
     getUsers();
     getTelegrams();
@@ -212,6 +195,35 @@ const addMessage: NextPage = () => {
       setOptionTelegram(telegramUsers.map((item) => ({ "key": item._id, "label": `${item.name}` })));
     }
   }, [themes, listUsers, telegramUsers]);
+
+  useEffect(() => {
+    if (currentNotif && themes.length > 0) {
+      const currentTheme = themes.find((item) => item._id === currentNotif.theme_id);
+      const currentTelegram = telegramUsers.find((item) => item._id === currentNotif.telegram_channel_ids[0]);
+      if (currentTheme) {
+        setSelectedOption({
+          key: currentTheme._id,
+          label: currentTheme.name
+        })
+      }
+      if (currentTelegram) {
+        setSelectedUsersTelegram({
+          key: currentTelegram._id,
+          label: currentTelegram.name
+        });
+      }
+      if (currentNotif.is_email && !currentNotif.is_telegram) {
+        setSendType(['mail']);
+        setLogin(currentNotif.email_list[0]);
+      } else if (currentNotif.is_telegram && !currentNotif.is_email) {
+        setSendType(['telegram']);
+      } else if (currentNotif.is_telegram && currentNotif.is_email) {
+        setLogin(currentNotif.email_list[0]);
+        setSendType(['mail', 'telegram']);
+      }
+
+    }
+  }, [currentNotif, themes]);
 
   return (
     <ProtectLayout>
@@ -304,7 +316,7 @@ const addMessage: NextPage = () => {
                   )}
                 </div>
                 <Button label="Сохранить оповещение" size="sm" classBtn="!w-fit mt-6" onClick={() => {
-                  createNotif()
+                  updateNotif()
                 }} />
               </div>
             </div>
@@ -341,4 +353,4 @@ const addMessage: NextPage = () => {
   )
 }
 
-export default addMessage;
+export default editMessage;

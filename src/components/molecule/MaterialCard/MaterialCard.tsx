@@ -52,22 +52,22 @@ export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, sr
 
   const removeTag = (idToRemove: string) => {
     console.log(idToRemove);
-    const choosenTag = listTag.find(item => item.name === idToRemove);
-    if (choosenTag) {
-      deleteTags(choosenTag?._id);
-    }
+    deleteTags(id, idToRemove);
   };
 
-  const deleteTags = async (id: string) => {
+  const deleteTags = async (id: string, tagId: string) => {
     try {
       const res = await fetch(
-        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/tags/${id}`,
+        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/materials/${id}/delete_tags`,
         {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
           },
+          body: JSON.stringify({
+            tags: [`${tagId}`],
+          }),
         }
       );
       if (res.ok) {
@@ -210,7 +210,7 @@ export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, sr
                       base: "[&_path]:fill-[#757575] bg-[#e1eaf8]",
                       content: `font-['Montserrat',sans-serif] text-[10px] text-[#808793] font-medium`
                     }}
-                    onClose={() => removeTag(item.name)}
+                    onClose={() => removeTag(item.tag_id)}
                   >
                     {item.name}
                   </Chip>

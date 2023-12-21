@@ -59,7 +59,6 @@ const Homepage: NextPage = () => {
       );
 
       if (res.ok) {
-        setPending(false);
         const data = await res.json();
         localStorage.setItem('forgotPassword', 'REJECT');
         setCookie('scano_acess_token', data.access_token);

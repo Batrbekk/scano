@@ -169,11 +169,13 @@ const dashboardIndex: NextPage = () => {
         }
       );
       if (res.ok) {
+        setPending(true);
         const data = await res.json();
         setMaterial(data);
         setPending(false);
       }
     } catch (err) {
+      setPending(true);
       console.error(err);
       setPending(false);
     }
@@ -351,25 +353,25 @@ const dashboardIndex: NextPage = () => {
           </div>
           <div className="flex items-start justify-between w-full">
             <div className="w-full max-w-[75%] flex flex-col gap-y-2">
-              {material
-                .slice((currentPage - 1) * 5, currentPage * 5)
-                .map((card) => (
-                  <MaterialCard
-                    updateTags={handleUpdate}
-                    key={card._id}
-                    id={card._id}
-                    title={card.title}
-                    date={card.created_at}
-                    text={card.description}
-                    tags={card.tags}
-                    links={card.url}
-                    src_name={card.source.name}
-                    img={card.img_url}
-                  />
-                ))}
-              {pending && (
-                <Spinner color="success" size="lg" />
-              )}
+              {pending ?
+                (<Spinner color="success" size="lg" />) : (
+                  material
+                    .slice((currentPage - 1) * 5, currentPage * 5)
+                    .map((card) => (
+                      <MaterialCard
+                        updateTags={handleUpdate}
+                        key={card._id}
+                        id={card._id}
+                        title={card.title}
+                        date={card.created_at}
+                        text={card.description}
+                        tags={card.tags}
+                        links={card.url}
+                        src_name={card.source.name}
+                        img={card.img_url}
+                      />
+                    ))
+                )}
               {material.length > 5 && !pending && (
                 <div className="flex items-center justify-center relative">
                   <div className="flex items-center absolute left-0">
@@ -395,7 +397,7 @@ const dashboardIndex: NextPage = () => {
                 >
                   {collection.map((item) => (
                     <Checkbox value={item.key} key={item.key} classNames={{
-                      wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                      wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm ml-2'
                     }}>
                       <p className="prose prose-sm text-[#7191c6]">{item.label}</p>
                     </Checkbox>
@@ -410,7 +412,7 @@ const dashboardIndex: NextPage = () => {
                 >
                   {materialType.map((item) => (
                     <Checkbox value={item.key} key={item.key} classNames={{
-                      wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                      wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm ml-2'
                     }}>
                       <p className="prose prose-sm text-[#7191c6]">{item.label}</p>
                     </Checkbox>
@@ -436,7 +438,7 @@ const dashboardIndex: NextPage = () => {
                   >
                     {lang.map((item) => (
                       <Checkbox value={item.key} key={item.key} classNames={{
-                        wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                        wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm ml-2'
                       }}>
                         <p className="prose prose-sm text-[#7191c6]">{item.label}</p>
                       </Checkbox>
@@ -463,7 +465,7 @@ const dashboardIndex: NextPage = () => {
                   >
                     {toneOption.map((item) => (
                       <Checkbox value={item.key} key={item.key} classNames={{
-                        wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                        wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm ml-2'
                       }}>
                         <p className="prose prose-sm text-[#7191c6]">{item.label}</p>
                       </Checkbox>
