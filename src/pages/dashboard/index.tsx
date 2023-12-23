@@ -18,6 +18,9 @@ import {getCookie} from "cookies-next";
 import {Button, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure} from "@nextui-org/react";
 import {Pagination} from "@nextui-org/pagination";
 import {Spinner} from "@nextui-org/spinner";
+import Excel from "@public/assets/icons/excel.svg";
+import Word from "@public/assets/icons/word.svg";
+import Pdf from "@public/assets/icons/pdf.svg";
 
 const filterTabs = [
   {
@@ -128,7 +131,17 @@ const collection = [
     label: 'Новости',
     key: 'news'
   }
-]
+];
+const docFormat = [
+  {
+    value: 'Excel',
+  },
+  {
+    value: 'Word',
+  },
+  {
+    value: 'PDF',
+  }];
 
 const dashboardIndex: NextPage = () => {
   const {isOpen, onOpen, onClose} = useDisclosure();
@@ -146,6 +159,8 @@ const dashboardIndex: NextPage = () => {
   const [materialCollection, setMaterialCollection] = useState<Array<string>>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pending, setPending] = useState<boolean>(true);
+  const [isDownload, setIsDownload] = useState<boolean>(false);
+  const [formatSelect, setFormatSelect] = useState('');
 
   const totalPage = useCallback(() => {
     if (material.length > 5) {
@@ -181,8 +196,40 @@ const dashboardIndex: NextPage = () => {
     }
   };
 
+  const getExport = async () => {
+    try {
+      const res = await fetch(
+        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/${id}/download_excel_report`,
+        {
+          method: 'GET', // Assuming you are sending a POST request
+          headers: {
+            'Content-Type': 'arraybuffer',
+            'Authorization': `Bearer ${token}`
+          },
+        }
+      ).then(res => res.blob()).then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "bac.xlsx";
+        document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+        a.click();
+        a.remove();
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
+  };
+
+  const handleFormatSelect = (value: string) => {
+    setFormatSelect(value);
+    if (value === 'Excel') {
+      getExport();
+    }
   };
 
   const removeFilter = (key: string, src: string) => {
@@ -240,7 +287,10 @@ const dashboardIndex: NextPage = () => {
               />
             </div>
             <div className="flex items-center gap-x-6">
-              <button className="flex items-center gap-x-1">
+              <button className="flex items-center gap-x-1" onClick={() => {
+                setIsDownload(true);
+                onOpen();
+              }}>
                 <Image src={Export} alt="icon" />
                 <p className="font-['Montserrat',sans-serif] text-base font-semibold text-[#35415A]">Экспорт</p>
               </button>
@@ -344,6 +394,7 @@ const dashboardIndex: NextPage = () => {
             <button
               className={`bg-[#60CA23] prose prose-base text-white font-['Work Sans',sans-serif] py-1 px-4 rounded flex gap-x-2 items-center`}
               onClick={() => {
+                setIsDownload(false);
                 onOpen();
               }}
             >
@@ -482,218 +533,237 @@ const dashboardIndex: NextPage = () => {
             size="5xl"
             isOpen={isOpen}
             onClose={onClose}
-            hideCloseButton={true}
+            hideCloseButton={!isDownload}
           >
             <ModalContent>
               {(onClose) => (
-                <>
-                  <ModalHeader className="flex items-center justify-between">
-                    Фильтры
-                    <div className="flex items-center gap-x-2">
-                      <Button className="bg-[#d9d9d9] rounded text-[#757575]" onPress={() => {
-                        onClose();
-                      }}>
-                        Отмена
-                      </Button>
-                      <Button className="bg-[#d9d9d9] rounded text-[#757575]" onPress={() => {
-                        setTone([]);
-                        setMaterialLang([]);
-                        setMaterialsType([]);
-                        setMaterialCollection([]);
-                      }}>
-                        Очистить
-                      </Button>
-                      <Button className="bg-[#6581ad] rounded text-white" onPress={() => {
-                        getMaterial();
-                        onClose();
-                      }}>
-                        Отфильтровать
-                      </Button>
-                    </div>
-                  </ModalHeader>
-                  <ModalBody className="p-0 pb-4">
-                    <div className="border-t pt-2 px-4">
-                      <div className="flex items-start">
-                        <p className="text-[#35415A] font-['Montserrat',sans-serif] text-base font-semibold mr-2">Фильтр:</p>
-                        <div className="flex items-center gap-y-2">
-                          <div className="ml-4 flex flex-wrap items-start gap-x-4">
-                            {tone.length > 0 && (
-                              <div className="flex items-center gap-x-1">
-                                <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Область поиска:</p>
-                                {tone.map((item) => (
-                                  <Chip
-                                    variant="light"
-                                    key={item}
-                                    classNames={{
-                                      base: "[&_path]:fill-[#ff0000] px-0",
-                                      content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
-                                    }}
-                                    onClose={() => removeFilter(item, 'tone')}
-                                  >
-                                    {item}
-                                  </Chip>
-                                ))}
-                              </div>
-                            )}
-                            {materialsType.length > 0 && (
-                              <div className="flex items-center gap-x-1">
-                                <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Тип материала:</p>
-                                {materialsType.map((item) => (
-                                  <Chip
-                                    key={item}
-                                    variant="light"
-                                    classNames={{
-                                      base: "[&_path]:fill-[#ff0000] px-0",
-                                      content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
-                                    }}
-                                    onClose={() => removeFilter(item, 'materialType')}
-                                  >
-                                    {item}
-                                  </Chip>
-                                ))}
-                              </div>
-                            )}
-                            {materialLang.length > 0 && (
-                              <div className="flex items-center gap-x-1">
-                                <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Язык материала:</p>
-                                {materialLang.map((item) => (
-                                  <Chip
-                                    key={item}
-                                    variant="light"
-                                    classNames={{
-                                      base: "[&_path]:fill-[#ff0000] px-0",
-                                      content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
-                                    }}
-                                    onClose={() => removeFilter(item, 'materialLang')}
-                                  >
-                                    {item}
-                                  </Chip>
-                                ))}
-                              </div>
-                            )}
-                            {materialCollection.length > 0 && (
-                              <div className="flex items-center gap-x-1">
-                                <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Тип источника:</p>
-                                {materialCollection.map((item) => (
-                                  <Chip
-                                    key={item}
-                                    variant="light"
-                                    classNames={{
-                                      base: "[&_path]:fill-[#ff0000] px-0",
-                                      content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
-                                    }}
-                                    onClose={() => removeFilter(item, 'materialCollection')}
-                                  >
-                                    {item}
-                                  </Chip>
-                                ))}
-                              </div>
-                            )}
+                isDownload ? (
+                  <>
+                    <ModalHeader className="flex flex-col gap-1">Экспорт материалов</ModalHeader>
+                    <ModalBody className="p-4">
+                      <h3 className="text-[#35415A] font-['Montserrat',sans-serif] text-base font-semibold">Выберите формат для экспорта материалов</h3>
+                      <div className="mt-4 flex items-center gap-x-4">
+                        {docFormat.map((item) => (
+                          <div key={item.value} className={`flex items-center gap-x-2 p-2 cursor-pointer ${formatSelect === item.value && 'bg-[#d8e4f9] rounded-lg'}`} onClick={() => handleFormatSelect(item.value)}>
+                            {item.value === 'Excel' && (<Image src={Excel} alt="icon" width={32} height={32} />)}
+                            {item.value === 'Word' && (<Image src={Word} alt="icon" width={32} height={32} />)}
+                            {item.value === 'PDF' && (<Image src={Pdf} alt="icon" width={42} height={42} />)}
+                            <p>{item.value}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </ModalBody>
+                  </>
+                  ) : (
+                  <>
+                    <ModalHeader className="flex items-center justify-between">
+                      Фильтры
+                      <div className="flex items-center gap-x-2">
+                        <Button className="bg-[#d9d9d9] rounded text-[#757575]" onPress={() => {
+                          onClose();
+                        }}>
+                          Отмена
+                        </Button>
+                        <Button className="bg-[#d9d9d9] rounded text-[#757575]" onPress={() => {
+                          setTone([]);
+                          setMaterialLang([]);
+                          setMaterialsType([]);
+                          setMaterialCollection([]);
+                        }}>
+                          Очистить
+                        </Button>
+                        <Button className="bg-[#6581ad] rounded text-white" onPress={() => {
+                          getMaterial();
+                          onClose();
+                        }}>
+                          Отфильтровать
+                        </Button>
+                      </div>
+                    </ModalHeader>
+                    <ModalBody className="p-0 pb-4">
+                      <div className="border-t pt-2 px-4">
+                        <div className="flex items-start">
+                          <p className="text-[#35415A] font-['Montserrat',sans-serif] text-base font-semibold mr-2">Фильтр:</p>
+                          <div className="flex items-center gap-y-2">
+                            <div className="ml-4 flex flex-wrap items-start gap-x-4">
+                              {tone.length > 0 && (
+                                <div className="flex items-center gap-x-1">
+                                  <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Область поиска:</p>
+                                  {tone.map((item) => (
+                                    <Chip
+                                      variant="light"
+                                      key={item}
+                                      classNames={{
+                                        base: "[&_path]:fill-[#ff0000] px-0",
+                                        content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
+                                      }}
+                                      onClose={() => removeFilter(item, 'tone')}
+                                    >
+                                      {item}
+                                    </Chip>
+                                  ))}
+                                </div>
+                              )}
+                              {materialsType.length > 0 && (
+                                <div className="flex items-center gap-x-1">
+                                  <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Тип материала:</p>
+                                  {materialsType.map((item) => (
+                                    <Chip
+                                      key={item}
+                                      variant="light"
+                                      classNames={{
+                                        base: "[&_path]:fill-[#ff0000] px-0",
+                                        content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
+                                      }}
+                                      onClose={() => removeFilter(item, 'materialType')}
+                                    >
+                                      {item}
+                                    </Chip>
+                                  ))}
+                                </div>
+                              )}
+                              {materialLang.length > 0 && (
+                                <div className="flex items-center gap-x-1">
+                                  <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Язык материала:</p>
+                                  {materialLang.map((item) => (
+                                    <Chip
+                                      key={item}
+                                      variant="light"
+                                      classNames={{
+                                        base: "[&_path]:fill-[#ff0000] px-0",
+                                        content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
+                                      }}
+                                      onClose={() => removeFilter(item, 'materialLang')}
+                                    >
+                                      {item}
+                                    </Chip>
+                                  ))}
+                                </div>
+                              )}
+                              {materialCollection.length > 0 && (
+                                <div className="flex items-center gap-x-1">
+                                  <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Тип источника:</p>
+                                  {materialCollection.map((item) => (
+                                    <Chip
+                                      key={item}
+                                      variant="light"
+                                      classNames={{
+                                        base: "[&_path]:fill-[#ff0000] px-0",
+                                        content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
+                                      }}
+                                      onClose={() => removeFilter(item, 'materialCollection')}
+                                    >
+                                      {item}
+                                    </Chip>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="flex items-stretch border-t">
-                      <div className="flex flex-col gap-y-2 w-[20%] border-r p-2">
-                        {filterTabs.map((item) => (
-                          <div
-                            key={item.id}
-                            className={`cursor-pointer rounded py-2 px-4 ${currentTab === item.key && 'bg-[#bfcbde]'}`}
-                            onClick={() => {
-                              setCurrentTab(item.key)
-                            }}>
-                            <p className="prose text-lg">
-                              {item.label}
-                            </p>
-                          </div>
-                        ))
-                        }
+                      <div className="flex items-stretch border-t">
+                        <div className="flex flex-col gap-y-2 w-[20%] border-r p-2">
+                          {filterTabs.map((item) => (
+                            <div
+                              key={item.id}
+                              className={`cursor-pointer rounded py-2 px-4 ${currentTab === item.key && 'bg-[#bfcbde]'}`}
+                              onClick={() => {
+                                setCurrentTab(item.key)
+                              }}>
+                              <p className="prose text-lg">
+                                {item.label}
+                              </p>
+                            </div>
+                          ))
+                          }
+                        </div>
+                        <div className="w-full p-2">
+                          {currentTab === 'main' && (
+                            <>
+                              <div className="flex flex-col gap-y-1 w-full">
+                                <p className="prose prose-sm text-[#979ca9]">Тональность</p>
+                                <CheckboxGroup
+                                  orientation="horizontal"
+                                  value={tone}
+                                  classNames={{
+                                    wrapper: 'gap-x-4'
+                                  }}
+                                  onValueChange={setTone}
+                                >
+                                  {toneOption.map((item) => (
+                                    <Checkbox key={item.key} value={item.key} classNames={{
+                                      wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                                    }}>
+                                      <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
+                                    </Checkbox>
+                                  ))}
+                                </CheckboxGroup>
+                              </div>
+                              <div className="flex flex-col gap-y-1 w-full mt-4">
+                                <p className="prose prose-sm text-[#979ca9]">Тип материала</p>
+                                <CheckboxGroup
+                                  orientation="horizontal"
+                                  value={materialsType}
+                                  classNames={{
+                                    wrapper: 'gap-x-4'
+                                  }}
+                                  onValueChange={setMaterialsType}
+                                >
+                                  {materialType.map((item) => (
+                                    <Checkbox key={item.key} value={item.key} classNames={{
+                                      wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                                    }}>
+                                      <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
+                                    </Checkbox>
+                                  ))}
+                                </CheckboxGroup>
+                              </div>
+                              <div className="flex flex-col gap-y-1 w-full mt-4">
+                                <p className="prose prose-sm text-[#979ca9]">Язык материалов</p>
+                                <CheckboxGroup
+                                  orientation="horizontal"
+                                  value={materialLang}
+                                  classNames={{
+                                    wrapper: 'gap-x-4'
+                                  }}
+                                  onValueChange={setMaterialLang}
+                                >
+                                  {lang.map((item) => (
+                                    <Checkbox key={item.key} value={item.key} classNames={{
+                                      wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                                    }}>
+                                      <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
+                                    </Checkbox>
+                                  ))}
+                                </CheckboxGroup>
+                              </div>
+                              <div className="flex flex-col gap-y-1 w-full mt-4">
+                                <p className="prose prose-sm text-[#979ca9]">Тип источника</p>
+                                <CheckboxGroup
+                                  orientation="horizontal"
+                                  value={materialCollection}
+                                  classNames={{
+                                    wrapper: 'gap-x-4'
+                                  }}
+                                  onValueChange={setMaterialCollection}
+                                >
+                                  {collection.map((item) => (
+                                    <Checkbox key={item.key} value={item.key} classNames={{
+                                      wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                                    }}>
+                                      <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
+                                    </Checkbox>
+                                  ))}
+                                </CheckboxGroup>
+                              </div>
+                            </>
+                          )}
+                        </div>
                       </div>
-                      <div className="w-full p-2">
-                        {currentTab === 'main' && (
-                          <>
-                            <div className="flex flex-col gap-y-1 w-full">
-                              <p className="prose prose-sm text-[#979ca9]">Тональность</p>
-                              <CheckboxGroup
-                                orientation="horizontal"
-                                value={tone}
-                                classNames={{
-                                  wrapper: 'gap-x-4'
-                                }}
-                                onValueChange={setTone}
-                              >
-                                {toneOption.map((item) => (
-                                  <Checkbox key={item.key} value={item.key} classNames={{
-                                    wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
-                                  }}>
-                                    <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
-                                  </Checkbox>
-                                ))}
-                              </CheckboxGroup>
-                            </div>
-                            <div className="flex flex-col gap-y-1 w-full mt-4">
-                              <p className="prose prose-sm text-[#979ca9]">Тип материала</p>
-                              <CheckboxGroup
-                                orientation="horizontal"
-                                value={materialsType}
-                                classNames={{
-                                  wrapper: 'gap-x-4'
-                                }}
-                                onValueChange={setMaterialsType}
-                              >
-                                {materialType.map((item) => (
-                                  <Checkbox key={item.key} value={item.key} classNames={{
-                                    wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
-                                  }}>
-                                    <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
-                                  </Checkbox>
-                                ))}
-                              </CheckboxGroup>
-                            </div>
-                            <div className="flex flex-col gap-y-1 w-full mt-4">
-                              <p className="prose prose-sm text-[#979ca9]">Язык материалов</p>
-                              <CheckboxGroup
-                                orientation="horizontal"
-                                value={materialLang}
-                                classNames={{
-                                  wrapper: 'gap-x-4'
-                                }}
-                                onValueChange={setMaterialLang}
-                              >
-                                {lang.map((item) => (
-                                  <Checkbox key={item.key} value={item.key} classNames={{
-                                    wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
-                                  }}>
-                                    <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
-                                  </Checkbox>
-                                ))}
-                              </CheckboxGroup>
-                            </div>
-                            <div className="flex flex-col gap-y-1 w-full mt-4">
-                              <p className="prose prose-sm text-[#979ca9]">Тип источника</p>
-                              <CheckboxGroup
-                                orientation="horizontal"
-                                value={materialCollection}
-                                classNames={{
-                                  wrapper: 'gap-x-4'
-                                }}
-                                onValueChange={setMaterialCollection}
-                              >
-                                {collection.map((item) => (
-                                  <Checkbox key={item.key} value={item.key} classNames={{
-                                    wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
-                                  }}>
-                                    <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
-                                  </Checkbox>
-                                ))}
-                              </CheckboxGroup>
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </ModalBody>
-                </>
+                    </ModalBody>
+                  </>
+                )
               )}
             </ModalContent>
           </Modal>
