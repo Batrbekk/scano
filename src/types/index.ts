@@ -80,7 +80,7 @@ export interface Material {
 
 export interface Mode {
   key: any,
-  label: string
+  label: any
 }
 
 export interface FilterItem {

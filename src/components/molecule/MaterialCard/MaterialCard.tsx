@@ -259,7 +259,7 @@ export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, sr
                 </Tooltip>
               </div>
               {currentImg ? (
-                <Image src={currentImg} alt="car-img" width={150} height={120}/>
+                <Image src={currentImg} alt="car-img" className="shadow border" width={150} height={120}/>
               ) : (
                 <div className={`w-[150px] h-[80px] animate-pulse bg-slate-400 ${!pending && 'hidden'}`}/>
               )}

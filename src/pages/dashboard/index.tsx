@@ -1,10 +1,8 @@
 import Image from "next/image";
 import {NextPage} from "next";
-import {ru} from "date-fns/locale";
 import {Chip} from "@nextui-org/chip";
 import React, {useCallback, useEffect, useState} from "react";
 import {Input} from "@nextui-org/input";
-import DatePicker from "react-datepicker";
 import Search from "@public/assets/icons/search.svg";
 import Export from "@public/assets/icons/export.svg";
 import Filter from "@public/assets/icons/filter.svg";
@@ -13,7 +11,7 @@ import { Checkbox, CheckboxGroup } from "@nextui-org/checkbox";
 import {Accordion, AccordionItem} from "@nextui-org/accordion";
 import MaterialCard from "@/components/molecule/MaterialCard";
 import ProtectLayout from "@/components/layout/protectLayout";
-import {Material} from "@/types";
+import {Material, Mode} from "@/types";
 import {getCookie} from "cookies-next";
 import {Button, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure} from "@nextui-org/react";
 import {Pagination} from "@nextui-org/pagination";
@@ -21,6 +19,7 @@ import {Spinner} from "@nextui-org/spinner";
 import Excel from "@public/assets/icons/excel.svg";
 import Word from "@public/assets/icons/word.svg";
 import Pdf from "@public/assets/icons/pdf.svg";
+import Select from "@/components/atom/Select";
 
 const filterTabs = [
   {
@@ -142,6 +141,28 @@ const docFormat = [
   {
     value: 'PDF',
   }];
+const paginationCounts = [
+  {
+    key: 0,
+    label: 5
+  },
+  {
+    key: 1,
+    label: 10
+  },
+  {
+    key: 2,
+    label: 15,
+  },
+  {
+    key: 3,
+    label: 25,
+  },
+  {
+    key: 4,
+    label: 50
+  }
+];
 
 const dashboardIndex: NextPage = () => {
   const {isOpen, onOpen, onClose} = useDisclosure();
@@ -161,10 +182,11 @@ const dashboardIndex: NextPage = () => {
   const [pending, setPending] = useState<boolean>(true);
   const [isDownload, setIsDownload] = useState<boolean>(false);
   const [formatSelect, setFormatSelect] = useState('');
+  const [materialCount, setMaterialCount] = useState(paginationCounts[0]);
 
-  const totalPage = useCallback(() => {
-    if (material.length > 5) {
-      return Math.ceil(material.length / 5);
+  const totalPage = useCallback((count: number) => {
+    if (material.length > count) {
+      return Math.ceil(material.length / count);
     } else {
       return 0;
     }
@@ -232,6 +254,11 @@ const dashboardIndex: NextPage = () => {
     }
   };
 
+  const handleSelectChange = (value: Mode) => {
+    setMaterialCount(value);
+    totalPage(value.label);
+  };
+
   const removeFilter = (key: string, src: string) => {
     if (src === 'tone') {
       setTone(tone.filter(item => item !== key));
@@ -294,21 +321,6 @@ const dashboardIndex: NextPage = () => {
                 <Image src={Export} alt="icon" />
                 <p className="font-['Montserrat',sans-serif] text-base font-semibold text-[#35415A]">Экспорт</p>
               </button>
-              <div className="z-50">
-                <DatePicker
-                  showIcon
-                  locale={ru}
-                  endDate={endDate}
-                  selectsRange={true}
-                  startDate={startDate}
-                  dateFormat="dd/MM/yyyy h:mm aa"
-                  showTimeInput
-                  placeholderText="Выберите период"
-                  onChange={(update) => {
-                    setDateRange(update);
-                  }}
-                />
-              </div>
             </div>
           </div>
           <div className="flex items-center justify-between w-full py-6">
@@ -407,7 +419,7 @@ const dashboardIndex: NextPage = () => {
               {pending ?
                 (<Spinner color="success" size="lg" />) : (
                   material
-                    .slice((currentPage - 1) * 5, currentPage * 5)
+                    .slice((currentPage - 1) * materialCount.label, currentPage * materialCount.label)
                     .map((card) => (
                       <MaterialCard
                         updateTags={handleUpdate}
@@ -424,8 +436,8 @@ const dashboardIndex: NextPage = () => {
                     ))
                 )}
               {material.length > 5 && !pending && (
-                <div className="flex items-center justify-center relative">
-                  <div className="flex items-center absolute left-0">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
                     <Button variant="light" className="text-[#35415A]">
                       Выбрать все
                     </Button>
@@ -434,8 +446,9 @@ const dashboardIndex: NextPage = () => {
                     </Button>
                   </div>
                   <div className="my-4">
-                    <Pagination showControls total={totalPage()} initialPage={currentPage} onChange={setCurrentPage}/>
+                    <Pagination showControls total={totalPage(materialCount.label)} initialPage={currentPage} onChange={setCurrentPage}/>
                   </div>
+                  <Select value={materialCount} options={paginationCounts} onChange={handleSelectChange} />
                 </div>
               )}
             </div>
