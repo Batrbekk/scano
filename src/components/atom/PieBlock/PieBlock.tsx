@@ -96,7 +96,7 @@ const PieBlock = () => {
         cursor: 'pointer',
         showInLegend: true,
         dataLabels: [{
-          enabled: true,
+          enabled: false,
           distance: 20
         }, {
           enabled: true,

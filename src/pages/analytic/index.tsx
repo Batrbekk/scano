@@ -26,6 +26,8 @@ import AuthorTypeBlock from "@/components/atom/AuthorTypeBlock";
 import AuthorGenderBlock from "@/components/atom/AuthorGenderBlock";
 import AuthorTable from "@/components/molecule/AuthorTable";
 import SrcTable from "@/components/molecule/SrcTable";
+import CountryTable from "@/components/molecule/CountryTable";
+import CityTable from "@/components/molecule/CityTable";
 
 if (typeof Highcharts === 'object') {
   exporting(Highcharts);
@@ -250,14 +252,24 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
       id: 'geography',
       label: 'География',
       content: (
-        <div className="px-6 flex flex-col gap-y-4">
+        <div className="px-4 flex flex-col gap-y-4">
           <MapChart/>
-          <div className="flex items-start gap-x-4">
-            <div className="w-1/3">
-              <PieBlock/>
+          <div className="flex flex-col gap-y-4">
+            <div className="flex items-start gap-x-4">
+              <div className="w-1/3">
+                <PieBlock/>
+              </div>
+              <div className="w-2/3">
+                <CountryTable />
+              </div>
             </div>
-            <div className="w-1/3">
-              <CityBlock />
+            <div className="flex items-start gap-x-4">
+              <div className="w-1/3">
+                <CityBlock/>
+              </div>
+              <div className="w-2/3">
+                <CityTable />
+              </div>
             </div>
           </div>
         </div>
