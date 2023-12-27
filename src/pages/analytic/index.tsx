@@ -28,6 +28,9 @@ import AuthorTable from "@/components/molecule/AuthorTable";
 import SrcTable from "@/components/molecule/SrcTable";
 import CountryTable from "@/components/molecule/CountryTable";
 import CityTable from "@/components/molecule/CityTable";
+import TagBlock from "@/components/atom/TagBlock";
+import TagTable from "@/components/molecule/TagTable";
+import TagDynamicTable from "@/components/molecule/TagDynamicTable";
 
 if (typeof Highcharts === 'object') {
   exporting(Highcharts);
@@ -279,7 +282,17 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
       id: 'tags',
       label: 'Теги',
       content: (
-        <p>tags</p>
+        <div className="px-4 flex flex-col gap-y-4">
+          <div className="flex items-start gap-x-4">
+            <div className="w-1/3">
+              <TagBlock/>
+            </div>
+            <div className="w-2/3">
+              <TagTable />
+            </div>
+          </div>
+          <TagDynamicTable />
+        </div>
       )
     }
   ];
