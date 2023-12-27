@@ -31,11 +31,127 @@ import CityTable from "@/components/molecule/CityTable";
 import TagBlock from "@/components/atom/TagBlock";
 import TagTable from "@/components/molecule/TagTable";
 import TagDynamicTable from "@/components/molecule/TagDynamicTable";
+import {Button, Modal, ModalBody, ModalContent, ModalHeader, useDisclosure} from "@nextui-org/react";
+import Excel from "@public/assets/icons/excel.svg";
+import Word from "@public/assets/icons/word.svg";
+import Pdf from "@public/assets/icons/pdf.svg";
+import {Checkbox, CheckboxGroup} from "@nextui-org/checkbox";
+import {getCookie} from "cookies-next";
 
 if (typeof Highcharts === 'object') {
   exporting(Highcharts);
 }
 
+const filterTabs = [
+  {
+    id: 0,
+    label: 'Основные',
+    key: 'main'
+  },
+  {
+    id: 1,
+    label: 'Источники',
+    key: 'src'
+  },
+  {
+    id: 2,
+    label: 'Авторы',
+    key: 'author'
+  },
+  {
+    id: 3,
+    label: 'География',
+    key: 'geography'
+  },
+  {
+    id: 4,
+    label: 'Теги',
+    key: 'tags'
+  }
+];
+const toneOption = [
+  {
+    title: 'Область поиска',
+    key: 'positive',
+    label: 'Позитив'
+  },
+  {
+    title: 'Область поиска',
+    key: 'negative',
+    label: 'Негатив'
+  },
+  {
+    title: 'Область поиска',
+    key: 'neutral',
+    label: 'Нейтрально'
+  }
+];
+const materialType = [
+  {
+    title: 'Тип материала',
+    label: 'Пост',
+    key: 'post'
+  },
+  {
+    title: 'Тип материала',
+    label: 'Репост',
+    key: 'repost'
+  },
+  {
+    title: 'Тип материала',
+    label: 'Комментарий',
+    key: 'comment'
+  },
+  {
+    title: 'Тип материала',
+    label: 'Сториз',
+    key: 'stories'
+  }
+];
+const lang = [
+  {
+    title: 'Язык материала',
+    label: 'Казахский',
+    key: 'kk'
+  },
+  {
+    title: 'Язык материала',
+    label: 'Русский',
+    key: 'ru'
+  },
+  {
+    title: 'Язык материала',
+    label: 'Английский',
+    key: 'en'
+  }
+];
+const collection = [
+  {
+    title: 'Тип источника',
+    label: 'Социальные сети',
+    key: 'social_network'
+  },
+  {
+    title: 'Тип источника',
+    label: 'Видео',
+    key: 'video'
+  },
+  {
+    title: 'Тип источника',
+    label: 'канал в мессенджерах',
+    key: 'messenger_chanel'
+  },
+  {
+    title: 'Тип источника',
+    label: 'группы в мессенджерах',
+    key: 'messenger_group'
+  },
+  {
+    title: 'Тип источника',
+    label: 'Новости',
+    key: 'news'
+  }
+];
 const chooseFilter = [
   {
     id: 0,
@@ -48,6 +164,16 @@ const chooseFilter = [
     value: 'Негатив'
   }
 ];
+const docFormat = [
+  {
+    value: 'Excel',
+  },
+  {
+    value: 'Word',
+  },
+  {
+    value: 'PDF',
+  }];
 
 const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
   const optionsSelect = [
@@ -64,6 +190,9 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
       key: 1
     }
   ];
+
+  const id = getCookie('currentTheme');
+  const token = getCookie('scano_acess_token');
   const [filterItems, setFilterItems] = useState(chooseFilter);
   const [search, setSearch] = useState('');
   const [dateRange, setDateRange] = useState<any>([null, null]);
@@ -71,8 +200,50 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
   const chartComponentRef = useRef<HighchartsReact.RefObject>(null);
   const [selectedOption, setSelectedOption] = useState<any>(optionsSelect[0]);
 
+  const [currentTab, setCurrentTab] = useState('main');
+  const {isOpen, onOpen, onClose} = useDisclosure();
+  const [tone, setTone] = useState<Array<string>>([]);
+  const [materialsType, setMaterialsType] = useState<Array<string>>([]);
+  const [materialLang, setMaterialLang] = useState<Array<string>>([]);
+  const [materialCollection, setMaterialCollection] = useState<Array<string>>([]);
+  const [isDownload, setIsDownload] = useState<boolean>(false);
+  const [formatSelect, setFormatSelect] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
+  };
+
+  const handleFormatSelect = (value: string) => {
+    setFormatSelect(value);
+    if (value === 'Excel') {
+      getExport();
+    }
+  };
+
+  const getExport = async () => {
+    try {
+      const res = await fetch(
+        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/${id}/download_excel_report`,
+        {
+          method: 'GET', // Assuming you are sending a POST request
+          headers: {
+            'Content-Type': 'arraybuffer',
+            'Authorization': `Bearer ${token}`
+          },
+        }
+      ).then(res => res.blob()).then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "bac.xlsx";
+        document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+        a.click();
+        a.remove();
+      });
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   useEffect(() => {
@@ -106,8 +277,19 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
     setSelectedOption(value);
   };
 
-  const removeFilter = (idToRemove: number) => {
-    setFilterItems(filterItems.filter(item => item.id !== idToRemove));
+  const removeFilter = (key: string, src: string) => {
+    if (src === 'tone') {
+      setTone(tone.filter(item => item !== key));
+    }
+    if (src === 'materialType') {
+      setMaterialsType(materialsType.filter(item => item !== key));
+    }
+    if (src === 'materialLang') {
+      setMaterialLang(materialLang.filter(item => item !== key));
+    }
+    if (src === 'materialCollection') {
+      setMaterialCollection(materialCollection.filter(item => item !== key));
+    }
   };
 
   const chartInterval = useCallback(() => {
@@ -304,7 +486,8 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
           <div className="flex flex-col px-6">
             <div className="flex items-center justify-between w-full">
               <div className="flex items-center gap-x-6">
-                <p className="text-[#35415A] font-['Montserrat',sans-serif] text-base font-semibold w-full">Аналитика</p>
+                <p className="text-[#35415A] font-['Montserrat',sans-serif] text-base font-semibold w-full">Все
+                  материалы</p>
                 <Input
                   value={search}
                   onChange={handleSearchChange}
@@ -321,44 +504,108 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
                     ]
                   }}
                   endContent={
-                    <Image src={Search} width={16} height={16} alt="icon" />
+                    <Image src={Search} width={16} height={16} alt="icon"/>
                   }
                 />
               </div>
               <div className="flex items-center gap-x-6">
-                <button className="flex items-center gap-x-1">
-                  <Image src={Export} alt="icon" />
+                <button className="flex items-center gap-x-1" onClick={() => {
+                  setIsDownload(true);
+                  onOpen();
+                }}>
+                  <Image src={Export} alt="icon"/>
                   <p className="font-['Montserrat',sans-serif] text-base font-semibold text-[#35415A]">Экспорт</p>
                 </button>
-                <div>
-                </div>
               </div>
             </div>
             <div className="flex items-center justify-between w-full py-6">
-              <div className="flex items-center gap-x-6">
-                <p className="text-[#35415A] font-['Montserrat',sans-serif] text-base font-semibold w-full">Фильтр:</p>
-                <div className="flex items-center gap-x-3">
-                  {filterItems.map((item) => (
-                    <div className="flex items-center gap-x-1" key={item.id}>
-                      <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">{item.title}:</p>
-                      <Chip
-                        variant="light"
-                        classNames={{
-                          base: "[&_path]:fill-[#ff0000]",
-                          content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold`
-                        }}
-                        onClose={() => removeFilter(item.id)}
-                      >
-                        {item.value}
-                      </Chip>
-                    </div>
-                  ))}
+              <div className="flex items-start max-w-[80%]">
+                <p className="text-[#35415A] font-['Montserrat',sans-serif] text-base font-semibold">Фильтр:</p>
+                <div className="flex items-center gap-y-2">
+                  <div className="ml-4 flex flex-wrap items-start gap-x-4">
+                    {tone.length > 0 && (
+                      <div className="flex items-center gap-x-1">
+                        <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Область поиска:</p>
+                        {tone.map((item) => (
+                          <Chip
+                            key={item}
+                            variant="light"
+                            classNames={{
+                              base: "[&_path]:fill-[#ff0000] px-0",
+                              content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
+                            }}
+                            onClose={() => removeFilter(item, 'tone')}
+                          >
+                            {item}
+                          </Chip>
+                        ))}
+                      </div>
+                    )}
+                    {materialsType.length > 0 && (
+                      <div className="flex items-center gap-x-1">
+                        <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Тип материала:</p>
+                        {materialsType.map((item) => (
+                          <Chip
+                            key={item}
+                            variant="light"
+                            classNames={{
+                              base: "[&_path]:fill-[#ff0000] px-0",
+                              content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
+                            }}
+                            onClose={() => removeFilter(item, 'materialType')}
+                          >
+                            {item}
+                          </Chip>
+                        ))}
+                      </div>
+                    )}
+                    {materialLang.length > 0 && (
+                      <div className="flex items-center gap-x-1">
+                        <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Язык материала:</p>
+                        {materialLang.map((item) => (
+                          <Chip
+                            key={item}
+                            variant="light"
+                            classNames={{
+                              base: "[&_path]:fill-[#ff0000] px-0",
+                              content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
+                            }}
+                            onClose={() => removeFilter(item, 'materialLang')}
+                          >
+                            {item}
+                          </Chip>
+                        ))}
+                      </div>
+                    )}
+                    {materialCollection.length > 0 && (
+                      <div className="flex items-center gap-x-1">
+                        <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Тип источника:</p>
+                        {materialCollection.map((item) => (
+                          <Chip
+                            key={item}
+                            variant="light"
+                            classNames={{
+                              base: "[&_path]:fill-[#ff0000] px-0",
+                              content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
+                            }}
+                            onClose={() => removeFilter(item, 'materialCollection')}
+                          >
+                            {item}
+                          </Chip>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
               <button
                 className={`bg-[#60CA23] prose prose-base text-white font-['Work Sans',sans-serif] py-1 px-4 rounded flex gap-x-2 items-center`}
+                onClick={() => {
+                  setIsDownload(false);
+                  onOpen();
+                }}
               >
-                <Image src={Filter} alt="icon" />
+                <Image src={Filter} alt="icon"/>
                 Фильтр
               </button>
             </div>
@@ -382,6 +629,243 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
             )}
           </Tabs>
         </div>
+        <Modal
+          size="5xl"
+          isOpen={isOpen}
+          onClose={onClose}
+          hideCloseButton={!isDownload}
+        >
+          <ModalContent>
+            {(onClose) => (
+              isDownload ? (
+                <>
+                  <ModalHeader className="flex flex-col gap-1">Экспорт материалов</ModalHeader>
+                  <ModalBody className="p-4">
+                    <h3 className="text-[#35415A] font-['Montserrat',sans-serif] text-base font-semibold">Выберите формат для экспорта материалов</h3>
+                    <div className="mt-4 flex items-center gap-x-4">
+                      {docFormat.map((item) => (
+                        <div key={item.value} className={`flex items-center gap-x-2 p-2 cursor-pointer ${formatSelect === item.value && 'bg-[#d8e4f9] rounded-lg'}`} onClick={() => handleFormatSelect(item.value)}>
+                          {item.value === 'Excel' && (<Image src={Excel} alt="icon" width={32} height={32} />)}
+                          {item.value === 'Word' && (<Image src={Word} alt="icon" width={32} height={32} />)}
+                          {item.value === 'PDF' && (<Image src={Pdf} alt="icon" width={42} height={42} />)}
+                          <p>{item.value}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </ModalBody>
+                </>
+              ) : (
+                <>
+                  <ModalHeader className="flex items-center justify-between">
+                    Фильтры
+                    <div className="flex items-center gap-x-2">
+                      <Button className="bg-[#d9d9d9] rounded text-[#757575]" onPress={() => {
+                        onClose();
+                      }}>
+                        Отмена
+                      </Button>
+                      <Button className="bg-[#d9d9d9] rounded text-[#757575]" onPress={() => {
+                        setTone([]);
+                        setMaterialLang([]);
+                        setMaterialsType([]);
+                        setMaterialCollection([]);
+                      }}>
+                        Очистить
+                      </Button>
+                      <Button className="bg-[#6581ad] rounded text-white" onPress={() => {
+                        onClose();
+                      }}>
+                        Отфильтровать
+                      </Button>
+                    </div>
+                  </ModalHeader>
+                  <ModalBody className="p-0 pb-4">
+                    <div className="border-t pt-2 px-4">
+                      <div className="flex items-start">
+                        <p className="text-[#35415A] font-['Montserrat',sans-serif] text-base font-semibold mr-2">Фильтр:</p>
+                        <div className="flex items-center gap-y-2">
+                          <div className="ml-4 flex flex-wrap items-start gap-x-4">
+                            {tone.length > 0 && (
+                              <div className="flex items-center gap-x-1">
+                                <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Область поиска:</p>
+                                {tone.map((item) => (
+                                  <Chip
+                                    variant="light"
+                                    key={item}
+                                    classNames={{
+                                      base: "[&_path]:fill-[#ff0000] px-0",
+                                      content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
+                                    }}
+                                    onClose={() => removeFilter(item, 'tone')}
+                                  >
+                                    {item}
+                                  </Chip>
+                                ))}
+                              </div>
+                            )}
+                            {materialsType.length > 0 && (
+                              <div className="flex items-center gap-x-1">
+                                <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Тип материала:</p>
+                                {materialsType.map((item) => (
+                                  <Chip
+                                    key={item}
+                                    variant="light"
+                                    classNames={{
+                                      base: "[&_path]:fill-[#ff0000] px-0",
+                                      content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
+                                    }}
+                                    onClose={() => removeFilter(item, 'materialType')}
+                                  >
+                                    {item}
+                                  </Chip>
+                                ))}
+                              </div>
+                            )}
+                            {materialLang.length > 0 && (
+                              <div className="flex items-center gap-x-1">
+                                <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Язык материала:</p>
+                                {materialLang.map((item) => (
+                                  <Chip
+                                    key={item}
+                                    variant="light"
+                                    classNames={{
+                                      base: "[&_path]:fill-[#ff0000] px-0",
+                                      content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
+                                    }}
+                                    onClose={() => removeFilter(item, 'materialLang')}
+                                  >
+                                    {item}
+                                  </Chip>
+                                ))}
+                              </div>
+                            )}
+                            {materialCollection.length > 0 && (
+                              <div className="flex items-center gap-x-1">
+                                <p className="font-['Montserrat',sans-serif] text-[#35415A] font-light">Тип источника:</p>
+                                {materialCollection.map((item) => (
+                                  <Chip
+                                    key={item}
+                                    variant="light"
+                                    classNames={{
+                                      base: "[&_path]:fill-[#ff0000] px-0",
+                                      content: `font-['Montserrat',sans-serif] text-[#35415A] font-semibold pl-0`
+                                    }}
+                                    onClose={() => removeFilter(item, 'materialCollection')}
+                                  >
+                                    {item}
+                                  </Chip>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-stretch border-t">
+                      <div className="flex flex-col gap-y-2 w-[20%] border-r p-2">
+                        {filterTabs.map((item) => (
+                          <div
+                            key={item.id}
+                            className={`cursor-pointer rounded py-2 px-4 ${currentTab === item.key && 'bg-[#bfcbde]'}`}
+                            onClick={() => {
+                              setCurrentTab(item.key)
+                            }}>
+                            <p className="prose text-lg">
+                              {item.label}
+                            </p>
+                          </div>
+                        ))
+                        }
+                      </div>
+                      <div className="w-full p-2">
+                        {currentTab === 'main' && (
+                          <>
+                            <div className="flex flex-col gap-y-1 w-full">
+                              <p className="prose prose-sm text-[#979ca9]">Тональность</p>
+                              <CheckboxGroup
+                                orientation="horizontal"
+                                value={tone}
+                                classNames={{
+                                  wrapper: 'gap-x-4'
+                                }}
+                                onValueChange={setTone}
+                              >
+                                {toneOption.map((item) => (
+                                  <Checkbox key={item.key} value={item.key} classNames={{
+                                    wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                                  }}>
+                                    <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
+                                  </Checkbox>
+                                ))}
+                              </CheckboxGroup>
+                            </div>
+                            <div className="flex flex-col gap-y-1 w-full mt-4">
+                              <p className="prose prose-sm text-[#979ca9]">Тип материала</p>
+                              <CheckboxGroup
+                                orientation="horizontal"
+                                value={materialsType}
+                                classNames={{
+                                  wrapper: 'gap-x-4'
+                                }}
+                                onValueChange={setMaterialsType}
+                              >
+                                {materialType.map((item) => (
+                                  <Checkbox key={item.key} value={item.key} classNames={{
+                                    wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                                  }}>
+                                    <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
+                                  </Checkbox>
+                                ))}
+                              </CheckboxGroup>
+                            </div>
+                            <div className="flex flex-col gap-y-1 w-full mt-4">
+                              <p className="prose prose-sm text-[#979ca9]">Язык материалов</p>
+                              <CheckboxGroup
+                                orientation="horizontal"
+                                value={materialLang}
+                                classNames={{
+                                  wrapper: 'gap-x-4'
+                                }}
+                                onValueChange={setMaterialLang}
+                              >
+                                {lang.map((item) => (
+                                  <Checkbox key={item.key} value={item.key} classNames={{
+                                    wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                                  }}>
+                                    <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
+                                  </Checkbox>
+                                ))}
+                              </CheckboxGroup>
+                            </div>
+                            <div className="flex flex-col gap-y-1 w-full mt-4">
+                              <p className="prose prose-sm text-[#979ca9]">Тип источника</p>
+                              <CheckboxGroup
+                                orientation="horizontal"
+                                value={materialCollection}
+                                classNames={{
+                                  wrapper: 'gap-x-4'
+                                }}
+                                onValueChange={setMaterialCollection}
+                              >
+                                {collection.map((item) => (
+                                  <Checkbox key={item.key} value={item.key} classNames={{
+                                    wrapper: 'after:bg-[#5b85ce] after:rounded-none before:rounded-none rounded-sm'
+                                  }}>
+                                    <p className="prose prose-sm text-[#5b5a5d]">{item.label}</p>
+                                  </Checkbox>
+                                ))}
+                              </CheckboxGroup>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </ModalBody>
+                </>
+              )
+            )}
+          </ModalContent>
+        </Modal>
       </MainLayout>
     </ProtectLayout>
   )
