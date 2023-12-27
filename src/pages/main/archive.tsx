@@ -101,18 +101,6 @@ const archive: NextPage = () => {
                 </div>
                 <div className="flex flex-col gap-y-1">
                   <p className="prose prose-sm text-[#979ca9]">Период</p>
-                  <DatePicker
-                    showIcon
-                    locale={ru}
-                    className="w-60"
-                    endDate={endDate}
-                    selectsRange={true}
-                    startDate={startDate}
-                    placeholderText="Выберите период"
-                    onChange={(update) => {
-                      setDateRange(update);
-                    }}
-                  />
                 </div>
                 <Button label="Оценить обьем данных" size="sm" color="bg-[#5b85ce]" classBtn="max-w-fit" />
               </div>

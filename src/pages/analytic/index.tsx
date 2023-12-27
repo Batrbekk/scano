@@ -24,6 +24,8 @@ import SocialBlock from "@/components/atom/SocialBlock";
 import CityBlock from "@/components/atom/CityBlock";
 import AuthorTypeBlock from "@/components/atom/AuthorTypeBlock";
 import AuthorGenderBlock from "@/components/atom/AuthorGenderBlock";
+import AuthorTable from "@/components/molecule/AuthorTable";
+import SrcTable from "@/components/molecule/SrcTable";
 
 if (typeof Highcharts === 'object') {
   exporting(Highcharts);
@@ -212,9 +214,12 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
       id: 'src',
       label: 'Источники',
       content: (
-        <div className="px-6 flex gap-x-4">
-          <div className="w-1/3">
+        <div className="px-4 flex flex-col gap-4">
+          <div className="w-1/2">
             <SocialBlock />
+          </div>
+          <div className="px-4">
+            <SrcTable />
           </div>
         </div>
       )
@@ -223,15 +228,20 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
       id: 'author',
       label: 'Авторы',
       content: (
-        <div className="px-6 flex gap-x-4">
-          <div className="w-1/3">
-            <BarBlock/>
+        <div className="flex flex-col gap-y-4">
+          <div className="px-4 flex flex-wrap gap-4">
+            <div className="w-[49%]">
+              <AuthorTypeBlock/>
+            </div>
+            <div className="w-[49%]">
+              <AuthorGenderBlock/>
+            </div>
+            <div className="w-[49%]">
+              <BarBlock/>
+            </div>
           </div>
-          <div className="w-1/3">
-            <AuthorTypeBlock/>
-          </div>
-          <div className="w-1/3">
-            <AuthorGenderBlock/>
+          <div className="px-4">
+            <AuthorTable />
           </div>
         </div>
       )
@@ -244,7 +254,7 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
           <MapChart/>
           <div className="flex items-start gap-x-4">
             <div className="w-1/3">
-              <PieBlock />
+              <PieBlock/>
             </div>
             <div className="w-1/3">
               <CityBlock />
@@ -296,17 +306,6 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
                   <p className="font-['Montserrat',sans-serif] text-base font-semibold text-[#35415A]">Экспорт</p>
                 </button>
                 <div>
-                  <DatePicker
-                    showIcon
-                    locale={ru}
-                    endDate={endDate}
-                    selectsRange={true}
-                    startDate={startDate}
-                    placeholderText="Выберите период"
-                    onChange={(update) => {
-                      setDateRange(update);
-                    }}
-                  />
                 </div>
               </div>
             </div>
