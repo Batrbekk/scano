@@ -37,6 +37,14 @@ import Word from "@public/assets/icons/word.svg";
 import Pdf from "@public/assets/icons/pdf.svg";
 import {Checkbox, CheckboxGroup} from "@nextui-org/checkbox";
 import {getCookie} from "cookies-next";
+import AuthorCountBlock from "@/components/atom/AuthorCountBlock";
+import TagTone from "@/components/atom/TagTone";
+import DynamicTag from "@/components/atom/DynamicTag";
+import DynamicSource from "@/components/atom/DynamicSource";
+import SourceMessageBlock from "@/components/atom/SourceMessageBlock";
+import {CodeActionKind} from "vscode-languageserver-types";
+import Source = CodeActionKind.Source;
+import SourceTone from "@/components/atom/SourceTone";
 
 if (typeof Highcharts === 'object') {
   exporting(Highcharts);
@@ -402,11 +410,24 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
       label: 'Источники',
       content: (
         <div className="px-4 flex flex-col gap-4">
-          <div className="w-1/2">
-            <SocialBlock />
+          <div className="flex items-start gap-x-4">
+            <div className="w-1/2">
+              <SourceMessageBlock/>
+            </div>
+            <div className="w-1/2">
+              <DynamicSource/>
+            </div>
+          </div>
+          <div className="flex items-start gap-x-4">
+            <div className="w-1/2">
+              <SocialBlock/>
+            </div>
+            <div className="w-1/2">
+              <SourceTone />
+            </div>
           </div>
           <div className="px-4">
-            <SrcTable />
+            <SrcTable/>
           </div>
         </div>
       )
@@ -418,7 +439,10 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
         <div className="flex flex-col gap-y-4">
           <div className="px-4 flex flex-wrap gap-4">
             <div className="w-[49%]">
-              <AuthorTypeBlock/>
+            <AuthorTypeBlock/>
+            </div>
+            <div className="w-[49%]">
+              <AuthorCountBlock/>
             </div>
             <div className="w-[49%]">
               <AuthorGenderBlock/>
@@ -428,7 +452,7 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
             </div>
           </div>
           <div className="px-4">
-            <AuthorTable />
+            <AuthorTable/>
           </div>
         </div>
       )
@@ -466,14 +490,22 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
       content: (
         <div className="px-4 flex flex-col gap-y-4">
           <div className="flex items-start gap-x-4">
-            <div className="w-1/3">
+            <div className="w-1/2">
               <TagBlock/>
             </div>
-            <div className="w-2/3">
-              <TagTable />
+            <div className="w-1/2">
+              <TagTable/>
             </div>
           </div>
-          <TagDynamicTable />
+          <div className="flex items-start gap-x-4">
+            <div className="w-1/2">
+              <TagTone />
+            </div>
+            <div className="w-1/2">
+              <DynamicTag />
+            </div>
+          </div>
+          <TagDynamicTable/>
         </div>
       )
     }
