@@ -4,8 +4,6 @@ import {Input} from "@nextui-org/input";
 import Image from "next/image";
 import Search from "@public/assets/icons/search.svg";
 import Export from "@public/assets/icons/export.svg";
-import DatePicker from "react-datepicker";
-import {ru} from "date-fns/locale";
 import {Chip} from "@nextui-org/chip";
 import Filter from "@public/assets/icons/filter.svg";
 import React, {useCallback, useEffect, useRef, useState} from "react";
@@ -42,8 +40,6 @@ import TagTone from "@/components/atom/TagTone";
 import DynamicTag from "@/components/atom/DynamicTag";
 import DynamicSource from "@/components/atom/DynamicSource";
 import SourceMessageBlock from "@/components/atom/SourceMessageBlock";
-import {CodeActionKind} from "vscode-languageserver-types";
-import Source = CodeActionKind.Source;
 import SourceTone from "@/components/atom/SourceTone";
 
 if (typeof Highcharts === 'object') {
@@ -195,7 +191,7 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
     },
     {
       label: 'В течений дня',
-      key: 1
+      key: 30
     }
   ];
 
@@ -300,14 +296,6 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
     }
   };
 
-  const chartInterval = useCallback(() => {
-    if (selectedOption.key === 1) {
-      return 3600 * 1000;
-    } else {
-      return 24 * 3600 * 1000;
-    }
-  }, [selectedOption]);
-
   const options: Highcharts.Options = {
     title: {
       text: '',
@@ -317,14 +305,16 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
         enabled: false,
       },
     },
+    yAxis: {
+      min: 0,
+    },
     xAxis: {
       type: 'datetime',
-      max: selectedOption.key * 24 * 3600 * 1000,
-      tickInterval: chartInterval(),
+      max: 30 * 24 * 3600 * 1000,
+      tickInterval: 24 * 3600 * 1000,
       dateTimeLabelFormats: {
         day: "%e %b",
-        hour: '%H:%M',
-      }
+      },
     },
     series: [
       {
@@ -339,7 +329,9 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
           [1550523000, 3],
           [1570623000, 9]
         ],
-        color: '#60CA23'
+        color: '#60CA23',
+        connectNulls: true,
+        connectEnds: true
       },
       {
         name: 'Негатив',
@@ -351,7 +343,9 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
           [1510323000, 3],
           [1530423000, 2],
         ],
-        color: '#B00000'
+        color: '#B00000',
+        connectNulls: true,
+        connectEnds: true
       },
       {
         name: 'Нейтральный',
@@ -365,7 +359,9 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
           [1550523000, 5],
           [1570623000, 10]
         ],
-        color: '#FFCF48'
+        color: '#FFCF48',
+        connectNulls: true,
+        connectEnds: true
       },
       {
         name: 'Количество упоминаний',
@@ -377,11 +373,12 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
           [1510323000, 3],
           [1530423000, 2],
           [1550523000, 6],
-          [1570623000, 9]
+          [1570623000, 9],
         ],
-        color: '#7851A9'
+        color: '#7851A9',
+        connectEnds: true
       },
-    ],
+    ]
   };
 
   const tabs = [

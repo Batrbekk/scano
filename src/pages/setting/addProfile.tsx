@@ -20,10 +20,6 @@ const addProfile: NextPage = () => {
       key: 'admin'
     },
     {
-      label: 'Супер администратор',
-      key: 'super_admin'
-    },
-    {
       label: 'Модератор',
       key: 'moderator'
     },

@@ -210,7 +210,7 @@ export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, sr
                       base: "[&_path]:fill-[#757575] bg-[#e1eaf8]",
                       content: `font-['Montserrat',sans-serif] text-[10px] text-[#808793] font-medium`
                     }}
-                    onClose={() => removeTag(item.tag_id)}
+                    onClose={() => removeTag(item.id)}
                   >
                     {item.name}
                   </Chip>
