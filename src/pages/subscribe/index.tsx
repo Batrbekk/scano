@@ -1,110 +1,105 @@
 import {NextPage} from "next";
 import MainLayout from "@/components/layout/mainLayout";
 import {useRouter} from "next/router";
-import React, {Key, useCallback} from "react";
+import React, {Key, useCallback, useEffect, useState} from "react";
 import Image from "next/image";
 import Edit from "@public/assets/icons/editBlue.svg";
 import Delete from "@public/assets/icons/deleteBlue.svg";
 import {Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from "@nextui-org/table";
 import Button from "@/components/atom/Button";
 import ProtectLayout from "@/components/layout/protectLayout";
+import {getCookie, setCookie} from "cookies-next";
+import {Subscription} from "@/types";
 
 const subscribeIndex: NextPage = () => {
+  const router = useRouter();
+  const token = getCookie('scano_acess_token');
+  const [pending, setPending] = useState<boolean>(false);
+  const [subs, setSubs] = useState<ReadonlyArray<Subscription>>([]);
+
+  const handleSubs = async () => {
+    setSubs([]);
+    try {
+      setPending(true);
+      const res = await fetch('https://scano-0df0b7c835bf.herokuapp.com/api/v1/subscriptions/' ,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+      if (res.ok) {
+        setPending(false);
+        const data = await res.json();
+        setSubs(data);
+      } else {
+        setPending(false);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    handleSubs();
+  }, []);
+
   const tableColumn = [
-    {name: '#', uid: 'id'},
-    {name: 'Тема', uid: 'theme'},
+    {name: 'Тема', uid: 'theme_id'},
     {name: 'E-mail', uid: 'email'},
-    {name: 'Содержание', uid: 'desc'},
     {name: 'Формат', uid: 'format'},
-    {name: 'Периодичность', uid: 'period'},
-    {name: 'Активность', uid: 'active'},
+    {name: 'Заголовок', uid: 'header'},
+    {name: 'Подзаголовок', uid: 'subheader'},
     {name: 'Действия', uid: 'action'}
   ];
-  const tableRow = [
-    {
-      id: 1,
-      theme: 'АО НАК Казатомпром',
-      email: [
-        'batrbekk@gmail.com',
-        'guzyakzz@gmail.com',
-        'apkaado@gmail.com',
-        'baha1477@mail.ru',
-        'asd@mail.ru'
-      ],
-      desc: 'Отчет по персональному фильтру',
-      format: 'Word',
-      period: 'Раз в неделю',
-      active: 'Вкл.',
-    },
-    {
-      id: 2,
-      theme: 'АО НК QAZAQGAZ',
-      email: [
-        'batrbekk@gmail.com',
-        'guzyakzz@gmail.com'
-      ],
-      desc: 'Отчет',
-      format: 'Word',
-      period: 'Раз в неделю',
-      active: 'Вкл.',
-    },
-  ];
-  const router = useRouter();
 
-  type Row = typeof tableRow[0];
-
-  const renderCell = useCallback((row: Row, columnKey: Key) => {
-    const cellValue = row[columnKey as keyof Row];
+  const renderCell = useCallback((row: Subscription, columnKey: Key) => {
+    const cellValue = row[columnKey as keyof Subscription];
 
     switch (columnKey) {
-      case 'id':
-        return (
-          <div className="py-2 px-8">
-            <p className="prose prose-sm">{row.id}</p>
-          </div>
-        )
       case 'theme':
         return (
           <div className="py-2 px-8">
-            <p className="prose prose-sm">{row.theme}</p>
+            <p className="prose prose-sm">{row.theme_id}</p>
           </div>
         )
       case 'email':
         return (
           <div className="py-2 px-8 flex flex-col">
-            {row.email.map((item) => (
+            {row.emails.map((item) => (
               <p className="prose prose-sm">{item}</p>
             ))}
           </div>
         )
-      case 'desc':
-        return (
-          <div className="py-2 px-8">
-            <p className="prose prose-sm">{row.desc}</p>
-          </div>
-        )
       case 'format':
         return (
-          <div className="py-2 px-8">
-            <p className="prose prose-sm">{row.format}</p>
+          <div className="py-2 px-8 flex flex-col">
+            {row.file_format_types.map((item) => (
+              <p className="prose prose-sm uppercase">{item}</p>
+            ))}
           </div>
         )
-      case 'period':
+      case 'header':
         return (
           <div className="py-2 px-8">
-            <p className="prose prose-sm">{row.period}</p>
+            <p className="prose prose-sm">{row.header}</p>
           </div>
         )
-      case 'active':
+      case 'subheader':
         return (
           <div className="py-2 px-8">
-            <p className="prose prose-sm">{row.active}</p>
+            <p className="prose prose-sm">{row.subheader}</p>
           </div>
         )
       case 'action':
         return (
           <div className="py-4 px-8 flex items-center gap-x-2">
-            <button className="bg-[#ebf1fd] rounded p-2">
+          <button className="bg-[#ebf1fd] rounded p-2" onClick={() => {
+            setCookie('currentSubs', row._id);
+            router.push('/subscribe/editSubscribe');
+          }}>
               <Image src={Edit} width={14} height={14} alt="icon" />
             </button>
             <button className="bg-[#ebf1fd] rounded p-2">
@@ -138,9 +133,9 @@ const subscribeIndex: NextPage = () => {
                 </TableColumn>
               )}
             </TableHeader>
-            <TableBody items={tableRow}>
+            <TableBody items={subs}>
               {(item) => (
-                <TableRow key={item.id} className="border-b last:border-0 hover:bg-[#fcfcfd]">
+                <TableRow key={item._id} className="border-b last:border-0 hover:bg-[#fcfcfd]">
                   {(columnKey) => <TableCell className="p-0">{renderCell(item, columnKey)}</TableCell>}
                 </TableRow>
               )}

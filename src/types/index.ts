@@ -25,6 +25,15 @@ export interface Notification {
   is_telegram: boolean;
 }
 
+export interface Subscription {
+  _id: string;
+  theme_id: string;
+  file_format_types: string[];
+  emails: string[];
+  header: string;
+  subheader: string;
+}
+
 export interface Theme {
   created_at: string,
   _id: string,
