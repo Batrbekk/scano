@@ -77,7 +77,7 @@ const editProfile: NextPage = () => {
   const updateData = async () => {
     try {
       const res = await fetch(
-        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/${profile?._id}`,
+        `https://test.scano.kz/api/v1/users/${profile?._id}`,
         {
           method: 'PATCH', // Assuming you are sending a POST request
           headers: {

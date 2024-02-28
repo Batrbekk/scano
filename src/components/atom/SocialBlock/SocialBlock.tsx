@@ -35,7 +35,7 @@ const SocialBlock = () => {
     try {
       setPending(true);
       const res = await fetch(
-        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/${id}/analytics/source_types`,
+        `https://test.scano.kz/api/v1/themes/${id}/analytics/source_types`,
         {
           method: 'GET', // Assuming you are sending a POST request
           headers: {

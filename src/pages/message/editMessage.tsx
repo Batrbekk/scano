@@ -75,7 +75,7 @@ const editMessage: NextPage = () => {
   const getTheme = async () => {
     try {
       const res = await fetch(
-        'https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/',
+        'https://test.scano.kz/api/v1/themes/',
         {
           method: 'GET', // Assuming you are sending a POST request
           headers: {
@@ -95,7 +95,7 @@ const editMessage: NextPage = () => {
   const getUsers = async () => {
     try {
       const res = await fetch(
-        'https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/',
+        'https://test.scano.kz/api/v1/users/',
         {
           method: 'GET', // Assuming you are sending a POST request
           headers: {
@@ -115,7 +115,7 @@ const editMessage: NextPage = () => {
   const getTelegrams = async () => {
     try {
       const res = await fetch(
-        'https://scano-0df0b7c835bf.herokuapp.com/api/v1/subscriptions/',
+        'https://test.scano.kz/api/v1/subscriptions/',
         {
           method: 'GET',
           headers: {
@@ -135,7 +135,7 @@ const editMessage: NextPage = () => {
   const updateNotif = async () => {
     try {
       const res = await fetch(
-        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/notification_plans/${currentId}`,
+        `https://test.scano.kz/api/v1/notification_plans/${currentId}`,
         {
           method: 'PATCH',
           headers: {
@@ -161,7 +161,7 @@ const editMessage: NextPage = () => {
   const getCurrentNotif = async () => {
     try {
       const res = await fetch(
-        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/notification_plans/${currentId}`,
+        `https://test.scano.kz/api/v1/notification_plans/${currentId}`,
         {
           method: 'GET', // Assuming you are sending a POST request
           headers: {

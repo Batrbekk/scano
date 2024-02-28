@@ -58,7 +58,7 @@ export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, sr
   const deleteTags = async (id: string, tagId: string) => {
     try {
       const res = await fetch(
-        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/materials/${id}/delete_tags`,
+        `https://test.scano.kz/api/v1/materials/${id}/delete_tags`,
         {
           method: 'DELETE',
           headers: {
@@ -81,7 +81,7 @@ export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, sr
   const getTags = async () => {
     try {
       const res = await fetch(
-        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/tags/`,
+        `https://test.scano.kz/api/v1/tags/`,
         {
           method: 'GET',
           headers: {
@@ -102,7 +102,7 @@ export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, sr
   const getImg = async () => {
     try {
       setPending(true);
-      const res = await fetch(`https://scano-0df0b7c835bf.herokuapp.com/files/${img}`,
+      const res = await fetch(`https://test.scano.kz/files/${img}`,
         {
           method: 'GET',
           headers: {
@@ -124,7 +124,7 @@ export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, sr
   const deleteMaterial = async () => {
     try {
       const res = await fetch(
-        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/materials/${id}`,
+        `https://test.scano.kz/api/v1/materials/${id}`,
         {
           method: 'DELETE',
           headers: {
@@ -144,7 +144,7 @@ export const MaterialCard: FC<Props> = ({id, title,date,text,tags,img, links, sr
   const addTags = async () => {
     try {
       const res = await fetch(
-        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/materials/${id}/add_tags`,
+        `https://test.scano.kz/api/v1/materials/${id}/add_tags`,
         {
           method: 'POST',
           headers: {

@@ -198,7 +198,7 @@ const dashboardIndex: NextPage = () => {
     try {
       setPending(true);
       const res = await fetch(
-        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/${id}/materials${tone.length > 0 ? `${tone.map((item) => `?sentiment=${item}`).join('')}` : ''}${materialsType.length > 0 ? `${materialsType.map((item) => `?material_type=${item}`).join('')}` : ''}${materialLang.length > 0 ? `${materialLang.map((item) => `?language=${item}`).join('')}` : ''}${materialCollection.length > 0 ? `${materialCollection.map((item) => `?source_type=${item}`).join('')}` : ''}`,
+        `https://test.scano.kz/api/v1/themes/${id}/materials${tone.length > 0 ? `${tone.map((item) => `?sentiment=${item}`).join('')}` : ''}${materialsType.length > 0 ? `${materialsType.map((item) => `?material_type=${item}`).join('')}` : ''}${materialLang.length > 0 ? `${materialLang.map((item) => `?language=${item}`).join('')}` : ''}${materialCollection.length > 0 ? `${materialCollection.map((item) => `?source_type=${item}`).join('')}` : ''}`,
         {
           method: 'GET', // Assuming you are sending a POST request
           headers: {
@@ -223,7 +223,7 @@ const dashboardIndex: NextPage = () => {
     try {
       setPending(true);
       const res = await fetch(
-        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/${id}/materials?
+        `https://test.scano.kz/api/v1/themes/${id}/materials?
           ${searchText ? `sort_by=${searchText}?` : ''}
           ${dateRange.startDate ? `start_date=${dateRange.startDate+'T00:00:00'}?` : ''}
           ${dateRange.endDate ? `end_date=${dateRange.endDate+'T00:00:00'}?` : ''}`,
@@ -249,7 +249,7 @@ const dashboardIndex: NextPage = () => {
   const getExport = async () => {
     try {
       const res = await fetch(
-        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/${id}/download_excel_report`,
+        `https://test.scano.kz/api/v1/themes/${id}/download_excel_report`,
         {
           method: 'GET', // Assuming you are sending a POST request
           headers: {

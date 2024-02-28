@@ -60,7 +60,7 @@ const addSubscribe: NextPage = () => {
   const getTheme = async () => {
     try {
       const res = await fetch(
-        'https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/',
+        'https://test.scano.kz/api/v1/themes/',
         {
           method: 'GET', // Assuming you are sending a POST request
           headers: {
@@ -82,7 +82,7 @@ const addSubscribe: NextPage = () => {
     const mailsMassive = emails.split(',');
     try {
       const res = await fetch(
-        'https://scano-0df0b7c835bf.herokuapp.com/api/v1/subscriptions/',
+        'https://test.scano.kz/api/v1/subscriptions/',
         {
           method: 'POST', // Assuming you are sending a POST request
           headers: {

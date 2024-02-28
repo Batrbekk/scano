@@ -45,7 +45,7 @@ const Homepage: NextPage = () => {
       setErrorLogin(false);
       setErrorPassword(false);
       const res = await fetch(
-        'https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/login',
+        'https://test.scano.kz/api/v1/users/login',
         {
           method: 'POST', // Assuming you are sending a POST request
           headers: {

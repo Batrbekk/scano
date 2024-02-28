@@ -228,7 +228,7 @@ const analyticIndex: NextPage = (props: HighchartsReact.Props) => {
   const getExport = async () => {
     try {
       const res = await fetch(
-        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/${id}/download_excel_report`,
+        `https://test.scano.kz/api/v1/themes/${id}/download_excel_report`,
         {
           method: 'GET', // Assuming you are sending a POST request
           headers: {

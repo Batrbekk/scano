@@ -144,7 +144,7 @@ const editTheme: NextPage = () => {
     try {
       setPending(true);
       const res = await fetch(
-        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/${id}`,
+        `https://test.scano.kz/api/v1/themes/${id}`,
         {
           method: 'GET', // Assuming you are sending a POST request
           headers: {
@@ -185,7 +185,7 @@ const editTheme: NextPage = () => {
     try {
       setPending(true);
       const res = await fetch(
-        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/${id}`,
+        `https://test.scano.kz/api/v1/themes/${id}`,
         {
           method: 'PATCH', // Assuming you are sending a POST request
           headers: {

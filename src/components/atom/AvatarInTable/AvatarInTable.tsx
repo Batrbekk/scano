@@ -12,7 +12,7 @@ export const AvatarInTable: FC<Props> = ({img}) => {
 
   const getImg = async () => {
     try {
-      const res = await fetch(`https://scano-0df0b7c835bf.herokuapp.com/files/${img}`,
+      const res = await fetch(`https://test.scano.kz/files/${img}`,
         {
           method: 'GET',
           headers: {

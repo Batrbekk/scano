@@ -29,7 +29,7 @@ export const LayoutNavbar: React.FC<Props> = ({email, first_name, last_name, rol
 
   const getImg = async (img: string) => {
     try {
-      const res = await fetch(`https://scano-0df0b7c835bf.herokuapp.com/files/${img}`,
+      const res = await fetch(`https://test.scano.kz/files/${img}`,
         {
           method: 'GET',
           headers: {

@@ -36,7 +36,7 @@ const Users: NextPage = () => {
     setUsers([]);
     try {
       setPending(true);
-      const res = await fetch('https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/' ,
+      const res = await fetch('https://test.scano.kz/api/v1/users/' ,
         {
           method: 'GET',
           headers: {
@@ -61,7 +61,7 @@ const Users: NextPage = () => {
   const banUser = async (id: string, status: boolean) => {
     try {
       const res = await fetch(
-        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/${id}`,
+        `https://test.scano.kz/api/v1/users/${id}`,
         {
           method: 'PATCH', // Assuming you are sending a POST request
           headers: {
@@ -84,7 +84,7 @@ const Users: NextPage = () => {
   const deleteUser = async (id: string) => {
     try {
       const res = await fetch(
-        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/${id}`,
+        `https://test.scano.kz/api/v1/users/${id}`,
         {
           method: 'DELETE', // Assuming you are sending a POST request
           headers: {

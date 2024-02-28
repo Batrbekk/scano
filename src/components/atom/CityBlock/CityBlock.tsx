@@ -35,7 +35,7 @@ const CityBlock = () => {
     try {
       setPending(true);
       const res = await fetch(
-        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/${id}/analytics/cities`,
+        `https://test.scano.kz/api/v1/themes/${id}/analytics/cities`,
         {
           method: 'GET', // Assuming you are sending a POST request
           headers: {

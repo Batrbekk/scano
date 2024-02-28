@@ -111,7 +111,7 @@ const addMessage: NextPage = () => {
   const getTheme = async () => {
     try {
       const res = await fetch(
-        'https://scano-0df0b7c835bf.herokuapp.com/api/v1/themes/',
+        'https://test.scano.kz/api/v1/themes/',
         {
           method: 'GET', // Assuming you are sending a POST request
           headers: {
@@ -132,7 +132,7 @@ const addMessage: NextPage = () => {
   const getUsers = async () => {
     try {
       const res = await fetch(
-        'https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/',
+        'https://test.scano.kz/api/v1/users/',
         {
           method: 'GET', // Assuming you are sending a POST request
           headers: {
@@ -153,7 +153,7 @@ const addMessage: NextPage = () => {
   const getTelegrams = async () => {
     try {
       const res = await fetch(
-        'https://scano-0df0b7c835bf.herokuapp.com/api/v1/subscriptions/',
+        'https://test.scano.kz/api/v1/subscriptions/',
         {
           method: 'GET',
           headers: {
@@ -174,7 +174,7 @@ const addMessage: NextPage = () => {
   const createNotif = async () => {
     try {
       const res = await fetch(
-        'https://scano-0df0b7c835bf.herokuapp.com/api/v1/notification_plans/',
+        'https://test.scano.kz/api/v1/notification_plans/',
         {
           method: 'POST',
           headers: {

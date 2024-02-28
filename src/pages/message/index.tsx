@@ -32,7 +32,7 @@ const messageIndex: NextPage = () => {
     setNotif([]);
     try {
       setPending(true);
-      const res = await fetch('https://scano-0df0b7c835bf.herokuapp.com/api/v1/notification_plans/' ,
+      const res = await fetch('https://test.scano.kz/api/v1/notification_plans/' ,
         {
           method: 'GET',
           headers: {
@@ -57,7 +57,7 @@ const messageIndex: NextPage = () => {
     try {
       setNotif([]);
       setPending(true);
-      const res = await fetch(`https://scano-0df0b7c835bf.herokuapp.com/api/v1/notification_plans/${id}` ,
+      const res = await fetch(`https://test.scano.kz/api/v1/notification_plans/${id}` ,
         {
           method: 'DELETE',
           headers: {

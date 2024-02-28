@@ -62,7 +62,7 @@ const Profile: NextPage = () => {
     try {
       setPending(true);
       const res = await fetch(
-        'https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/me',
+        'https://test.scano.kz/api/v1/users/me',
         {
           method: 'GET', // Assuming you are sending a POST request
           headers: {
@@ -106,7 +106,7 @@ const Profile: NextPage = () => {
 
   const getImg = async (img: string) => {
     try {
-      const res = await fetch(`https://scano-0df0b7c835bf.herokuapp.com/files/${img}`,
+      const res = await fetch(`https://test.scano.kz/files/${img}`,
         {
           method: 'GET',
           headers: {
@@ -126,7 +126,7 @@ const Profile: NextPage = () => {
   const updateData = async () => {
     try {
       const res = await fetch(
-        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/${profileAuth?.admin_id}`,
+        `https://test.scano.kz/api/v1/users/${profileAuth?.admin_id}`,
         {
           method: 'PATCH', // Assuming you are sending a POST request
           headers: {
@@ -157,7 +157,7 @@ const Profile: NextPage = () => {
         img
       );
       const res = await fetch(
-        `https://scano-0df0b7c835bf.herokuapp.com/api/v1/users/user-pic`,
+        `https://test.scano.kz/api/v1/users/user-pic`,
         {
           method: 'POST', // Assuming you are sending a POST request
           headers: {
